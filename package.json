@@ -3,6 +3,13 @@
   "module": "index.ts",
   "type": "module",
   "private": true,
+  "scripts": {
+    "dev": "bun --watch src/app.js",
+    "dev:css": "bunx @tailwindcss/cli -i ./src/styles.css -o ./public/css/styles.css --watch",
+    "start": "bun src/app.js",
+    "migrate:dev": "bunx prisma migrate dev",
+    "migrate:deploy": "bunx prims migrate deploy"
+  },
   "devDependencies": {
     "@types/bun": "latest",
     "eslint": "^9.32.0",
@@ -20,6 +27,7 @@
     "@quixo3/prisma-session-store": "^3.1.13",
     "bcryptjs": "^3.0.2",
     "dotenv": "^17.2.1",
+    "ejs": "^3.1.10",
     "express": "^5.1.0",
     "express-session": "^1.18.2",
     "passport": "^0.7.0",
