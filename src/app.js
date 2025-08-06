@@ -50,7 +50,7 @@ passport.use(
       }
       return done(null, user);
     } catch (err) {
-      done(err);
+      return done(err);
     }
   }),
 );
@@ -61,7 +61,7 @@ passport.serializeUser((user, done) => {
 
 passport.deserializeUser(async (id, done) => {
   try {
-    const user = prisma.user.findUnique({
+    const user = await prisma.user.findUnique({
       where: {
         id,
       },
