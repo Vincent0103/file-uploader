@@ -361,6 +361,21 @@
   .max-w-md {
     max-width: var(--container-md);
   }
+  .min-w-\[150px\] {
+    min-width: 150px;
+  }
+  .min-w-\[200px\] {
+    min-width: 200px;
+  }
+  .min-w-\[400px\] {
+    min-width: 400px;
+  }
+  .min-w-\[2150px\] {
+    min-width: 2150px;
+  }
+  .min-w-\[é00px\] {
+    min-width: é00px;
+  }
   .border-collapse {
     border-collapse: collapse;
   }
@@ -375,6 +390,9 @@
   }
   .flex-col {
     flex-direction: column;
+  }
+  .flex-wrap {
+    flex-wrap: wrap;
   }
   .items-center {
     align-items: center;
