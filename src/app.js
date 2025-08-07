@@ -9,6 +9,7 @@ import path from "path";
 import signupRouter from "./routes/signupRouter";
 import loginRouter from "./routes/loginRouter";
 import logoutRouter from "./routes/logoutRouter";
+import db from "./db/queries";
 
 const app = express();
 const prisma = new PrismaClient();
@@ -38,19 +39,16 @@ app.use(express.urlencoded({ extended: true }));
 passport.use(
   new LocalStrategy(async (username, password, done) => {
     try {
-      const user = await prisma.user.findUnique({
-        where: {
-          username,
-        },
-      });
+      const user = await db.getUserByUsername(username);
+      const errorMsg = "Incorrect username or password.";
 
       if (!user) {
-        return done(null, false, { message: "Incorrect username" });
+        return done(null, false, { message: errorMsg });
       }
 
       const match = await bcrypt.compare(password, user.password);
       if (!match) {
-        return done(null, false, { message: "Incorrect password" });
+        return done(null, false, { message: errorMsg });
       }
       return done(null, user);
     } catch (err) {
@@ -65,11 +63,7 @@ passport.serializeUser((user, done) => {
 
 passport.deserializeUser(async (id, done) => {
   try {
-    const user = await prisma.user.findUnique({
-      where: {
-        id,
-      },
-    });
+    const user = await db.getUserById(id);
 
     done(null, user);
   } catch (err) {
@@ -81,7 +75,7 @@ app.get("/", (req, res) => {
   if (!req.isAuthenticated()) {
     return res.redirect("/signup");
   }
-  return res.render("/");
+  return res.render("index");
 });
 app.use("/signup", signupRouter);
 app.use("/login", loginRouter);

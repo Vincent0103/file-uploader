@@ -18,17 +18,32 @@ const db = (() => {
     });
   };
 
-  const hasUserByUsername = async (username) => {
-    const user = await prisma.user.findFirst({
+  const getUserByUsername = async (username) => {
+    const user = await prisma.user.findUnique({
       where: {
         username,
       },
     });
 
+    return user;
+  };
+
+  const getUserById = async (id) => {
+    const user = await prisma.user.findUnique({
+      where: {
+        id,
+      },
+    });
+
+    return user;
+  };
+
+  const hasUserByUsername = async (username) => {
+    const user = await getUserByUsername(username);
     return !!user;
   };
 
-  return { createUser, hasUserByUsername };
+  return { createUser, getUserByUsername, getUserById, hasUserByUsername };
 })();
 
 export default db;

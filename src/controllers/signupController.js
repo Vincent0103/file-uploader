@@ -13,10 +13,12 @@ const signupController = (() => {
       .withMessage(`Username ${validationErrorMessages.lengthErr(3, 255)}`)
       .isAlphanumeric("en-US", { ignore: "_-" })
       .withMessage(`Username ${validationErrorMessages.alphanumericErr}`)
-      .custom((value) => {
-        if (db.hasUserByUsername(value)) {
+      .custom(async (value) => {
+        const userExists = await db.hasUserByUsername(value);
+        if (userExists) {
           throw new Error(`Username "${value}" already exists.`);
         }
+        return true;
       }),
     body("password")
       .isLength({ min: 8, max: 128 })
@@ -46,7 +48,7 @@ const signupController = (() => {
 
   const signupPost = [
     validateSignup,
-    (req, res, next) => {
+    async (req, res, next) => {
       try {
         const errors = validationResult(req);
         const { username, password } = req.body;
@@ -57,7 +59,7 @@ const signupController = (() => {
           });
         }
 
-        db.createUser({ username, password });
+        await db.createUser({ username, password });
         return res.redirect("/login");
       } catch (err) {
         console.error(err);
