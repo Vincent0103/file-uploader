@@ -1,0 +1,10 @@
+<% if (locals.errors) { %>
+<ul class="text-sm text-red-800">
+  <% errors.forEach((error) => { %> <% if (Array.isArray(error.msg)) { %> <%
+  error.msg.forEach((msg) => { %>
+  <li><%= msg %></li>
+  <% }); %> <% } else { %>
+  <li>- <%= error.msg %></li>
+  <% } %> <% }); %>
+</ul>
+<% } %>

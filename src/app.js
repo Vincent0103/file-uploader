@@ -3,9 +3,12 @@ import { PrismaSessionStore } from "@quixo3/prisma-session-store";
 import express from "express";
 import expressSession from "express-session";
 import passport from "passport";
-import bcrypt from "bcryptjs";
 import { Strategy as LocalStrategy } from "passport-local";
+import bcrypt from "bcryptjs";
 import path from "path";
+import signupRouter from "./routes/signupRouter";
+import loginRouter from "./routes/loginRouter";
+import logoutRouter from "./routes/logoutRouter";
 
 const app = express();
 const prisma = new PrismaClient();
@@ -29,7 +32,7 @@ app.use(
   }),
 );
 app.use(passport.session());
-app.use(express.static(path.join(__dirname, "public")));
+app.use(express.static(path.join(__dirname, "../public")));
 app.use(express.urlencoded({ extended: true }));
 
 passport.use(
@@ -75,8 +78,14 @@ passport.deserializeUser(async (id, done) => {
 });
 
 app.get("/", (req, res) => {
-  return res.render("sign-up");
+  if (!req.isAuthenticated()) {
+    return res.redirect("/signup");
+  }
+  return res.render("/");
 });
+app.use("/signup", signupRouter);
+app.use("/login", loginRouter);
+app.use("/logout", logoutRouter);
 
 const { PORT } = process.env;
 app.listen(PORT, () => {
