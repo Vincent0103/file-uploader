@@ -42,12 +42,12 @@
         <section class="flex size-full flex-col bg-zinc-800 p-2">
           <nav class="font-light text-zinc-400">
             <small>
-              <% path.forEach((node, index) => { %>
+              <% nodesAndPaths.forEach((item, index) => { %> <% if (item) { %>
               <span class="hover:text-zinc-300">
-                <a href="#"><%= node %></a>
-                <% if (index < path.length - 1) { %> &gt; <% } %>
+                <a href="<%= item.path %>"><%= item.self %></a>
+                <% if (index < nodesAndPaths.length - 1) { %> &gt; <% } %>
               </span>
-              <% }) %>
+              <% } %> <% }) %>
             </small>
           </nav>
           <div class="flex flex-col">
@@ -67,8 +67,9 @@
             </div>
             <% if (locals.folders) { %>
             <div class="flex flex-wrap gap-2">
-              <% folders.forEach(({ name: folderName }) => { %> <%-
-              include("partials/folderItem.ejs", { folderName }) %> <% }) %>
+              <% folders.forEach((folder) => { %> <%-
+              include("partials/folderItem.ejs", { folderName: folder.name,
+              folderId: folder.id }) %> <% }) %>
             </div>
             <% } %>
           </div>

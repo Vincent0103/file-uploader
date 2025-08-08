@@ -61,6 +61,17 @@ const db = (() => {
     console.log(folder);
   };
 
+  const getFolderById = async (userId, folderId) => {
+    const folder = await prisma.entity.findFirst({
+      where: {
+        id: folderId,
+        userId,
+      },
+    });
+
+    return folder;
+  };
+
   const getFolders = async (userId, folderId) => {
     const foldersAndFiles = await prisma.entity.findMany({
       where: {
@@ -72,7 +83,6 @@ const db = (() => {
       },
     });
 
-    console.log(foldersAndFiles);
     return foldersAndFiles;
   };
 
@@ -93,6 +103,7 @@ const db = (() => {
     getUserById,
     hasUserByUsername,
     createFolder,
+    getFolderById,
     getFolders,
     getHomeFolder,
   };

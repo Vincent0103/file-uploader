@@ -19,6 +19,31 @@ const validationErrorMessages = (() => {
   };
 })();
 
-const toTitleCase = (str) => str[0].toUpperCase() + str.slice(1);
+const getNodesAndPaths = (srcPath) => {
+  const cb = (nodes, i = 0) => {
+    if (nodes.length === i) return {};
 
-export { validationErrorMessages, toTitleCase };
+    let path;
+    if (i > 0) {
+      path = nodes[i - 1].path.concat(nodes[i]);
+    } else {
+      path = `/${nodes[i]}`;
+    }
+
+    // eslint-disable-next-line no-param-reassign
+    nodes[i] = {
+      self: nodes[i],
+      path,
+    };
+
+    return cb(nodes, i + 1);
+  };
+
+  const nodes = srcPath.split("/");
+  cb(nodes);
+
+  console.log(nodes);
+  return nodes;
+};
+
+export { validationErrorMessages, getNodesAndPaths };

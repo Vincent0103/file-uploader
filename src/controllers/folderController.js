@@ -1,4 +1,5 @@
 import db from "../db/queries";
+import { getNodesAndPaths } from "../utils/utils";
 
 const folderController = (() => {
   const folderGet = async (req, res) => {
@@ -8,8 +9,10 @@ const folderController = (() => {
     const { id: userId } = req.user;
 
     const folders = await db.getFolders(userId, folderId);
+    const mainFolder = await db.getFolderById(userId, folderId);
+    const nodesAndPaths = getNodesAndPaths(mainFolder.path);
 
-    return res.render("index", { user: req.user, path: ["home"], folders });
+    return res.render("index", { user: req.user, nodesAndPaths, folders });
   };
 
   return { folderGet };
