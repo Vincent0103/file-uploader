@@ -36,9 +36,9 @@ model Entity {
   user   User @relation(fields: [userId], references: [id])
   userId Int
 
-  successorId Int?    @unique
-  successor   Entity? @relation("FolderTree", fields: [successorId], references: [id])
-  predecessor Entity? @relation("FolderTree")
+  predecessorId Int?
+  predecessor   Entity?  @relation("FolderTree", fields: [predecessorId], references: [id])
+  successor     Entity[] @relation("FolderTree")
 }
 
 model File {

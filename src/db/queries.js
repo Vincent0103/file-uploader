@@ -43,7 +43,59 @@ const db = (() => {
     return !!user;
   };
 
-  return { createUser, getUserByUsername, getUserById, hasUserByUsername };
+  const createFolder = async (userId, filename, path, folderParentId) => {
+    const folder = await prisma.entity.create({
+      data: {
+        name: filename,
+        path,
+        user: {
+          connect: {
+            id: userId,
+          },
+        },
+        ...(folderParentId && {
+          predecessor: { connect: { id: folderParentId } },
+        }),
+      },
+    });
+    console.log(folder);
+  };
+
+  const getFolders = async (userId, folderId) => {
+    const foldersAndFiles = await prisma.entity.findMany({
+      where: {
+        predecessorId: folderId,
+        userId,
+      },
+      include: {
+        file: true,
+      },
+    });
+
+    console.log(foldersAndFiles);
+    return foldersAndFiles;
+  };
+
+  const getHomeFolder = async (userId) => {
+    const folder = await prisma.entity.findFirst({
+      where: {
+        userId,
+        path: "/",
+      },
+    });
+
+    return folder;
+  };
+
+  return {
+    createUser,
+    getUserByUsername,
+    getUserById,
+    hasUserByUsername,
+    createFolder,
+    getFolders,
+    getHomeFolder,
+  };
 })();
 
 export default db;

@@ -11,6 +11,7 @@ import loginRouter from "./routes/loginRouter";
 import logoutRouter from "./routes/logoutRouter";
 import db from "./db/queries";
 import createRouter from "./routes/createRouter";
+import folderRouter from "./routes/folderRouter";
 
 const app = express();
 
@@ -71,16 +72,23 @@ passport.deserializeUser(async (id, done) => {
   }
 });
 
-app.get("/", (req, res) => {
+app.get("/", async (req, res) => {
   if (!req.isAuthenticated()) {
     return res.redirect("/signup");
   }
-  return res.render("index", { user: req.user });
+
+  const { id: userId } = req.user;
+  const folder = await db.getHomeFolder(userId);
+  console.log(folder);
+
+  return res.redirect(`/folder/${folder.id}`);
 });
+
 app.use("/signup", signupRouter);
 app.use("/login", loginRouter);
 app.use("/create", createRouter);
 app.use("/logout", logoutRouter);
+app.use("/folder", folderRouter);
 
 const { PORT } = process.env;
 app.listen(PORT, () => {
