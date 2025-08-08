@@ -1,17 +1,15 @@
 <section
-  id="new-folder-container"
-  class="pointer-events-none absolute inset-0 size-full bg-black/70 opacity-0 backdrop-blur-sm transition-opacity"
+  class="create-container pointer-events-none absolute inset-0 size-full bg-black/70 opacity-0 backdrop-blur-sm transition-opacity"
 >
   <div class="flex h-full w-full items-center justify-center">
     <form
-      action="/create-folder"
+      action="<%= createPath %>"
       method="POST"
-      id="new-folder-popup"
-      class="flex w-[300px] translate-y-8 scale-75 flex-col rounded-md border-1 border-zinc-700 bg-zinc-800 p-4 transition-transform duration-200"
+      class="create-popup flex w-[300px] translate-y-8 scale-75 flex-col rounded-md border-1 border-zinc-700 bg-zinc-800 p-4 transition-transform duration-200"
     >
       <div class="mb-2 flex items-center justify-between">
-        <h3 class="text-lg font-semibold">New Folder</h3>
-        <button type="button" id="close-create-folder-button">
+        <h3 class="text-lg font-semibold">New <%= createTitle %></h3>
+        <button class="close-create-button" aria-label="Close" type="button">
           <i
             class="size-5 cursor-pointer rounded-md hover:text-zinc-500"
             data-lucide="x"
@@ -19,9 +17,10 @@
         </button>
       </div>
       <input
+        aria-label="<%= `${createName} Name` %>"
+        placeholder="<%= `${createTitle} Name` %>"
         type="text"
         class="w-full rounded-md border-1 border-zinc-700 bg-zinc-900 p-2 text-sm text-white placeholder:text-zinc-500 focus:border-amber-500 focus:outline-none"
-        placeholder="Folder Name"
       />
       <div class="mt-4 flex justify-end">
         <button

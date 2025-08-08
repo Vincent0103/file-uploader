@@ -19,4 +19,6 @@ const validationErrorMessages = (() => {
   };
 })();
 
-export default validationErrorMessages;
+const toTitleCase = (str) => str[0].toUpperCase() + str.slice(1);
+
+export { validationErrorMessages, toTitleCase };
