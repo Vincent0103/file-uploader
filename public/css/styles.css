@@ -312,6 +312,12 @@
   .min-w-\[150px\] {
     min-width: 150px;
   }
+  .min-w-\[180px\] {
+    min-width: 180px;
+  }
+  .min-w-\[200px\] {
+    min-width: 200px;
+  }
   .border-collapse {
     border-collapse: collapse;
   }
@@ -420,6 +426,9 @@
     border-bottom-style: var(--tw-border-style);
     border-bottom-width: 1px;
   }
+  .border-\[\#973c00\] {
+    border-color: #973c00;
+  }
   .border-\[\#92400e\] {
     border-color: #92400e;
   }
@@ -440,6 +449,9 @@
   }
   .border-zinc-800 {
     border-color: var(--color-zinc-800);
+  }
+  .bg-\[\#461901\] {
+    background-color: #461901;
   }
   .bg-\[\#d97706\] {
     background-color: #d97706;

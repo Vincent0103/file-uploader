@@ -3,18 +3,27 @@ window.addEventListener("DOMContentLoaded", () => {
   const createContainers = document.querySelectorAll(".create-container");
   const createPopups = document.querySelectorAll(".create-popup");
   const closeCreateButtons = document.querySelectorAll(".close-create-button");
-  const createInputs = [];
+  const inputs = [];
 
   createPopups.forEach((createPopup) => {
-    createInputs.push(createPopup.querySelector("input"));
+    createPopup.querySelectorAll("input").forEach((input) => {
+      inputs.push(input);
+    });
   });
 
-  const closePopup = (createContainer, createPopup) => {
+  const closePopup = (createContainer, createPopup, inputsParams) => {
     createContainer.classList.add("opacity-0");
     createContainer.classList.add("pointer-events-none");
     createContainer.classList.remove("opacity-100");
     createContainer.classList.remove("pointer-events-auto");
     createPopup.classList.add("scale-75", "translate-y-8");
+
+    // Make the file name input appear on file submission
+    inputsParams.forEach((input) => {
+      const fileNameContainer = document.getElementById("file-name-input");
+      fileNameContainer.classList.add("hidden");
+      input.value = "";
+    });
   };
 
   const onFileSubmission = (filename) => {
@@ -25,17 +34,17 @@ window.addEventListener("DOMContentLoaded", () => {
     fileNameInput.focus();
   };
 
-  const openPopup = (createContainer, createPopup, createInput) => {
+  const openPopup = (createContainer, createPopup, input) => {
     createContainer.classList.remove("opacity-0");
     createContainer.classList.remove("pointer-events-none");
     createContainer.classList.add("opacity-100");
     createContainer.classList.add("pointer-events-auto");
     createPopup.classList.remove("scale-75", "translate-y-8");
-    createInput.focus();
+    input.focus();
 
     // Make the file name input appear on file submission
-    if (createInput.type === "file") {
-      createInput.addEventListener("change", (e) =>
+    if (input.type === "file") {
+      input.addEventListener("change", (e) =>
         onFileSubmission(e.target.files[0].name),
       );
     }
@@ -43,18 +52,13 @@ window.addEventListener("DOMContentLoaded", () => {
 
   createButtons.forEach((createButton, index) => {
     createButton.addEventListener("click", () =>
-      openPopup(
-        createContainers[index],
-        createPopups[index],
-        createInputs[index],
-        createButtons[index],
-      ),
+      openPopup(createContainers[index], createPopups[index], inputs[index]),
     );
   });
 
   closeCreateButtons.forEach((closeCreateButton, index) => {
     closeCreateButton.addEventListener("click", () =>
-      closePopup(createContainers[index], createPopups[index]),
+      closePopup(createContainers[index], createPopups[index], inputs),
     );
   });
 
@@ -62,7 +66,7 @@ window.addEventListener("DOMContentLoaded", () => {
   createContainers.forEach((container, index) => {
     container.addEventListener("click", (event) => {
       if (!createPopups[index].contains(event.target)) {
-        closePopup(container, createPopups[index]);
+        closePopup(container, createPopups[index], inputs);
       }
     });
   });
