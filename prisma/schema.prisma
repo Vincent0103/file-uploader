@@ -21,7 +21,30 @@ model Session {
 }
 
 model User {
-  id       Int    @id @default(autoincrement())
-  username String @unique
+  id       Int      @id @default(autoincrement())
+  username String   @unique
   password String
+  entity   Entity[]
+}
+
+model Entity {
+  id   Int    @id @default(autoincrement())
+  name String
+  path String
+  file File?
+
+  user   User @relation(fields: [userId], references: [id])
+  userId Int
+
+  successorId Int?    @unique
+  successor   Entity? @relation("FolderTree", fields: [successorId], references: [id])
+  predecessor Entity? @relation("FolderTree")
+}
+
+model File {
+  id        Int    @id @default(autoincrement())
+  size      Int
+  extension String
+  entity    Entity @relation(fields: [entityId], references: [id])
+  entityId  Int    @unique
 }

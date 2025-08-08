@@ -10,9 +10,9 @@ import signupRouter from "./routes/signupRouter";
 import loginRouter from "./routes/loginRouter";
 import logoutRouter from "./routes/logoutRouter";
 import db from "./db/queries";
+import createRouter from "./routes/createRouter";
 
 const app = express();
-const prisma = new PrismaClient();
 
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
@@ -79,6 +79,7 @@ app.get("/", (req, res) => {
 });
 app.use("/signup", signupRouter);
 app.use("/login", loginRouter);
+app.use("/create", createRouter);
 app.use("/logout", logoutRouter);
 
 const { PORT } = process.env;

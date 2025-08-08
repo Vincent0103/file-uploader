@@ -5,6 +5,9 @@
     <form
       action="<%= createPath %>"
       method="POST"
+      <% if (locals.hasFileInput) { %>
+        enctype="multipart/form-data"
+      <% } %>
       class="create-popup flex w-[400px] translate-y-8 scale-75 flex-col rounded-md border-1 border-zinc-700 bg-zinc-800 p-4 transition-transform duration-200"
     >
       <div class="mb-2 flex items-center justify-between">
@@ -20,7 +23,7 @@
       <input
         aria-label="Upload File"
         type="file"
-        name="file"
+        name="uploadedFile"
         accept="*"
         class="mt-2 w-full rounded-md border-1 border-zinc-700 bg-zinc-900 p-2 text-sm placeholder:text-zinc-500 focus:border-amber-500 focus:outline-none"
       />
@@ -39,6 +42,8 @@
       <input
         aria-label="<%= `${createName} Name` %>"
         placeholder="<%= `${createTitle} Name` %>"
+        name="<%= `${createName}Name`%>"
+        id="<%= `${createName}Name` %>"
         type="text"
         class="mt-2 w-full rounded-md border-1 border-zinc-700 bg-zinc-900 p-2 text-sm text-white placeholder:text-zinc-500 focus:border-amber-500 focus:outline-none"
       />
@@ -46,7 +51,7 @@
       <div class="mt-4 flex justify-end">
         <button
           type="submit"
-          class="cursor-default cursor-pointer rounded-md bg-amber-500 px-4 py-2 text-sm font-semibold text-white hover:bg-amber-600"
+          class="cursor-pointer rounded-md bg-amber-500 px-4 py-2 text-sm font-semibold text-white hover:bg-amber-600"
         >
           <%= buttonName %>
         </button>
