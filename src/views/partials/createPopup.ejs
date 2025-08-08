@@ -5,7 +5,7 @@
     <form
       action="<%= createPath %>"
       method="POST"
-      class="create-popup flex w-[300px] translate-y-8 scale-75 flex-col rounded-md border-1 border-zinc-700 bg-zinc-800 p-4 transition-transform duration-200"
+      class="create-popup flex w-[400px] translate-y-8 scale-75 flex-col rounded-md border-1 border-zinc-700 bg-zinc-800 p-4 transition-transform duration-200"
     >
       <div class="mb-2 flex items-center justify-between">
         <h3 class="text-lg font-semibold">New <%= createTitle %></h3>
@@ -16,18 +16,39 @@
           ></i>
         </button>
       </div>
+      <% if (locals.hasFileInput) { %>
+      <input
+        aria-label="Upload File"
+        type="file"
+        name="file"
+        accept="*"
+        class="mt-2 w-full rounded-md border-1 border-zinc-700 bg-zinc-900 p-2 text-sm placeholder:text-zinc-500 focus:border-amber-500 focus:outline-none"
+      />
+      <div id="file-name-input" class="my-3 hidden">
+        <label class="text-zinc-200" for="file-name">File name</label>
+        <input
+          name="file-name"
+          id="file-name"
+          aria-label="File Name"
+          placeholder="File Name"
+          type="text"
+          class="mt-2 w-full rounded-md border-1 border-zinc-700 bg-zinc-900 p-2 text-sm text-white placeholder:text-zinc-500 focus:border-amber-500 focus:outline-none"
+        />
+      </div>
+      <% } else { %>
       <input
         aria-label="<%= `${createName} Name` %>"
         placeholder="<%= `${createTitle} Name` %>"
         type="text"
-        class="w-full rounded-md border-1 border-zinc-700 bg-zinc-900 p-2 text-sm text-white placeholder:text-zinc-500 focus:border-amber-500 focus:outline-none"
+        class="mt-2 w-full rounded-md border-1 border-zinc-700 bg-zinc-900 p-2 text-sm text-white placeholder:text-zinc-500 focus:border-amber-500 focus:outline-none"
       />
+      <% } %>
       <div class="mt-4 flex justify-end">
         <button
           type="submit"
-          class="cursor-pointer rounded-md bg-amber-500 px-4 py-2 text-sm font-semibold text-white hover:bg-amber-600"
+          class="cursor-default cursor-pointer rounded-md bg-amber-500 px-4 py-2 text-sm font-semibold text-white hover:bg-amber-600"
         >
-          Create
+          <%= buttonName %>
         </button>
       </div>
     </form>

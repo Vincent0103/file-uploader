@@ -38,7 +38,7 @@
         </div>
       </nav>
       <main class="flex h-full">
-        <%- include("partials/leftSidebar.ejs") %>
+        <%- include("partials/leftSidebar.ejs", { user }) %>
         <section class="flex size-full flex-col bg-zinc-800 p-2">
           <nav class="font-light text-zinc-400">
             <small>
@@ -48,22 +48,40 @@
               ><span class="hover:text-zinc-300"><a href="">garuda</a></span>
             </small>
           </nav>
-          <div class="flex flex-wrap gap-2">
-            <%- include("partials/folderItem.ejs", { folderName: "soliman" }) %>
-            <%- include("partials/folderItem.ejs", { folderName: "projects" })
-            %> <%- include("partials/folderItem.ejs", { folderName: "notes" })
-            %> <%- include("partials/folderItem.ejs", { folderName: "gpt" }) %>
-            <%- include("partials/folderItem.ejs", { folderName: "obsidian" })
-            %> <%- include("partials/folderItem.ejs", { folderName: "flip" }) %>
-            <%- include("partials/folderItem.ejs", { folderName: "hola" }) %>
+          <div class="flex flex-col">
+            <div class="flex gap-2 p-2">
+              <div
+                class="create-button flex cursor-pointer items-center gap-3 rounded-md border-1 border-zinc-700 bg-zinc-900 px-3 py-1.5 hover:bg-zinc-800"
+              >
+                <i class="size-4" data-lucide="folder-plus"></i>
+                <span>New Folder</span>
+              </div>
+              <div
+                class="create-button flex cursor-pointer items-center gap-3 rounded-md border-1 border-zinc-700 bg-zinc-900 px-3 py-1.5 hover:bg-zinc-800"
+              >
+                <i class="size-4" data-lucide="file-plus"></i>
+                <span>New File</span>
+              </div>
+            </div>
+            <div class="flex flex-wrap gap-2">
+              <%- include("partials/folderItem.ejs", { folderName: "soliman" })
+              %> <%- include("partials/folderItem.ejs", { folderName: "projects"
+              }) %> <%- include("partials/folderItem.ejs", { folderName: "notes"
+              }) %> <%- include("partials/folderItem.ejs", { folderName: "gpt"
+              }) %> <%- include("partials/folderItem.ejs", { folderName:
+              "obsidian" }) %> <%- include("partials/folderItem.ejs", {
+              folderName: "flip" }) %> <%- include("partials/folderItem.ejs", {
+              folderName: "hola" }) %>
+            </div>
           </div>
         </section>
       </main>
     </div>
-    <%- include("partials/createPopup.ejs", { createPath: "/create-folder",
-    createName: "folder", createTitle: "Folder" }) %> <%-
-    include("partials/createPopup.ejs", { createPath: "/create-file",
-    createName: "file", createTitle: "File" }) %>
+    <%- include("partials/createPopup.ejs", { createPath: "/create/folder",
+    createName: "folder", createTitle: "Folder", buttonName: "Create" }) %> <%-
+    include("partials/createPopup.ejs", { createPath: "/create/file",
+    createName: "file", createTitle: "File", hasFileInput: true, buttonName:
+    "Upload" }) %>
     <script src="https://unpkg.com/lucide@latest"></script>
     <script>
       lucide.createIcons();

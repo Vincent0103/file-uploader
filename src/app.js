@@ -75,7 +75,7 @@ app.get("/", (req, res) => {
   if (!req.isAuthenticated()) {
     return res.redirect("/signup");
   }
-  return res.render("index");
+  return res.render("index", { user: req.user });
 });
 app.use("/signup", signupRouter);
 app.use("/login", loginRouter);

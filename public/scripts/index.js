@@ -17,6 +17,14 @@ window.addEventListener("DOMContentLoaded", () => {
     createPopup.classList.add("scale-75", "translate-y-8");
   };
 
+  const onFileSubmission = (filename) => {
+    const fileNameContainer = document.getElementById("file-name-input");
+    fileNameContainer.classList.remove("hidden");
+    const fileNameInput = fileNameContainer.querySelector("input");
+    fileNameInput.value = filename || "";
+    fileNameInput.focus();
+  };
+
   const openPopup = (createContainer, createPopup, createInput) => {
     createContainer.classList.remove("opacity-0");
     createContainer.classList.remove("pointer-events-none");
@@ -24,6 +32,13 @@ window.addEventListener("DOMContentLoaded", () => {
     createContainer.classList.add("pointer-events-auto");
     createPopup.classList.remove("scale-75", "translate-y-8");
     createInput.focus();
+
+    // Make the file name input appear on file submission
+    if (createInput.type === "file") {
+      createInput.addEventListener("change", (e) =>
+        onFileSubmission(e.target.files[0].name),
+      );
+    }
   };
 
   createButtons.forEach((createButton, index) => {
@@ -32,6 +47,7 @@ window.addEventListener("DOMContentLoaded", () => {
         createContainers[index],
         createPopups[index],
         createInputs[index],
+        createButtons[index],
       ),
     );
   });
