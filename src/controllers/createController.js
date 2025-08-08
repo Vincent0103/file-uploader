@@ -10,10 +10,11 @@ const loginController = (() => {
       .withMessage(`Username ${validationErrorMessages.lengthErr(3, 255)}`)
       .isAlphanumeric("en-US", { ignore: "_-" })
       .withMessage(`Username ${validationErrorMessages.alphanumericErr}`)
-      .custom(async (value) => {
+      .custom(async (value, { req }) => {
+        const { id: userId } = req.user;
         const folderExists = await db.doesFolderExistsInPath(
           userId,
-          folder,
+          value,
           path,
         );
         if (folderExists) {
@@ -28,7 +29,6 @@ const loginController = (() => {
   };
 
   const createFilePost = (req, res) => {
-    console.log(req.file);
     return res.redirect("/");
   };
 

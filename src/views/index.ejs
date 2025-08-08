@@ -42,10 +42,10 @@
         <section class="flex size-full flex-col bg-zinc-800 p-2">
           <nav class="font-light text-zinc-400">
             <small>
-              <% nodesAndPaths.forEach((item, index) => { %> <% if (item) { %>
+              <% nodes.forEach((node, index) => { %> <% if (node) { %>
               <span class="hover:text-zinc-300">
-                <a href="<%= item.path %>"><%= item.self %></a>
-                <% if (index < nodesAndPaths.length - 1) { %> &gt; <% } %>
+                <a href="/folder/<%= node.folderId %>"><%= node.name %></a>
+                <% if (index < nodes.length - 1) { %> &gt; <% } %>
               </span>
               <% } %> <% }) %>
             </small>

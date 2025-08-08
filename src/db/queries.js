@@ -6,7 +6,6 @@ const db = (() => {
 
   const createUser = async (userData) => {
     const { username, password: unhashedPassword } = userData;
-    console.log(username, unhashedPassword);
     const salt = await bcrypt.genSalt();
     const password = await bcrypt.hash(unhashedPassword, salt);
 
@@ -58,7 +57,6 @@ const db = (() => {
         }),
       },
     });
-    console.log(folder);
   };
 
   const getFolderById = async (userId, folderId) => {
@@ -86,15 +84,35 @@ const db = (() => {
     return foldersAndFiles;
   };
 
-  const getHomeFolder = async (userId) => {
+  const getFolderbyPath = async (userId, path) => {
     const folder = await prisma.entity.findFirst({
       where: {
+        path,
         userId,
-        path: "/",
       },
     });
 
     return folder;
+  };
+
+  const getPredecessorByPath = async (userId, path) => {
+    const childFolder = await prisma.entity.findFirst({
+      where: {
+        path,
+        userId,
+      },
+    });
+
+    if (!childFolder) return null;
+    const { predecessorId } = childFolder;
+
+    const parentFolder = await prisma.entity.findFirst({
+      where: {
+        id: predecessorId,
+      },
+    });
+
+    return parentFolder;
   };
 
   return {
@@ -105,7 +123,8 @@ const db = (() => {
     createFolder,
     getFolderById,
     getFolders,
-    getHomeFolder,
+    getFolderbyPath,
+    getPredecessorByPath,
   };
 })();
 

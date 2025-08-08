@@ -1,3 +1,5 @@
+import db from "../db/queries";
+
 const validationErrorMessages = (() => {
   const lengthErr = (min, max) => `must be between ${min} and ${max}.`;
   const alphanumericErr =
@@ -19,31 +21,31 @@ const validationErrorMessages = (() => {
   };
 })();
 
-const getNodesAndPaths = (srcPath) => {
-  const cb = (nodes, i = 0) => {
-    if (nodes.length === i) return {};
+const getNodesObject = async (srcPath, userId) => {
+  // filter removes empty strings especially at the beginning of the split
+  let nodes = srcPath.split("/").filter((node) => !!node);
+  let currentPath = "";
 
-    let path;
-    if (i > 0) {
-      path = nodes[i - 1].path.concat(nodes[i]);
-    } else {
-      path = `/${nodes[i]}`;
-    }
+  nodes = await Promise.all(
+    nodes.map(async (node) => {
+      currentPath = currentPath.concat(`/${node}`);
+      const folder = await db.getPredecessorByPath(userId, currentPath);
+      const folderId = folder ? folder.id : null;
 
-    // eslint-disable-next-line no-param-reassign
-    nodes[i] = {
-      self: nodes[i],
-      path,
-    };
+      return {
+        name: node,
+        folderId,
+      };
+    }),
+  );
 
-    return cb(nodes, i + 1);
-  };
-
-  const nodes = srcPath.split("/");
-  cb(nodes);
-
-  console.log(nodes);
   return nodes;
 };
 
-export { validationErrorMessages, getNodesAndPaths };
+const main = async () => {
+  const nodes = await getNodesObject("/home/documents", 3);
+};
+
+main();
+
+export { validationErrorMessages, getNodesObject };

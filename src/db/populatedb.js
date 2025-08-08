@@ -17,7 +17,7 @@ const main = async () => {
   //   await db.createFolder(3, "images", "/home", 22);
   //   await db.createFolder(3, "videos", "/home", 22);
   //   await db.createFolder(3, "music", "/home", 22);
-  //   const folders = await prisma.entity.findMany();
+  const folders = await prisma.entity.findMany();
 };
 
 main()
