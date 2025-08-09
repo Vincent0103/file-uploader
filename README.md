@@ -1,4 +1,5 @@
 - include images in the readme for all of your projects and attract eyeballs.
+- Add userName as root folder instead of home.
 
 # file-uploader
 

@@ -23,29 +23,27 @@ const validationErrorMessages = (() => {
 
 const getNodesObject = async (srcPath, userId) => {
   // filter removes empty strings especially at the beginning of the split
-  let nodes = srcPath.split("/").filter((node) => !!node);
-  let currentPath = "";
+  const nodes = srcPath.split("/").filter((node) => !!node);
+  let currentPath = "/";
+  const obj = [];
 
-  nodes = await Promise.all(
-    nodes.map(async (node) => {
-      currentPath = currentPath.concat(`/${node}`);
-      const folder = await db.getPredecessorByPath(userId, currentPath);
-      const folderId = folder ? folder.id : null;
+  // The next loop doesn't follow eslint good practices but is necessary
+  // so that it runs *sequentially* and doesn't cause race conditions.
 
-      return {
-        name: node,
-        folderId,
-      };
-    }),
-  );
+  // eslint-disable-next-line no-restricted-syntax
+  for (const node of nodes) {
+    // eslint-disable-next-line no-await-in-loop
+    const folder = await db.getFolderByNameAndPath(userId, node, currentPath);
+    const folderId = folder ? folder.id : null;
+    currentPath = currentPath.concat(`${node}/`);
 
-  return nodes;
+    obj.push({
+      name: node,
+      folderId,
+    });
+  }
+
+  return obj;
 };
-
-const main = async () => {
-  const nodes = await getNodesObject("/home/documents", 3);
-};
-
-main();
 
 export { validationErrorMessages, getNodesObject };

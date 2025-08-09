@@ -13,7 +13,8 @@
     />
   </head>
   <body
-    class="font-inter m-0 flex h-screen w-screen items-center justify-center bg-gradient-to-br from-amber-900 to-amber-950 p-5 text-white"
+    style="background-image: linear-gradient(135deg, #0c0704, #432622)"
+    class="font-inter m-0 flex h-screen w-screen items-center justify-center p-5 text-white"
   >
     <div
       class="absolute inset-0 -z-10 size-full bg-[url(/images/body-wallpaper.jpg)] bg-cover bg-center"
@@ -42,12 +43,12 @@
         <section class="flex size-full flex-col bg-zinc-800 p-2">
           <nav class="font-light text-zinc-400">
             <small>
-              <% nodes.forEach((node, index) => { %> <% if (node) { %>
+              <% nodes.forEach((node, index) => { %>
               <span class="hover:text-zinc-300">
                 <a href="/folder/<%= node.folderId %>"><%= node.name %></a>
                 <% if (index < nodes.length - 1) { %> &gt; <% } %>
               </span>
-              <% } %> <% }) %>
+              <% }) %>
             </small>
           </nav>
           <div class="flex flex-col">

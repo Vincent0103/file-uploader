@@ -84,9 +84,10 @@ const db = (() => {
     return foldersAndFiles;
   };
 
-  const getFolderbyPath = async (userId, path) => {
+  const getFolderByNameAndPath = async (userId, name, path) => {
     const folder = await prisma.entity.findFirst({
       where: {
+        name,
         path,
         userId,
       },
@@ -123,7 +124,7 @@ const db = (() => {
     createFolder,
     getFolderById,
     getFolders,
-    getFolderbyPath,
+    getFolderByNameAndPath,
     getPredecessorByPath,
   };
 })();

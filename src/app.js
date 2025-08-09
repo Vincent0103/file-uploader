@@ -78,8 +78,7 @@ app.get("/", async (req, res) => {
   }
 
   const { id: userId } = req.user;
-  const folder = await db.getFolderbyPath(userId, "/home");
-  console.log(folder);
+  const folder = await db.getFolderByNameAndPath(userId, "home", "/");
 
   return res.redirect(`/folder/${folder.id}`);
 });

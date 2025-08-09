@@ -10,7 +10,10 @@ const folderController = (() => {
 
     const folders = await db.getFolders(userId, folderId);
     const mainFolder = await db.getFolderById(userId, folderId);
-    const nodes = await getNodesObject(mainFolder.path, userId);
+    const nodes = await getNodesObject(
+      mainFolder.path.concat(mainFolder.name),
+      userId,
+    );
 
     return res.render("index", { user: req.user, nodes, folders });
   };
