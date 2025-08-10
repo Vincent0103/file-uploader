@@ -1,0 +1,15 @@
+<a class="cursor-default" href="/folder/<%= folderId %>">
+  <div
+    class="flex flex-col items-center rounded-md border-1 border-zinc-800 p-2 hover:bg-zinc-900"
+  >
+    <% if (!locals.mimetype) { %> <%- include("entity-icons/folder.ejs") %> <% }
+    else if (mimetype && mimetype.startsWith('image/')) { %> <%-
+    include("entity-icons/image.ejs") %> <% } else if (mimetype &&
+    mimetype.startsWith('video/')) { %> <%- include("entity-icons/video.ejs") %>
+    <% } else if (mimetype && mimetype.startsWith('audio/')) { %> <%-
+    include("entity-icons/audio.ejs") %> <% } else if (mimetype ===
+    'application/pdf') { %> <%- include("entity-icons/document.ejs") %> <% }
+    else { %> <%- include("entity-icons/file.ejs") %> <% } %>
+    <small class="pointer-events-none -mt-1 text-sm"><%= entityName %></small>
+  </div>
+</a>
