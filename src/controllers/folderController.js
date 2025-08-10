@@ -19,7 +19,6 @@ const folderController = (() => {
       }),
     );
 
-    console.log(sidebarFolders);
     const mainFolder = await db.getFolderById(userId, folderId);
     const nodes = await getNodesObject(
       mainFolder.path.concat(mainFolder.name),
