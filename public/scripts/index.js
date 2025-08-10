@@ -6,9 +6,11 @@ window.addEventListener("DOMContentLoaded", () => {
   const inputs = [];
 
   createPopups.forEach((createPopup) => {
-    createPopup.querySelectorAll("input").forEach((input) => {
-      inputs.push(input);
-    });
+    createPopup
+      .querySelectorAll("input[type=file], input[type=text]")
+      .forEach((input) => {
+        inputs.push(input);
+      });
   });
 
   const closePopup = (createContainer, createPopup, inputsParams) => {
@@ -20,16 +22,17 @@ window.addEventListener("DOMContentLoaded", () => {
 
     // Make the file name input appear on file submission
     inputsParams.forEach((input) => {
-      const fileNameContainer = document.getElementById("file-name-input");
+      const fileNameContainer = document.getElementById("file-name-container");
       fileNameContainer.classList.add("hidden");
       input.value = "";
     });
   };
 
   const onFileSubmission = (filename) => {
-    const fileNameContainer = document.getElementById("file-name-input");
+    const fileNameContainer = document.getElementById("file-name-container");
     fileNameContainer.classList.remove("hidden");
-    const fileNameInput = fileNameContainer.querySelector("input");
+
+    const fileNameInput = document.getElementById("fileName");
     fileNameInput.value = filename || "";
     fileNameInput.focus();
   };
