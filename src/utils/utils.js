@@ -21,7 +21,7 @@ const validationErrorMessages = (() => {
   };
 })();
 
-const getNodesObject = async (srcPath, userId) => {
+const getNodesFromPath = async (srcPath, userId) => {
   const nodes = [];
 
   // The next loop doesn't follow eslint good practices but is necessary
@@ -50,4 +50,4 @@ const getNodesObject = async (srcPath, userId) => {
   return nodes;
 };
 
-export { validationErrorMessages, getNodesObject };
+export { validationErrorMessages, getNodesFromPath };

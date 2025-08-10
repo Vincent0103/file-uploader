@@ -1,5 +1,5 @@
 import db from "../db/queries";
-import { getNodesObject } from "../utils/utils";
+import { getNodesFromPath } from "../utils/utils";
 
 const folderController = (() => {
   const folderGet = async (req, res) => {
@@ -20,7 +20,7 @@ const folderController = (() => {
     );
 
     const mainFolder = await db.getFolderById(userId, folderId);
-    const nodes = await getNodesObject(
+    const nodes = await getNodesFromPath(
       mainFolder.path.concat(mainFolder.name),
       userId,
     );
