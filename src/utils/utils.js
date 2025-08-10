@@ -3,7 +3,7 @@ import db from "../db/queries";
 const validationErrorMessages = (() => {
   const lengthErr = (min, max) => `must be between ${min} and ${max}.`;
   const alphanumericErr =
-    "must only contain letters, numbers, spaces and one of these characters (_-).";
+    "must only contain letters, numbers or one of these characters (_-).";
   const lowerCaseErr = "have atleast one lowercase letter (a-z)";
   const upperCaseErr = "have atleast one uppercase letter (A-Z)";
   const digitErr = "have atleast one digit (0-9)";
@@ -23,7 +23,6 @@ const validationErrorMessages = (() => {
 
 const getNodesObject = async (srcPath, userId) => {
   // filter removes empty strings especially at the beginning of the split
-  const nodes = srcPath.split("/").filter((node) => !!node);
   let currentPath = "/";
   const obj = [];
 

@@ -9,7 +9,17 @@ const folderController = (() => {
     const { id: userId, username } = req.user;
 
     const folders = await db.getFolders(userId, folderId);
-    const sidebarFolders = await db.getSidebarFolders(userId, username);
+
+    const iconNames = ["home", "file-text", "image", "film", "music"];
+    const sidebarFolders = (await db.getSidebarFolders(userId, username)).map(
+      ({ id, name }, index) => ({
+        folderId: id,
+        name,
+        iconName: iconNames[index],
+      }),
+    );
+
+    console.log(sidebarFolders);
     const mainFolder = await db.getFolderById(userId, folderId);
     const nodes = await getNodesObject(
       mainFolder.path.concat(mainFolder.name),

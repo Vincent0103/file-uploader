@@ -100,6 +100,7 @@ const db = (() => {
   const getSidebarFolders = async (userId, username) => {
     const folders = await prisma.entity.findMany({
       where: {
+        userId,
         OR: [
           { name: username },
           { name: "documents" },
