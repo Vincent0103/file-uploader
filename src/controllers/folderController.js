@@ -21,7 +21,7 @@ const folderController = (() => {
 
     const { id: userId, username } = req.user;
 
-    const folders = await db.getFolders(userId, folderId);
+    const entities = await db.getEntities(userId, folderId);
 
     const iconNames = ["home", "file-text", "image", "film", "music"];
     const sidebarFolders = (await db.getSidebarFolders(userId, username)).map(
@@ -42,7 +42,7 @@ const folderController = (() => {
       user: req.user,
       folderId,
       nodes,
-      folders,
+      entities,
       sidebarFolders,
       hasCreateFolderErrors,
       hasCreateFileErrors,

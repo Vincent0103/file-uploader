@@ -122,7 +122,7 @@ const db = (() => {
     return folder;
   };
 
-  const getFolders = async (userId, folderId) => {
+  const getEntities = async (userId, folderId) => {
     const foldersAndFiles = await prisma.entity.findMany({
       where: {
         predecessorId: folderId,
@@ -202,7 +202,7 @@ const db = (() => {
     createFolder,
     createFile,
     getFolderById,
-    getFolders,
+    getEntities,
     getSidebarFolders,
     getFolderByNameAndPath,
     getPredecessorByPath,

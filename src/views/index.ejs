@@ -66,11 +66,12 @@
                 <span>New File</span>
               </div>
             </div>
-            <% if (locals.folders) { %>
+            <% if (locals.entities) { %>
             <div class="flex flex-wrap gap-2">
-              <% folders.forEach((folder) => { %> <%-
-              include("partials/entityItem.ejs", { entityName: folder.name,
-              folderId: folder.id }) %> <% }) %>
+              <% entities.forEach((entity) => { %> <%-
+              include("partials/entityItem.ejs", { entityName: entity.name,
+              folderId: entity.id, mimetype: entity?.file?.extension }) %> <% })
+              %>
             </div>
             <% } %>
           </div>
