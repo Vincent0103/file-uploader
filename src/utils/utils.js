@@ -23,6 +23,7 @@ const validationErrorMessages = (() => {
 
 const getNodesObject = async (srcPath, userId) => {
   // filter removes empty strings especially at the beginning of the split
+  const nodes = srcPath.split("/").filter((node) => !!node);
   let currentPath = "/";
   const obj = [];
 
