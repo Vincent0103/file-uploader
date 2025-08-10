@@ -1,4 +1,4 @@
-window.addEventListener("DOMContentLoaded", () => {
+const createRelated = () => {
   const createButtons = document.querySelectorAll(".create-button");
   const createContainers = document.querySelectorAll(".create-container");
   const createPopups = document.querySelectorAll(".create-popup");
@@ -70,6 +70,45 @@ window.addEventListener("DOMContentLoaded", () => {
     container.addEventListener("click", (event) => {
       if (!createPopups[index].contains(event.target)) {
         closePopup(container, createPopups[index], inputs);
+      }
+    });
+  });
+};
+
+const toggleModal = (modal, entityLink, moreOptionsContainer) => {
+  modal.classList.toggle("opacity-100");
+  modal.classList.toggle("pointer-events-auto");
+  modal.classList.toggle("opacity-0");
+  modal.classList.toggle("pointer-events-none");
+  entityLink.classList.toggle("hover:bg-zinc-900");
+  entityLink.classList.toggle("bg-zinc-800");
+  entityLink.classList.toggle("bg-zinc-900");
+  moreOptionsContainer.classList.toggle("opacity-0");
+  moreOptionsContainer.classList.toggle("group-hover:opacity-100");
+};
+
+window.addEventListener("DOMContentLoaded", () => {
+  createRelated();
+
+  document.addEventListener("click", (event) => {
+    const button = event.target.closest(".more-options-button");
+    if (button) {
+      const entityItem = button.closest(".entity-item");
+      if (entityItem) {
+        const modal = entityItem.querySelector(".more-modal");
+        const entityLink = entityItem.querySelector("a");
+        const moreOptionsContainer = entityItem.querySelector("div.absolute");
+        toggleModal(modal, entityLink, moreOptionsContainer);
+      }
+      return;
+    }
+
+    document.querySelectorAll(".more-modal.opacity-100").forEach((modal) => {
+      const entityItem = modal.closest(".entity-item");
+      if (entityItem && !entityItem.contains(event.target)) {
+        const entityLink = entityItem.querySelector("a");
+        const moreOptionsContainer = entityItem.querySelector("div.absolute");
+        toggleModal(modal, entityLink, moreOptionsContainer);
       }
     });
   });
