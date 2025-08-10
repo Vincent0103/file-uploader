@@ -53,18 +53,22 @@
           </nav>
           <div class="flex flex-col">
             <div class="flex gap-2 p-2">
-              <div
-                class="create-button flex cursor-pointer items-center gap-3 rounded-md border-1 border-zinc-700 bg-zinc-900 px-3 py-1.5 hover:bg-zinc-800"
+              <button
+                id="create-folder-button"
+                type="button"
+                class="flex cursor-pointer items-center gap-3 rounded-md border-1 border-zinc-700 bg-zinc-900 px-3 py-1.5 hover:bg-zinc-800"
               >
                 <i class="size-4" data-lucide="folder-plus"></i>
                 <span>New Folder</span>
-              </div>
-              <div
-                class="create-button flex cursor-pointer items-center gap-3 rounded-md border-1 border-zinc-700 bg-zinc-900 px-3 py-1.5 hover:bg-zinc-800"
+              </button>
+              <button
+                id="create-file-button"
+                type="button"
+                class="flex cursor-pointer items-center gap-3 rounded-md border-1 border-zinc-700 bg-zinc-900 px-3 py-1.5 hover:bg-zinc-800"
               >
                 <i class="size-4" data-lucide="file-plus"></i>
                 <span>New File</span>
-              </div>
+              </button>
             </div>
             <% if (locals.entities) { %>
             <div class="flex flex-wrap gap-2">
@@ -78,12 +82,11 @@
         </section>
       </main>
     </div>
-    <%- include("partials/createPopup.ejs", { createPath: "/create/folder",
-    createName: "folder", createTitle: "Folder", buttonName: "Create",
-    isVisible: hasCreateFolderErrors, folderId}) %> <%-
-    include("partials/createPopup.ejs", { createPath: "/create/file",
-    createName: "file", createTitle: "File", hasFileInput: true, buttonName:
-    "Upload", isVisible: hasCreateFileErrors }) %>
+    <%- include("partials/folderPopup.ejs", { path: "/create/folder", name:
+    "folder", title: "Folder", buttonName: "Create", isVisible:
+    hasCreateFolderErrors, folderId}) %> <%- include("partials/filePopup.ejs", {
+    path: "/create/file", title: "File", hasFileInput: true, buttonName:
+    "Upload", isVisible: hasCreateFileErrors, folderId }) %>
     <script src="https://unpkg.com/lucide@latest"></script>
     <script>
       lucide.createIcons();

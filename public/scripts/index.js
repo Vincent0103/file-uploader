@@ -1,24 +1,35 @@
-const createRelated = () => {
-  const createButtons = document.querySelectorAll(".create-button");
-  const createContainers = document.querySelectorAll(".create-container");
-  const createPopups = document.querySelectorAll(".create-popup");
-  const closeCreateButtons = document.querySelectorAll(".close-create-button");
-  const inputs = [];
+const toggleModal = (modal, entityLink, moreOptionsContainer) => {
+  modal.classList.toggle("opacity-100");
+  modal.classList.toggle("pointer-events-auto");
+  modal.classList.toggle("opacity-0");
+  modal.classList.toggle("pointer-events-none");
+  entityLink.classList.toggle("hover:bg-zinc-900");
+  entityLink.classList.toggle("bg-zinc-800");
+  entityLink.classList.toggle("bg-zinc-900");
+  moreOptionsContainer.classList.toggle("opacity-0");
+  moreOptionsContainer.classList.toggle("group-hover:opacity-100");
+};
 
-  createPopups.forEach((createPopup) => {
-    createPopup
-      .querySelectorAll("input[type=file], input[type=text]")
-      .forEach((input) => {
-        inputs.push(input);
-      });
-  });
+const createAndEditRelated = () => {
+  const folder = {
+    popupContainer: document.querySelector(".folder.popup-container"),
+    popup: document.querySelector(".folder .popup"),
+    createButton: document.getElementById("create-folder-button"),
+    closeButton: document.getElementById("close-folder-button"),
+  };
+  const file = {
+    popupContainer: document.querySelector(".file.popup-container"),
+    popup: document.querySelector(".file .popup"),
+    createButton: document.getElementById("create-file-button"),
+    closeButton: document.getElementById("close-file-button"),
+  };
 
-  const closePopup = (createContainer, createPopup, inputsParams) => {
-    createContainer.classList.add("opacity-0");
-    createContainer.classList.add("pointer-events-none");
-    createContainer.classList.remove("opacity-100");
-    createContainer.classList.remove("pointer-events-auto");
-    createPopup.classList.add("scale-75", "translate-y-8");
+  const closePopup = (container, popup, inputsParams) => {
+    container.classList.add("opacity-0");
+    container.classList.add("pointer-events-none");
+    container.classList.remove("opacity-100");
+    container.classList.remove("pointer-events-auto");
+    popup.classList.add("scale-75", "translate-y-8");
 
     // Make the file name input appear on file submission
     inputsParams.forEach((input) => {
@@ -37,12 +48,12 @@ const createRelated = () => {
     fileNameInput.focus();
   };
 
-  const openPopup = (createContainer, createPopup, input) => {
-    createContainer.classList.remove("opacity-0");
-    createContainer.classList.remove("pointer-events-none");
-    createContainer.classList.add("opacity-100");
-    createContainer.classList.add("pointer-events-auto");
-    createPopup.classList.remove("scale-75", "translate-y-8");
+  const openPopup = (container, popup, input) => {
+    container.classList.remove("opacity-0");
+    container.classList.remove("pointer-events-none");
+    container.classList.add("opacity-100");
+    container.classList.add("pointer-events-auto");
+    popup.classList.remove("scale-75", "translate-y-8");
     input.focus();
 
     // Make the file name input appear on file submission
@@ -53,60 +64,75 @@ const createRelated = () => {
     }
   };
 
-  createButtons.forEach((createButton, index) => {
-    createButton.addEventListener("click", () =>
-      openPopup(createContainers[index], createPopups[index], inputs[index]),
-    );
-  });
+  const inputs = [];
 
-  closeCreateButtons.forEach((closeCreateButton, index) => {
-    closeCreateButton.addEventListener("click", () =>
-      closePopup(createContainers[index], createPopups[index], inputs),
-    );
-  });
+  [folder, file].forEach(
+    ({ popupContainer, popup, createButton, closeButton }, index) => {
+      popup
+        .querySelectorAll("input[type=file], input[type=text]")
+        .forEach((input) => {
+          inputs.push(input);
+        });
 
-  // Close popup when clicking outside the popup
-  createContainers.forEach((container, index) => {
-    container.addEventListener("click", (event) => {
-      if (!createPopups[index].contains(event.target)) {
-        closePopup(container, createPopups[index], inputs);
-      }
-    });
-  });
-};
+      createButton.addEventListener("click", () =>
+        openPopup(popupContainer, popup, inputs[index]),
+      );
 
-const toggleModal = (modal, entityLink, moreOptionsContainer) => {
-  modal.classList.toggle("opacity-100");
-  modal.classList.toggle("pointer-events-auto");
-  modal.classList.toggle("opacity-0");
-  modal.classList.toggle("pointer-events-none");
-  entityLink.classList.toggle("hover:bg-zinc-900");
-  entityLink.classList.toggle("bg-zinc-800");
-  entityLink.classList.toggle("bg-zinc-900");
-  moreOptionsContainer.classList.toggle("opacity-0");
-  moreOptionsContainer.classList.toggle("group-hover:opacity-100");
+      closeButton.addEventListener("click", () =>
+        closePopup(popupContainer, popup, inputs),
+      );
+
+      // Close popup when clicking outside the popup
+      popupContainer.addEventListener("click", (event) => {
+        if (!popup.contains(event.target)) {
+          closePopup(popupContainer, popup, inputs);
+        }
+      });
+    },
+  );
+
+  document.addEventListener("click", (event) => {
+    const button = event.target.closest(".edit-button");
+    if (button) {
+      const entityItem = button.closest(".entity-item");
+      // if (entityItem) {
+      //   const modal = entityItem.querySelector(".more-modal");
+      //   const entityLink = entityItem.querySelector(".entity-link");
+      //   const moreOptionsContainer = entityItem.querySelector("div.absolute");
+      //   toggleModal(modal, entityLink, moreOptionsContainer);
+      // }
+
+      openPopup(
+        document.querySelector(".folder .popup-container"),
+        document.querySelector(".folder .popup"),
+        document.querySelector(".folder .popup input[type=text]"),
+      );
+    }
+  });
 };
 
 window.addEventListener("DOMContentLoaded", () => {
-  createRelated();
+  createAndEditRelated();
 
   document.addEventListener("click", (event) => {
+    // Handle more-options-button click
     const button = event.target.closest(".more-options-button");
     if (button) {
       const entityItem = button.closest(".entity-item");
       if (entityItem) {
         const modal = entityItem.querySelector(".more-modal");
-        const entityLink = entityItem.querySelector("a");
+        const entityLink = entityItem.querySelector(".entity-link");
         const moreOptionsContainer = entityItem.querySelector("div.absolute");
         toggleModal(modal, entityLink, moreOptionsContainer);
       }
       return;
     }
 
+    // Close open modals if clicking outside
     document.querySelectorAll(".more-modal.opacity-100").forEach((modal) => {
       const entityItem = modal.closest(".entity-item");
       if (entityItem && !entityItem.contains(event.target)) {
-        const entityLink = entityItem.querySelector("a");
+        const entityLink = entityItem.querySelector(".entity-link");
         const moreOptionsContainer = entityItem.querySelector("div.absolute");
         toggleModal(modal, entityLink, moreOptionsContainer);
       }

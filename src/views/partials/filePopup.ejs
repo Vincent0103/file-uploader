@@ -1,26 +1,24 @@
 <section
   <% if (isVisible) { %>
-    class="create-container pointer-events-auto absolute inset-0 size-full bg-black/70 opacity-100 backdrop-blur-sm transition-opacity"
+    class="file popup-container pointer-events-auto absolute inset-0 size-full bg-black/70 opacity-100 backdrop-blur-sm transition-opacity"
   <% } else { %>
-    class="create-container pointer-events-none absolute inset-0 size-full bg-black/70 opacity-0 backdrop-blur-sm transition-opacity"
+    class="file popup-container pointer-events-none absolute inset-0 size-full bg-black/70 opacity-0 backdrop-blur-sm transition-opacity"
   <% } %>
 >
   <div class="flex h-full w-full items-center justify-center">
     <form
-      action="<%= createPath %>"
+      action="<%= path %>"
       method="POST"
-      <% if (locals.hasFileInput) { %>
-        enctype="multipart/form-data"
-      <% } %>
+      enctype="multipart/form-data"
       <% if (isVisible) { %>
-        class="create-popup flex w-[400px] flex-col rounded-md border-1 border-zinc-700 bg-zinc-800 p-4 transition-transform duration-200"
+        class="popup flex w-[400px] flex-col rounded-md border-1 border-zinc-700 bg-zinc-800 p-4 transition-transform duration-200"
       <% } else { %>
-        class="create-popup flex w-[400px] translate-y-8 scale-75 flex-col rounded-md border-1 border-zinc-700 bg-zinc-800 p-4 transition-transform duration-200"
+        class="popup flex w-[400px] translate-y-8 scale-75 flex-col rounded-md border-1 border-zinc-700 bg-zinc-800 p-4 transition-transform duration-200"
       <% } %>
     >
       <div class="mb-2 flex items-center justify-between">
-        <h3 class="text-lg font-semibold">New <%= createTitle %></h3>
-        <button class="close-create-button" aria-label="Close" type="button">
+        <h3 class="text-lg font-semibold">New <%= title %></h3>
+        <button id="close-file-button" aria-label="Close" type="button">
           <i
             class="size-5 cursor-pointer rounded-md hover:text-zinc-500"
             data-lucide="x"
@@ -28,7 +26,6 @@
         </button>
       </div>
       <%- include("errors.ejs", { inDarkMode: true }) %>
-      <% if (locals.hasFileInput) { %>
       <input
         aria-label="Upload File"
         type="file"
@@ -50,18 +47,6 @@
           class="mt-2 w-full rounded-md border-1 border-zinc-700 bg-zinc-900 p-2 text-sm text-white placeholder:text-zinc-500 focus:border-amber-500 focus:outline-none"
         />
       </div>
-      <% } else { %>
-      <input
-        aria-label="<%= `${createName} Name` %>"
-        placeholder="<%= `${createTitle} Name` %>"
-        name="<%= `${createName}Name`%>"
-        id="<%= `${createName}Name` %>"
-        type="text"
-        minlength="1"
-        minlength="255"
-        class="mt-2 w-full rounded-md border-1 border-zinc-700 bg-zinc-900 p-2 text-sm text-white placeholder:text-zinc-500 focus:border-amber-500 focus:outline-none"
-      />
-      <% } %>
       <input type="hidden" name="folderId" id="folderId" value="<%= folderId %>">
       <div class="mt-4 flex justify-end">
         <button
