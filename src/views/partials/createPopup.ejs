@@ -1,5 +1,9 @@
 <section
-  class="create-container pointer-events-none absolute inset-0 size-full bg-black/70 opacity-0 backdrop-blur-sm transition-opacity"
+  <% if (isVisible) { %>
+    class="create-container pointer-events-auto absolute inset-0 size-full bg-black/70 opacity-100 backdrop-blur-sm transition-opacity"
+  <% } else { %>
+    class="create-container pointer-events-none absolute inset-0 size-full bg-black/70 opacity-0 backdrop-blur-sm transition-opacity"
+  <% } %>
 >
   <div class="flex h-full w-full items-center justify-center">
     <form
@@ -8,7 +12,11 @@
       <% if (locals.hasFileInput) { %>
         enctype="multipart/form-data"
       <% } %>
-      class="create-popup flex w-[400px] translate-y-8 scale-75 flex-col rounded-md border-1 border-zinc-700 bg-zinc-800 p-4 transition-transform duration-200"
+      <% if (isVisible) { %>
+        class="create-popup flex w-[400px] flex-col rounded-md border-1 border-zinc-700 bg-zinc-800 p-4 transition-transform duration-200"
+      <% } else { %>
+        class="create-popup flex w-[400px] translate-y-8 scale-75 flex-col rounded-md border-1 border-zinc-700 bg-zinc-800 p-4 transition-transform duration-200"
+      <% } %>
     >
       <div class="mb-2 flex items-center justify-between">
         <h3 class="text-lg font-semibold">New <%= createTitle %></h3>
@@ -19,6 +27,7 @@
           ></i>
         </button>
       </div>
+      <%- include("errors.ejs", { inDarkMode: true }) %>
       <% if (locals.hasFileInput) { %>
       <input
         aria-label="Upload File"
@@ -28,13 +37,15 @@
         class="mt-2 w-full rounded-md border-1 border-zinc-700 bg-zinc-900 p-2 text-sm placeholder:text-zinc-500 focus:border-amber-500 focus:outline-none"
       />
       <div id="file-name-input" class="my-3 hidden">
-        <label class="text-zinc-200" for="file-name">File name</label>
+        <label class="text-zinc-200" for="fileName">File name</label>
         <input
-          name="file-name"
-          id="file-name"
+          name="fileName"
+          id="fileName"
           aria-label="File Name"
           placeholder="File Name"
           type="text"
+          minlength="1"
+          minlength="255"
           class="mt-2 w-full rounded-md border-1 border-zinc-700 bg-zinc-900 p-2 text-sm text-white placeholder:text-zinc-500 focus:border-amber-500 focus:outline-none"
         />
       </div>
@@ -45,10 +56,12 @@
         name="<%= `${createName}Name`%>"
         id="<%= `${createName}Name` %>"
         type="text"
+        minlength="1"
+        minlength="255"
         class="mt-2 w-full rounded-md border-1 border-zinc-700 bg-zinc-900 p-2 text-sm text-white placeholder:text-zinc-500 focus:border-amber-500 focus:outline-none"
       />
-      <input type="hidden" id="folderPath" name="folderPath" value="<%= folderPath || "" %>">
       <% } %>
+      <input type="hidden" name="folderId" id="folderId" value="<%= folderId %>">
       <div class="mt-4 flex justify-end">
         <button
           type="submit"

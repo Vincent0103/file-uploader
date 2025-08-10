@@ -2,8 +2,21 @@ import db from "../db/queries";
 import { getNodesFromPath } from "../utils/utils";
 
 const folderController = (() => {
-  const folderGet = async (req, res) => {
-    let { folderId } = req.params;
+  const getIndexViewParams = async (
+    req,
+    hasCreateFolderErrors = false,
+    hasCreateFileErrors = false,
+  ) => {
+    let folderId;
+
+    // not comparing with typical comparison like !req.params.folderId
+    // because folderId can be equal to 0.
+    if (typeof req.params.folderId !== "undefined") {
+      folderId = req.params.folderId;
+    } else {
+      folderId = req.body.folderId;
+    }
+
     folderId = parseInt(folderId, 10);
 
     const { id: userId, username } = req.user;
@@ -25,15 +38,23 @@ const folderController = (() => {
       userId,
     );
 
-    return res.render("index", {
+    return {
       user: req.user,
+      folderId,
       nodes,
       folders,
       sidebarFolders,
-    });
+      hasCreateFolderErrors,
+      hasCreateFileErrors,
+    };
   };
 
-  return { folderGet };
+  const folderGet = async (req, res) => {
+    const params = await getIndexViewParams(req);
+    return res.render("index", { ...params });
+  };
+
+  return { folderGet, getIndexViewParams };
 })();
 
 export default folderController;

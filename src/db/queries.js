@@ -78,6 +78,9 @@ const db = (() => {
         id: folderId,
         userId,
       },
+      include: {
+        successor: true,
+      },
     });
 
     return folder;
@@ -146,6 +149,14 @@ const db = (() => {
     return parentFolder;
   };
 
+  const doesFolderExistsInPath = async (userId, filename, folderId) => {
+    const folder = await db.getFolderById(userId, folderId);
+
+    const successorNames = folder.successor.map(({ name }) => name);
+    if (successorNames.includes(filename)) return true;
+    return false;
+  };
+
   return {
     createUser,
     initFolders,
@@ -158,6 +169,7 @@ const db = (() => {
     getSidebarFolders,
     getFolderByNameAndPath,
     getPredecessorByPath,
+    doesFolderExistsInPath,
   };
 })();
 

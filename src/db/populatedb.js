@@ -10,8 +10,9 @@ const main = async () => {
   // await db.createFolder(3, "images", "/home/", 27);
   // await db.createFolder(3, "videos", "/home/", 27);
   // await db.createFolder(3, "music", "/home/", 27);
-  const folders = await prisma.entity.findMany();
-  console.log(folders);
+  // const folders = await prisma.entity.findMany();
+  const folderExists = await db.doesFolderExistsInPath(6, "music", 42);
+  console.log(folderExists);
 };
 
 main()

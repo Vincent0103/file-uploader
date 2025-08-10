@@ -79,9 +79,10 @@
     </div>
     <%- include("partials/createPopup.ejs", { createPath: "/create/folder",
     createName: "folder", createTitle: "Folder", buttonName: "Create",
-    folderPath: ""}) %> <%- include("partials/createPopup.ejs", { createPath:
-    "/create/file", createName: "file", createTitle: "File", hasFileInput: true,
-    buttonName: "Upload" }) %>
+    isVisible: hasCreateFolderErrors, folderId}) %> <%-
+    include("partials/createPopup.ejs", { createPath: "/create/file",
+    createName: "file", createTitle: "File", hasFileInput: true, buttonName:
+    "Upload", isVisible: hasCreateFileErrors }) %>
     <script src="https://unpkg.com/lucide@latest"></script>
     <script>
       lucide.createIcons();
