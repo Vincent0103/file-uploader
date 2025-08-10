@@ -59,7 +59,8 @@ const signupController = (() => {
           });
         }
 
-        await db.createUser({ username, password });
+        const { id: userId } = await db.createUser({ username, password });
+        await db.initFolders(userId, username);
         return res.redirect("/login");
       } catch (err) {
         console.error(err);

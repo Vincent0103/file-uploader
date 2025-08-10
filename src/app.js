@@ -77,8 +77,8 @@ app.get("/", async (req, res) => {
     return res.redirect("/signup");
   }
 
-  const { id: userId } = req.user;
-  const folder = await db.getFolderByNameAndPath(userId, "home", "/");
+  const { id: userId, username } = req.user;
+  const folder = await db.getFolderByNameAndPath(userId, username, "/");
 
   return res.redirect(`/folder/${folder.id}`);
 });

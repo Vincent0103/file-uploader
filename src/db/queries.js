@@ -9,12 +9,23 @@ const db = (() => {
     const salt = await bcrypt.genSalt();
     const password = await bcrypt.hash(unhashedPassword, salt);
 
-    await prisma.user.create({
+    const user = await prisma.user.create({
       data: {
         username,
         password,
       },
     });
+
+    return user;
+  };
+
+  const initFolders = async (userId, username) => {
+    const { id: folderParentId } = await db.createFolder(userId, username, "/");
+
+    await db.createFolder(userId, "documents", `/${username}/`, folderParentId);
+    await db.createFolder(userId, "images", `/${username}/`, folderParentId);
+    await db.createFolder(userId, "videos", `/${username}/`, folderParentId);
+    await db.createFolder(userId, "music", `/${username}/`, folderParentId);
   };
 
   const getUserByUsername = async (username) => {
@@ -57,6 +68,8 @@ const db = (() => {
         }),
       },
     });
+
+    return folder;
   };
 
   const getFolderById = async (userId, folderId) => {
@@ -82,6 +95,22 @@ const db = (() => {
     });
 
     return foldersAndFiles;
+  };
+
+  const getSidebarFolders = async (userId, username) => {
+    const folders = await prisma.entity.findMany({
+      where: {
+        OR: [
+          { name: username },
+          { name: "documents" },
+          { name: "images" },
+          { name: "videos" },
+          { name: "music" },
+        ],
+      },
+    });
+
+    return folders;
   };
 
   const getFolderByNameAndPath = async (userId, name, path) => {
@@ -118,12 +147,14 @@ const db = (() => {
 
   return {
     createUser,
+    initFolders,
     getUserByUsername,
     getUserById,
     hasUserByUsername,
     createFolder,
     getFolderById,
     getFolders,
+    getSidebarFolders,
     getFolderByNameAndPath,
     getPredecessorByPath,
   };

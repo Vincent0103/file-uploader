@@ -6,16 +6,22 @@ const folderController = (() => {
     let { folderId } = req.params;
     folderId = parseInt(folderId, 10);
 
-    const { id: userId } = req.user;
+    const { id: userId, username } = req.user;
 
     const folders = await db.getFolders(userId, folderId);
+    const sidebarFolders = await db.getSidebarFolders(userId, username);
     const mainFolder = await db.getFolderById(userId, folderId);
     const nodes = await getNodesObject(
       mainFolder.path.concat(mainFolder.name),
       userId,
     );
 
-    return res.render("index", { user: req.user, nodes, folders });
+    return res.render("index", {
+      user: req.user,
+      nodes,
+      folders,
+      sidebarFolders,
+    });
   };
 
   return { folderGet };
