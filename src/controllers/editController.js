@@ -27,11 +27,10 @@ const loginController = (() => {
         });
       }
 
-      const { id: userId } = req.user;
       const { folderName } = req.body;
       const parentFolderId = parseInt(req.body.parentFolderId, 10);
 
-      const folder = await db.editFolder(userId, folderId, folderName);
+      const folder = await db.editFolder(folderId, folderName);
       console.log(`Edited: ${folder}`);
 
       return res.redirect(`/folder/${parentFolderId}`);
@@ -56,7 +55,6 @@ const loginController = (() => {
         });
       }
 
-      const { id: userId } = req.user;
       const { fileName } = req.body;
       const parentFolderId = parseInt(req.body.parentFolderId, 10);
 
@@ -65,7 +63,7 @@ const loginController = (() => {
         storagePath: req.file.path,
         extension: req.file.mimetype,
       };
-      await db.editFile(userId, fileId, fileName, fileInfos);
+      await db.editFile(fileId, fileName, fileInfos);
       return res.redirect(`/folder/${parentFolderId}`);
     },
   ];

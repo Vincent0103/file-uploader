@@ -94,7 +94,7 @@ const DOMMethods = (() => {
         popupDOM.inputs.parentFolderId.value = parentFolderId;
         popupDOM.submitButton.textContent = "Delete";
 
-        popupDOM.popup.action = `/delete/${entityType}/${entityId}`;
+        popupDOM.popup.action = `/delete/${entityId}`;
       }
     }
   };

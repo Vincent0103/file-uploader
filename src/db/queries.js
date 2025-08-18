@@ -72,10 +72,9 @@ const db = (() => {
     return folder;
   };
 
-  const editFolder = async (userId, folderId, foldername) => {
+  const editFolder = async (folderId, foldername) => {
     const folder = await prisma.entity.update({
       where: {
-        userId,
         id: folderId,
       },
       data: {
@@ -122,10 +121,9 @@ const db = (() => {
     return file;
   };
 
-  const editFile = async (userId, fileId, filename, fileInfos) => {
+  const editFile = async (fileId, filename, fileInfos) => {
     const file = await prisma.entity.update({
       where: {
-        userId,
         id: fileId,
       },
       data: {
@@ -139,6 +137,27 @@ const db = (() => {
     });
 
     return file;
+  };
+
+  const deleteEntity = async (entityId, deletedEntities = []) => {
+    const childEntities = await prisma.entity.findMany({
+      where: {
+        predecessorId: entityId,
+      },
+    });
+
+    for (const entity of childEntities) {
+      const childDeleted = await deleteEntity(entity.id);
+      deletedEntities = deletedEntities.concat(childDeleted);
+    }
+
+    const deletedEntity = await prisma.entity.delete({
+      where: {
+        id: entityId,
+      },
+    });
+
+    return deletedEntities.concat(deletedEntity);
   };
 
   const getFolderById = async (userId, folderId) => {
@@ -236,6 +255,7 @@ const db = (() => {
     editFolder,
     createFile,
     editFile,
+    deleteEntity,
     getFolderById,
     getEntities,
     getSidebarFolders,

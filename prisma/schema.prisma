@@ -46,6 +46,6 @@ model File {
   size        Int
   storagePath String
   extension   String
-  entity      Entity @relation(fields: [entityId], references: [id])
+  entity      Entity @relation(fields: [entityId], references: [id], onDelete: Cascade)
   entityId    Int    @unique
 }

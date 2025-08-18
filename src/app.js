@@ -13,6 +13,7 @@ import db from "./db/queries";
 import createRouter from "./routes/createRouter";
 import folderRouter from "./routes/folderRouter";
 import editRouter from "./routes/editRouter";
+import deleteRouter from "./routes/deleteRouter";
 
 const app = express();
 
@@ -88,6 +89,7 @@ app.use("/signup", signupRouter);
 app.use("/login", loginRouter);
 app.use("/create", createRouter);
 app.use("/edit", editRouter);
+app.use("/delete", deleteRouter);
 app.use("/logout", logoutRouter);
 app.use("/folder", folderRouter);
 
