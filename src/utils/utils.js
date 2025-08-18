@@ -1,3 +1,4 @@
+import { body } from "express-validator";
 import db from "../db/queries";
 
 const validationErrorMessages = (() => {
@@ -20,6 +21,28 @@ const validationErrorMessages = (() => {
     matchErr,
   };
 })();
+
+const validateEntity = (name, attributeName, messageName) => [
+  body(attributeName)
+    .trim()
+    .isLength({ min: 1, max: 255 })
+    .withMessage(`${messageName} ${validationErrorMessages.lengthErr(1, 255)}`)
+    .custom(async (value, { req }) => {
+      const { id: userId } = req.user;
+      const parentFolderId = parseInt(req.body.parentFolderId, 10);
+
+      const entityExists = await db.doesEntityExistsInPath(
+        userId,
+        value,
+        parentFolderId,
+      );
+
+      if (entityExists) {
+        throw new Error(`${name} "${value}" already exists.`);
+      }
+      return true;
+    }),
+];
 
 const getNodesFromPath = async (srcPath, userId) => {
   const nodes = [];
@@ -50,4 +73,4 @@ const getNodesFromPath = async (srcPath, userId) => {
   return nodes;
 };
 
-export { validationErrorMessages, getNodesFromPath };
+export { validationErrorMessages, validateEntity, getNodesFromPath };

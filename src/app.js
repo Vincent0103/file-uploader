@@ -12,6 +12,7 @@ import logoutRouter from "./routes/logoutRouter";
 import db from "./db/queries";
 import createRouter from "./routes/createRouter";
 import folderRouter from "./routes/folderRouter";
+import editRouter from "./routes/editRouter";
 
 const app = express();
 
@@ -86,6 +87,7 @@ app.get("/", async (req, res) => {
 app.use("/signup", signupRouter);
 app.use("/login", loginRouter);
 app.use("/create", createRouter);
+app.use("/edit", editRouter);
 app.use("/logout", logoutRouter);
 app.use("/folder", folderRouter);
 

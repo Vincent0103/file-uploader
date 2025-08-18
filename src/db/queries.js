@@ -53,7 +53,7 @@ const db = (() => {
     return !!user;
   };
 
-  const createFolder = async (userId, foldername, path, folderParentId) => {
+  const createFolder = async (userId, foldername, path, parentFolderId) => {
     const folder = await prisma.entity.create({
       data: {
         name: foldername,
@@ -63,9 +63,23 @@ const db = (() => {
             id: userId,
           },
         },
-        ...(folderParentId && {
-          predecessor: { connect: { id: folderParentId } },
+        ...(parentFolderId && {
+          predecessor: { connect: { id: parentFolderId } },
         }),
+      },
+    });
+
+    return folder;
+  };
+
+  const editFolder = async (userId, folderId, foldername) => {
+    const folder = await prisma.entity.update({
+      where: {
+        userId,
+        id: folderId,
+      },
+      data: {
+        name: foldername,
       },
     });
 
@@ -200,6 +214,7 @@ const db = (() => {
     getUserById,
     hasUserByUsername,
     createFolder,
+    editFolder,
     createFile,
     getFolderById,
     getEntities,

@@ -6,7 +6,7 @@ import db from "../db/queries";
 import folderController from "./folderController";
 
 const loginController = (() => {
-  const createFolderPost = [
+  const editFolderPost = [
     validateEntity("Folder", "folderName", "Foldername"),
     async (req, res) => {
       const errors = validationResult(req);
@@ -22,11 +22,10 @@ const loginController = (() => {
       const { folderName } = req.body;
       const parentFolderId = parseInt(req.body.parentFolderId, 10);
 
-      const { path: folderPath } = await db.getFolderById(
-        userId,
-        parentFolderId,
-      );
-      await db.createFolder(userId, folderName, folderPath, parentFolderId);
+      const { folderId } = req.params;
+      const folder = await db.editFolder(userId, folderId, folderName);
+      console.log(`Edited: ${folder}`);
+
       return res.redirect(`/folder/${parentFolderId}`);
     },
   ];
@@ -34,7 +33,7 @@ const loginController = (() => {
   const destinationPath = path.join(__dirname, "../../public/uploads");
   const upload = multer({ dest: destinationPath });
 
-  const createFilePost = [
+  const editFilePost = [
     upload.single("uploadedFile"),
     validateEntity("File", "fileName", "Filename"),
     async (req, res) => {
@@ -63,7 +62,7 @@ const loginController = (() => {
     },
   ];
 
-  return { createFolderPost, createFilePost };
+  return { editFolderPost, editFilePost };
 })();
 
 export default loginController;

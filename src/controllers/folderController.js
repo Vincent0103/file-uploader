@@ -7,21 +7,22 @@ const folderController = (() => {
     hasCreateFolderErrors = false,
     hasCreateFileErrors = false,
   ) => {
-    let folderId;
+    let parentFolderId;
 
     // not comparing with typical comparison like !req.params.folderId
     // because folderId can be equal to 0.
     if (typeof req.params.folderId !== "undefined") {
-      folderId = req.params.folderId;
+      parentFolderId = req.params.folderId;
     } else {
-      folderId = req.body.folderId;
+      // folderId can come from a form's body when submitting either the folder or file popup
+      parentFolderId = req.body.parentFolderId;
     }
 
-    folderId = parseInt(folderId, 10);
+    parentFolderId = parseInt(parentFolderId, 10);
 
     const { id: userId, username } = req.user;
 
-    const entities = await db.getEntities(userId, folderId);
+    const entities = await db.getEntities(userId, parentFolderId);
 
     const iconNames = ["home", "file-text", "image", "film", "music"];
     const sidebarFolders = (await db.getSidebarFolders(userId, username)).map(
@@ -32,15 +33,15 @@ const folderController = (() => {
       }),
     );
 
-    const mainFolder = await db.getFolderById(userId, folderId);
+    const parentFolder = await db.getFolderById(userId, parentFolderId);
     const nodes = await getNodesFromPath(
-      mainFolder.path.concat(mainFolder.name),
+      parentFolder.path.concat(parentFolder.name),
       userId,
     );
 
     return {
       user: req.user,
-      folderId,
+      parentFolderId,
       nodes,
       entities,
       sidebarFolders,
