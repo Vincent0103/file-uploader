@@ -51,7 +51,24 @@ const DOMMethods = (() => {
     }
   };
 
-  return { toggleModal, closePopup, openPopup, onFileSubmission };
+  const updatePopupContent = (entity, entityType, isCreating) => {
+    const titledEntityType = entityType === "folder" ? "Folder" : "File";
+    if (isCreating) {
+      entity.title.textContent = `New ${titledEntityType}`;
+      entity.submitButton.textContent = "Create";
+    } else {
+      entity.title.textContent = `Edit ${titledEntityType}`;
+      entity.submitButton.textContent = "Edit";
+    }
+  };
+
+  return {
+    toggleModal,
+    closePopup,
+    openPopup,
+    onFileSubmission,
+    updatePopupContent,
+  };
 })();
 
 const createEntityDOMObject = (entityType) => {
@@ -63,10 +80,12 @@ const createEntityDOMObject = (entityType) => {
   const entity = {
     container,
     popup: container.querySelector(".popup"),
+    title: container.querySelector(".title"),
     inputs: container.querySelectorAll("input[type=file], input[type=text]"),
     openPopupButton: document.querySelector(
       `${containerSelector}.open-popup-button`,
     ),
+    submitButton: container.querySelector("button[type=submit]"),
     closeButton: container.querySelector(".close-button"),
   };
 

@@ -1,21 +1,28 @@
 // eslint-disable-next-line import/extensions
-import utils, { createEntityDOMObject } from "./utils.js";
+import DOMMethods, { createEntityDOMObject } from "./utils.js";
 
 const createAndEditRelated = (folder, file) => {
   [folder, file].forEach(
     ({ container, popup, inputs, openPopupButton, closeButton }) => {
-      openPopupButton.addEventListener("click", () =>
-        utils.openPopup(container, popup, inputs[0]),
-      );
+      openPopupButton.addEventListener("click", (event) => {
+        const button = event.target.closest(".open-popup-button");
+        if (button) {
+          const { entityType } = button.dataset;
+          const entity = entityType === "folder" ? folder : file;
+
+          DOMMethods.updatePopupContent(entity, entityType, true);
+          DOMMethods.openPopup(container, popup, inputs[0]);
+        }
+      });
 
       closeButton.addEventListener("click", () =>
-        utils.closePopup(container, popup, inputs),
+        DOMMethods.closePopup(container, popup, inputs),
       );
 
       // Close popup when clicking outside the popup
       container.addEventListener("click", (event) => {
         if (!popup.contains(event.target)) {
-          utils.closePopup(container, popup, inputs);
+          DOMMethods.closePopup(container, popup, inputs);
         }
       });
     },
@@ -26,9 +33,10 @@ const createAndEditRelated = (folder, file) => {
     if (button) {
       const entityItem = button.closest(".entity-item");
       const { entityType } = entityItem.dataset;
-      const entity = entityType === "folder" ? folder : file;
 
-      utils.openPopup(entity.container, entity.popup, entity.inputs[0]);
+      const entity = entityType === "folder" ? folder : file;
+      DOMMethods.updatePopupContent(entity, entityType, false);
+      DOMMethods.openPopup(entity.container, entity.popup, entity.inputs[0]);
     }
   });
 };
@@ -48,7 +56,7 @@ window.addEventListener("DOMContentLoaded", () => {
         const modal = entityItem.querySelector(".more-modal");
         const entityLink = entityItem.querySelector(".entity-link");
         const moreOptionsContainer = entityItem.querySelector("div.absolute");
-        utils.toggleModal(modal, entityLink, moreOptionsContainer);
+        DOMMethods.toggleModal(modal, entityLink, moreOptionsContainer);
       }
       return;
     }
@@ -59,7 +67,7 @@ window.addEventListener("DOMContentLoaded", () => {
       if (entityItem && !entityItem.contains(event.target)) {
         const entityLink = entityItem.querySelector(".entity-link");
         const moreOptionsContainer = entityItem.querySelector("div.absolute");
-        utils.toggleModal(modal, entityLink, moreOptionsContainer);
+        DOMMethods.toggleModal(modal, entityLink, moreOptionsContainer);
       }
     });
   });
