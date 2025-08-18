@@ -86,7 +86,8 @@
         </section>
       </main>
     </div>
-    <%- include("partials/folderPopup.ejs", { ...popups.folder, isVisible:
+    <%- include("partials/deletePopup.ejs") %> <%-
+    include("partials/folderPopup.ejs", { ...popups.folder, isVisible:
     locals.hasPopupFolderErrors, parentFolderId}) %> <%-
     include("partials/filePopup.ejs", { ...popups.file, isVisible:
     locals.hasPopupFileErrors, parentFolderId }) %>

@@ -39,9 +39,10 @@ const folderController = (() => {
       userId,
     );
 
+    const CRUDType = isCreatingEntity ? "create" : "edit";
     const popups = {
-      folder: getPopupObject(isCreatingEntity, "folder", entityId),
-      file: getPopupObject(isCreatingEntity, "file", entityId),
+      folder: getPopupObject(CRUDType, "folder", entityId),
+      file: getPopupObject(CRUDType, "file", entityId),
     };
 
     return {

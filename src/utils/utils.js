@@ -53,10 +53,10 @@ const getNodesFromPath = async (srcPath, userId) => {
   // so that it runs *sequentially* and doesn't cause race conditions.
 
   const lastIndexOfSlash = srcPath.lastIndexOf("/");
-  const path = srcPath.slice(0, lastIndexOfSlash + 1);
+  const narrowedPath = srcPath.slice(0, lastIndexOfSlash + 1);
   const name = srcPath.slice(lastIndexOfSlash + 1, srcPath.length);
 
-  let folder = await db.getFolderByNameAndPath(userId, name, path);
+  let folder = await db.getFolderByNameAndPath(userId, name, narrowedPath);
 
   nodes.push({
     name,
@@ -77,13 +77,13 @@ const getNodesFromPath = async (srcPath, userId) => {
 
 const toTitleCase = (str) => str.charAt(0).toUpperCase() + str.slice(1);
 
-const getPopupObject = (isCreating, entityType, entityId = null) => {
-  let path;
+const getPopupObject = (CRUDType, entityType, entityId = null) => {
+  let entityPath;
   let title;
   let submitButtonName;
 
-  if (isCreating) {
-    path = `/create/${entityType}`;
+  if (CRUDType === "create") {
+    entityPath = `/create/${entityType}`;
     title = `New ${toTitleCase(entityType)}`;
     submitButtonName = entityType === "folder" ? "Create" : "Upload";
   } else {
@@ -92,13 +92,20 @@ const getPopupObject = (isCreating, entityType, entityId = null) => {
         `Entity ID: ${entityId} does not exist upon to change the link's url for edition`,
       );
     }
-    path = `/edit/${entityType}/${entityId}`;
-    title = `Edit ${toTitleCase(entityType)}`;
-    submitButtonName = "Edit";
+
+    if (CRUDType === "edit") {
+      entityPath = `/edit/${entityType}/${entityId}`;
+      title = `Edit ${toTitleCase(entityType)}`;
+      submitButtonName = "Edit";
+    } else {
+      entityPath = `/delete/${entityType}/${entityId}`;
+      title = `Delete ${toTitleCase(entityType)}`;
+      submitButtonName = "Delete";
+    }
   }
 
   const popup = {
-    path,
+    path: entityPath,
     name: entityType,
     title,
     submitButtonName,

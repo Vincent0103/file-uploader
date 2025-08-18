@@ -1,0 +1,45 @@
+<section
+  class="deletion popup-container pointer-events-none absolute inset-0 z-20 size-full bg-black/70 opacity-0 backdrop-blur-sm transition-opacity"
+>
+  <div class="flex h-full w-full items-center justify-center">
+    <form
+      method="POST"
+      class="popup flex w-[400px] translate-y-8 scale-75 flex-col rounded-md border-1 border-zinc-700 bg-zinc-800 p-4 transition-transform duration-200"
+    >
+      <div class="mb-2 flex items-center justify-between">
+        <h3 class="title text-lg font-semibold"></h3>
+        <button class="close-button" aria-label="Close" type="button">
+          <i
+            class="size-5 cursor-pointer rounded-md hover:text-zinc-500"
+            data-lucide="x"
+          ></i>
+        </button>
+      </div>
+
+      <%- include("errors.ejs", { inDarkMode: true }) %>
+
+      <p class="mt-2 text-sm text-zinc-200">
+        Are you sure you want to delete <%= locals.name || "folder" %> "<span
+          class="font-semibold"
+          ><%= locals.entityName || "mario"%></span
+        >"?
+      </p>
+      <p class="text-sm text-zinc-200">This action cannot be undone.</p>
+
+      <!-- Hidden fields -->
+      <input type="hidden" name="entityId" id="entityId" />
+      <input type="hidden" name="entityType" id="entityType" />
+      <input type="hidden" name="parentFolderId" id="parentFolderId" />
+
+      <div class="mt-4 flex justify-end gap-2">
+        <button
+          type="submit"
+          class="flex cursor-pointer items-center gap-2 rounded-md bg-rose-600 px-4 py-2 text-sm font-semibold text-white hover:bg-rose-700"
+        >
+          <i class="size-5" data-lucide="trash-2"></i>
+          <span>Delete</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</section>

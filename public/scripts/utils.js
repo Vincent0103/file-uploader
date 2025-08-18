@@ -18,6 +18,8 @@ const DOMMethods = (() => {
     container.classList.remove("pointer-events-auto");
     popup.classList.add("scale-75", "translate-y-8");
 
+    if (!inputsParams) return;
+
     // Make the file name input appear on file submission
     inputsParams.forEach((input) => {
       const fileNameContainer = document.getElementById("file-name-container");
@@ -41,6 +43,9 @@ const DOMMethods = (() => {
     container.classList.add("opacity-100");
     container.classList.add("pointer-events-auto");
     popup.classList.remove("scale-75", "translate-y-8");
+
+    if (!firstInput) return;
+
     firstInput.focus();
 
     // Make the file name input appear on file submission
@@ -54,27 +59,35 @@ const DOMMethods = (() => {
   const updatePopupContent = (
     entityParam,
     entityType,
-    isCreating,
+    CRUDType,
     entityId = null,
   ) => {
     const titledEntityType = entityType === "folder" ? "Folder" : "File";
     const entity = entityParam;
-    if (isCreating) {
+    if (CRUDType === "create") {
       entity.title.textContent = `New ${titledEntityType}`;
       entity.submitButton.textContent =
         entityType === "folder" ? "Create" : "Upload";
 
       entity.popup.action = `/create/${entityType}`;
     } else {
-      entity.title.textContent = `Edit ${titledEntityType}`;
-      entity.submitButton.textContent = "Edit";
-
       if (!entityId) {
         throw new Error(
           `Entity ID: ${entityId} does not exist upon to change the link's url for edition`,
         );
       }
-      entity.popup.action = `/edit/${entityType}/${entityId}`;
+
+      if (CRUDType === "edit") {
+        entity.title.textContent = `Edit ${titledEntityType}`;
+        entity.submitButton.textContent = "Edit";
+
+        entity.popup.action = `/edit/${entityType}/${entityId}`;
+      } else {
+        entity.title.textContent = `Delete ${titledEntityType}`;
+        entity.submitButton.textContent = "Delete";
+
+        entity.popup.action = `/delete/${entityType}/${entityId}`;
+      }
     }
   };
 
@@ -87,26 +100,34 @@ const DOMMethods = (() => {
   };
 })();
 
-const createEntityDOMObject = (entityType) => {
-  const containerSelector = entityType === "folder" ? ".folder" : ".file";
+const createPopupDOMObject = (entityType, forDeletion = false) => {
+  const popupDOM = {};
+  const containerSelector = forDeletion ? ".deletion" : `.${entityType}`;
+
   const container = document.querySelector(
     `${containerSelector}.popup-container`,
   );
 
-  const entity = {
-    container,
-    popup: container.querySelector(".popup"),
-    title: container.querySelector(".title"),
-    inputs: container.querySelectorAll("input[type=file], input[type=text]"),
-    openPopupButton: document.querySelector(
-      `${containerSelector}.open-popup-button`,
-    ),
-    submitButton: container.querySelector("button[type=submit]"),
-    closeButton: container.querySelector(".close-button"),
-  };
+  popupDOM.container = container;
 
-  return entity;
+  if (!forDeletion) {
+    const inputs = container.querySelectorAll(
+      "input[type=file], input[type=text]",
+    );
+    const openPopupButton = document.querySelector(
+      `${containerSelector}.open-popup-button`,
+    );
+    popupDOM.inputs = inputs;
+    popupDOM.openPopupButton = openPopupButton;
+  }
+
+  popupDOM.popup = container.querySelector(".popup");
+  popupDOM.title = container.querySelector(".title");
+  popupDOM.submitButton = container.querySelector("button[type=submit]");
+  popupDOM.closeButton = container.querySelector(".close-button");
+
+  return popupDOM;
 };
 
 export default DOMMethods;
-export { createEntityDOMObject };
+export { createPopupDOMObject };

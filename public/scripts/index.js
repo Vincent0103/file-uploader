@@ -1,7 +1,7 @@
 // eslint-disable-next-line import/extensions
-import DOMMethods, { createEntityDOMObject } from "./utils.js";
+import DOMMethods, { createPopupDOMObject } from "./utils.js";
 
-const createAndEditRelated = (folder, file) => {
+const listenCreatePopup = (folder, file) => {
   [folder, file].forEach(
     ({ container, popup, inputs, openPopupButton, closeButton }) => {
       openPopupButton.addEventListener("click", (event) => {
@@ -10,7 +10,7 @@ const createAndEditRelated = (folder, file) => {
           const { entityType } = button.dataset;
           const entity = entityType === "folder" ? folder : file;
 
-          DOMMethods.updatePopupContent(entity, entityType, true);
+          DOMMethods.updatePopupContent(entity, entityType, "create");
           DOMMethods.openPopup(container, popup, inputs[0]);
         }
       });
@@ -27,25 +27,42 @@ const createAndEditRelated = (folder, file) => {
       });
     },
   );
+};
 
-  document.addEventListener("click", (event) => {
-    const button = event.target.closest(".edit-button");
-    if (button) {
-      const entityItem = button.closest(".entity-item");
-      const { entityType, entityId } = entityItem.dataset;
+const listenEditPopup = (event, folder, file) => {
+  const button = event.target.closest(".edit-button");
+  if (button) {
+    const entityItem = button.closest(".entity-item");
+    const { entityType, entityId } = entityItem.dataset;
 
-      const entity = entityType === "folder" ? folder : file;
-      DOMMethods.updatePopupContent(entity, entityType, false, entityId);
-      DOMMethods.openPopup(entity.container, entity.popup, entity.inputs[0]);
-    }
-  });
+    const entity = entityType === "folder" ? folder : file;
+    DOMMethods.updatePopupContent(entity, entityType, "edit", entityId);
+    DOMMethods.openPopup(entity.container, entity.popup, entity.inputs[0]);
+  }
+};
+
+const listenDeletePopup = (event, deletePopup) => {
+  const button = event.target.closest(".delete-button");
+  if (button) {
+    const entityItem = button.closest(".entity-item");
+    const { entityType, entityId } = entityItem.dataset;
+
+    DOMMethods.updatePopupContent(deletePopup, entityType, "delete", entityId);
+    DOMMethods.openPopup(deletePopup.container, deletePopup.popup);
+  }
 };
 
 window.addEventListener("DOMContentLoaded", () => {
-  const folder = createEntityDOMObject("folder");
-  const file = createEntityDOMObject("file");
+  const folder = createPopupDOMObject("folder");
+  const file = createPopupDOMObject("file");
+  const deletePopup = createPopupDOMObject(null, true);
 
-  createAndEditRelated(folder, file);
+  listenCreatePopup(folder, file);
+
+  document.addEventListener("click", (event) => {
+    listenEditPopup(event, folder, file);
+    listenDeletePopup(event, deletePopup);
+  });
 
   document.addEventListener("click", (event) => {
     // Handle more-options-button click
