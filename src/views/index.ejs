@@ -54,19 +54,17 @@
           <div class="flex flex-col">
             <div class="flex gap-2 p-2">
               <button
-                id="create-folder-button"
                 data-entity-type="folder"
                 type="button"
-                class="flex cursor-pointer items-center gap-3 rounded-md border-1 border-zinc-700 bg-zinc-900 px-3 py-1.5 hover:bg-zinc-800"
+                class="folder open-popup-button flex cursor-pointer items-center gap-3 rounded-md border-1 border-zinc-700 bg-zinc-900 px-3 py-1.5 hover:bg-zinc-800"
               >
                 <i class="size-4" data-lucide="folder-plus"></i>
                 <span>New Folder</span>
               </button>
               <button
-                id="create-file-button"
                 data-entity-type="file"
                 type="button"
-                class="flex cursor-pointer items-center gap-3 rounded-md border-1 border-zinc-700 bg-zinc-900 px-3 py-1.5 hover:bg-zinc-800"
+                class="file open-popup-button flex cursor-pointer items-center gap-3 rounded-md border-1 border-zinc-700 bg-zinc-900 px-3 py-1.5 hover:bg-zinc-800"
               >
                 <i class="size-4" data-lucide="file-plus"></i>
                 <span>New File</span>
@@ -93,6 +91,6 @@
     <script>
       lucide.createIcons();
     </script>
-    <script src="/scripts/index.js"></script>
+    <script type="module" src="/scripts/index.js"></script>
   </body>
 </html>
