@@ -32,10 +32,10 @@ const createAndEditRelated = (folder, file) => {
     const button = event.target.closest(".edit-button");
     if (button) {
       const entityItem = button.closest(".entity-item");
-      const { entityType } = entityItem.dataset;
+      const { entityType, entityId } = entityItem.dataset;
 
       const entity = entityType === "folder" ? folder : file;
-      DOMMethods.updatePopupContent(entity, entityType, false);
+      DOMMethods.updatePopupContent(entity, entityType, false, entityId);
       DOMMethods.openPopup(entity.container, entity.popup, entity.inputs[0]);
     }
   });

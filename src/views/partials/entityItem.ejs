@@ -1,4 +1,8 @@
-<div data-entity-type="<%= entityType %>" class="entity-item group relative">
+<div
+  data-entity-type="<%= entityType %>"
+  data-entity-id="<%= entityId %>"
+  class="entity-item group relative"
+>
   <div
     class="absolute top-1 right-1 flex gap-2 opacity-0 group-hover:opacity-100"
   >
@@ -12,7 +16,7 @@
   </div>
   <a
     class="entity-link flex cursor-default flex-col items-center rounded-md border-1 border-zinc-800 p-2 group-hover:bg-zinc-900"
-    href="/folder/<%= folderId %>"
+    href="/folder/<%= entityId %>"
   >
     <% if (!locals.mimetype) { %> <%- include("entity-icons/folder.ejs") %> <% }
     else if (mimetype && mimetype.startsWith('image/')) { %> <%-

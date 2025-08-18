@@ -1,5 +1,5 @@
+- Update file path logic to use predecessorId instead of the actual path (join by name with "/")
 - include images in the readme for all of your projects and attract eyeballs.
-- Add userName as root folder instead of home.
 
 # file-uploader
 
