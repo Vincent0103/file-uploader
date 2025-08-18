@@ -1,8 +1,8 @@
 <section
   <% if (isVisible) { %>
-    class="folder popup-container pointer-events-auto absolute inset-0 size-full bg-black/70 opacity-100 backdrop-blur-sm transition-opacity"
+    class="folder z-20 popup-container pointer-events-auto absolute inset-0 size-full bg-black/70 opacity-100 backdrop-blur-sm transition-opacity"
   <% } else { %>
-    class="folder popup-container pointer-events-none absolute inset-0 size-full bg-black/70 opacity-0 backdrop-blur-sm transition-opacity"
+    class="folder z-20 popup-container pointer-events-none absolute inset-0 size-full bg-black/70 opacity-0 backdrop-blur-sm transition-opacity"
   <% } %>
 >
   <div class="flex h-full w-full items-center justify-center">
@@ -17,7 +17,7 @@
     >
       <div class="mb-2 flex items-center justify-between">
         <h3 class="text-lg font-semibold">New <%= title %></h3>
-        <button id="close-folder-button"  aria-label="Close" type="button">
+        <button class="close-button" aria-label="Close" type="button">
           <i
             class="size-5 cursor-pointer rounded-md hover:text-zinc-500"
             data-lucide="x"

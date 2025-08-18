@@ -10,82 +10,69 @@ const toggleModal = (modal, entityLink, moreOptionsContainer) => {
   moreOptionsContainer.classList.toggle("group-hover:opacity-100");
 };
 
-const createAndEditRelated = () => {
-  const folder = {
-    popupContainer: document.querySelector(".folder.popup-container"),
-    popup: document.querySelector(".folder .popup"),
-    createButton: document.getElementById("create-folder-button"),
-    closeButton: document.getElementById("close-folder-button"),
-  };
-  const file = {
-    popupContainer: document.querySelector(".file.popup-container"),
-    popup: document.querySelector(".file .popup"),
-    createButton: document.getElementById("create-file-button"),
-    closeButton: document.getElementById("close-file-button"),
-  };
+const closePopup = (container, popup, inputsParams) => {
+  container.classList.add("opacity-0");
+  container.classList.add("pointer-events-none");
+  container.classList.remove("opacity-100");
+  container.classList.remove("pointer-events-auto");
+  popup.classList.add("scale-75", "translate-y-8");
 
-  const closePopup = (container, popup, inputsParams) => {
-    container.classList.add("opacity-0");
-    container.classList.add("pointer-events-none");
-    container.classList.remove("opacity-100");
-    container.classList.remove("pointer-events-auto");
-    popup.classList.add("scale-75", "translate-y-8");
-
-    // Make the file name input appear on file submission
-    inputsParams.forEach((input) => {
-      const fileNameContainer = document.getElementById("file-name-container");
-      fileNameContainer.classList.add("hidden");
-      input.value = "";
-    });
-  };
-
-  const onFileSubmission = (filename) => {
+  // Make the file name input appear on file submission
+  inputsParams.forEach((input) => {
     const fileNameContainer = document.getElementById("file-name-container");
-    fileNameContainer.classList.remove("hidden");
+    fileNameContainer.classList.add("hidden");
+    input.value = "";
+  });
+};
 
-    const fileNameInput = document.getElementById("fileName");
-    fileNameInput.value = filename || "";
-    fileNameInput.focus();
-  };
+const onFileSubmission = (filename) => {
+  const fileNameContainer = document.getElementById("file-name-container");
+  fileNameContainer.classList.remove("hidden");
 
-  const openPopup = (container, popup, input) => {
-    container.classList.remove("opacity-0");
-    container.classList.remove("pointer-events-none");
-    container.classList.add("opacity-100");
-    container.classList.add("pointer-events-auto");
-    popup.classList.remove("scale-75", "translate-y-8");
-    input.focus();
+  const fileNameInput = document.getElementById("fileName");
+  fileNameInput.value = filename || "";
+  fileNameInput.focus();
+};
 
-    // Make the file name input appear on file submission
-    if (input.type === "file") {
-      input.addEventListener("change", (e) =>
-        onFileSubmission(e.target.files[0].name),
-      );
-    }
-  };
+const openPopup = (container, popup, input) => {
+  container.classList.remove("opacity-0");
+  container.classList.remove("pointer-events-none");
+  container.classList.add("opacity-100");
+  container.classList.add("pointer-events-auto");
+  popup.classList.remove("scale-75", "translate-y-8");
+  input.focus();
 
-  const inputs = [];
+  // Make the file name input appear on file submission
+  if (input.type === "file") {
+    input.addEventListener("change", (e) =>
+      onFileSubmission(e.target.files[0].name),
+    );
+  }
+};
+
+const createAndEditRelated = (folder, file) => {
+  // const inputs = [];
 
   [folder, file].forEach(
-    ({ popupContainer, popup, createButton, closeButton }, index) => {
-      popup
-        .querySelectorAll("input[type=file], input[type=text]")
-        .forEach((input) => {
-          inputs.push(input);
-        });
+    ({ container, popup, inputs, createButton, closeButton }) => {
+      // popup
+      //   .querySelectorAll("input[type=file], input[type=text]")
+      //   .forEach((input) => {
+      //     inputs.push(input);
+      //   });
 
       createButton.addEventListener("click", () =>
-        openPopup(popupContainer, popup, inputs[index]),
+        openPopup(container, popup, inputs[0]),
       );
 
       closeButton.addEventListener("click", () =>
-        closePopup(popupContainer, popup, inputs),
+        closePopup(container, popup, inputs),
       );
 
       // Close popup when clicking outside the popup
-      popupContainer.addEventListener("click", (event) => {
+      container.addEventListener("click", (event) => {
         if (!popup.contains(event.target)) {
-          closePopup(popupContainer, popup, inputs);
+          closePopup(container, popup, inputs);
         }
       });
     },
@@ -103,8 +90,8 @@ const createAndEditRelated = () => {
       // }
 
       openPopup(
-        document.querySelector(".folder .popup-container"),
-        document.querySelector(".folder .popup"),
+        folder.container,
+        folder.popup,
         document.querySelector(".folder .popup input[type=text]"),
       );
     }
@@ -112,7 +99,29 @@ const createAndEditRelated = () => {
 };
 
 window.addEventListener("DOMContentLoaded", () => {
-  createAndEditRelated();
+  const folderContainer = document.querySelector(".folder.popup-container");
+  const folder = {
+    container: folderContainer,
+    popup: folderContainer.querySelector(".popup"),
+    inputs: folderContainer.querySelectorAll(
+      "input[type=file], input[type=text]",
+    ),
+    createButton: document.getElementById("create-folder-button"),
+    closeButton: folderContainer.querySelector(".close-button"),
+  };
+
+  const fileContainer = document.querySelector(".file.popup-container");
+  const file = {
+    container: fileContainer,
+    popup: fileContainer.querySelector(".popup"),
+    inputs: fileContainer.querySelectorAll(
+      "input[type=file], input[type=text]",
+    ),
+    createButton: document.getElementById("create-file-button"),
+    closeButton: fileContainer.querySelector(".close-button"),
+  };
+
+  createAndEditRelated(folder, file);
 
   document.addEventListener("click", (event) => {
     // Handle more-options-button click
