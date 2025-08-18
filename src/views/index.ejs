@@ -79,7 +79,7 @@
               <% entities.forEach((entity) => { %> <%-
               include("partials/entityItem.ejs", { entityName: entity.name,
               entityId: entity.id, mimetype: entity.file?.extension, entityType:
-              entity.file ? "file" : "folder" }) %> <% }) %>
+              entity.file ? "file" : "folder", parentFolderId}) %> <% }) %>
             </div>
             <% } %>
           </div>

@@ -45,9 +45,17 @@ const listenDeletePopup = (event, deletePopup) => {
   const button = event.target.closest(".delete.open-popup-button");
   if (button) {
     const entityItem = button.closest(".entity-item");
-    const { entityType, entityId } = entityItem.dataset;
+    const { entityType, entityId, parentFolderId } = entityItem.dataset;
+    const entityName = entityItem.querySelector("#entity-name").textContent;
 
-    DOMMethods.updatePopupContent(deletePopup, entityType, "delete", entityId);
+    DOMMethods.updatePopupContent(
+      deletePopup,
+      entityType,
+      "delete",
+      entityId,
+      entityName,
+      parentFolderId,
+    );
     DOMMethods.openPopup(deletePopup.container, deletePopup.popup);
   }
 };

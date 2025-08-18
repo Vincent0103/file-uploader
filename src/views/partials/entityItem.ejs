@@ -1,6 +1,7 @@
 <div
-  data-entity-type="<%= entityType %>"
   data-entity-id="<%= entityId %>"
+  data-entity-type="<%= entityType %>"
+  data-parent-folder-id="<%= parentFolderId %>"
   class="entity-item group relative"
 >
   <div
@@ -27,6 +28,7 @@
     'application/pdf') { %> <%- include("entity-icons/document.ejs") %> <% }
     else { %> <%- include("entity-icons/file.ejs") %> <% } %>
     <small
+      id="entity-name"
       class="pointer-events-none -mt-1 block max-w-full truncate text-center text-sm"
       ><%= entityName %></small
     >

@@ -19,9 +19,11 @@
       <%- include("errors.ejs", { inDarkMode: true }) %>
 
       <p class="mt-2 text-sm text-zinc-200">
-        Are you sure you want to delete <%= locals.name || "folder" %> "<span
+        Are you sure you want to delete
+        <span id="delete-content-entity-type"></span> "<span
+          id="delete-content-entity-name"
           class="font-semibold"
-          ><%= locals.entityName || "mario"%></span
+        ></span
         >"?
       </p>
       <p class="text-sm text-zinc-200">This action cannot be undone.</p>

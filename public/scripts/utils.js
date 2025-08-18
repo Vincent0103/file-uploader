@@ -18,7 +18,7 @@ const DOMMethods = (() => {
     container.classList.remove("pointer-events-auto");
     popup.classList.add("scale-75", "translate-y-8");
 
-    if (!inputsParams) return;
+    if (!inputsParams || !Array.isArray(inputsParams)) return;
 
     // Make the file name input appear on file submission
     inputsParams.forEach((input) => {
@@ -61,6 +61,8 @@ const DOMMethods = (() => {
     entityType,
     CRUDType,
     entityId = null,
+    entityName = null,
+    parentFolderId = null,
   ) => {
     const titledEntityType = entityType === "folder" ? "Folder" : "File";
     const popupDOM = popupDOMParam;
@@ -85,6 +87,11 @@ const DOMMethods = (() => {
         popupDOM.popup.action = `/edit/${entityType}/${entityId}`;
       } else {
         popupDOM.title.textContent = `Delete ${titledEntityType}`;
+        popupDOM.deleteContentEntityType.textContent = entityType;
+        popupDOM.deleteContentEntityName.textContent = entityName;
+        popupDOM.inputs.entityId.value = entityId;
+        popupDOM.inputs.entityType.value = entityType;
+        popupDOM.inputs.parentFolderId.value = parentFolderId;
         popupDOM.submitButton.textContent = "Delete";
 
         popupDOM.popup.action = `/delete/${entityType}/${entityId}`;
@@ -120,6 +127,18 @@ const createPopupDOMObject = (entityType, forDeletion = false) => {
     );
     popupDOM.inputs = inputs;
     popupDOM.openPopupButton = openPopupButton;
+  } else {
+    popupDOM.deleteContentEntityName = container.querySelector(
+      "#delete-content-entity-name",
+    );
+    popupDOM.deleteContentEntityType = container.querySelector(
+      "#delete-content-entity-type",
+    );
+    popupDOM.inputs = {
+      entityId: container.querySelector("#entityId"),
+      entityType: container.querySelector("#entityType"),
+      parentFolderId: container.querySelector("#parentFolderId"),
+    };
   }
 
   popupDOM.popup = container.querySelector(".popup");
