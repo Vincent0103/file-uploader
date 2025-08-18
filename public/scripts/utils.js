@@ -52,26 +52,29 @@ const DOMMethods = (() => {
   };
 
   const updatePopupContent = (
-    entity,
+    entityParam,
     entityType,
     isCreating,
     entityId = null,
   ) => {
     const titledEntityType = entityType === "folder" ? "Folder" : "File";
+    const entity = entityParam;
     if (isCreating) {
       entity.title.textContent = `New ${titledEntityType}`;
-      entity.submitButton.textContent = "Create";
-      entity.popup.action = "/create/folder";
+      entity.submitButton.textContent =
+        entityType === "folder" ? "Create" : "Upload";
+
+      entity.popup.action = `/create/${entityType}`;
     } else {
       entity.title.textContent = `Edit ${titledEntityType}`;
       entity.submitButton.textContent = "Edit";
-      if (entityId) {
-        entity.popup.action = `/edit/folder/${entityId}`;
-      } else {
+
+      if (!entityId) {
         throw new Error(
           `Entity ID: ${entityId} does not exist upon to change the link's url for edition`,
         );
       }
+      entity.popup.action = `/edit/${entityType}/${entityId}`;
     }
   };
 

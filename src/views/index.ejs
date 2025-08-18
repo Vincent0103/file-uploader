@@ -82,12 +82,10 @@
         </section>
       </main>
     </div>
-    <%- include("partials/folderPopup.ejs", { path: "/create/folder", name:
-    "folder", title: "Folder", buttonName: "Create", isVisible:
-    hasCreateFolderErrors, parentFolderId}) %> <%-
-    include("partials/filePopup.ejs", { path: "/create/file", title: "File",
-    hasFileInput: true, buttonName: "Upload", isVisible: hasCreateFileErrors,
-    parentFolderId }) %>
+    <%- include("partials/folderPopup.ejs", { ...popups.folder, isVisible:
+    locals.hasPopupFolderErrors, parentFolderId}) %> <%-
+    include("partials/filePopup.ejs", { ...popups.file, isVisible:
+    locals.hasPopupFileErrors, parentFolderId }) %>
     <script src="https://unpkg.com/lucide@latest"></script>
     <script>
       lucide.createIcons();

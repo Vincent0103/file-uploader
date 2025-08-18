@@ -1,21 +1,21 @@
 import db from "../db/queries";
-import { getNodesFromPath } from "../utils/utils";
+import { getNodesFromPath, getPopupObject } from "../utils/utils";
 
 const folderController = (() => {
   const getIndexViewParams = async (
     req,
-    hasCreateFolderErrors = false,
-    hasCreateFileErrors = false,
+    isCreatingEntity = true,
+    entityId = null,
   ) => {
     let parentFolderId;
 
     // not comparing with typical comparison like !req.params.folderId
     // because folderId can be equal to 0.
-    if (typeof req.params.folderId !== "undefined") {
-      parentFolderId = req.params.folderId;
-    } else {
+    if (typeof req.body?.parentFolderId !== "undefined") {
       // folderId can come from a form's body when submitting either the folder or file popup
       parentFolderId = req.body.parentFolderId;
+    } else {
+      parentFolderId = req.params.folderId;
     }
 
     parentFolderId = parseInt(parentFolderId, 10);
@@ -39,14 +39,18 @@ const folderController = (() => {
       userId,
     );
 
+    const popups = {
+      folder: getPopupObject(isCreatingEntity, "folder", entityId),
+      file: getPopupObject(isCreatingEntity, "file", entityId),
+    };
+
     return {
       user: req.user,
       parentFolderId,
       nodes,
+      popups,
       entities,
       sidebarFolders,
-      hasCreateFolderErrors,
-      hasCreateFileErrors,
     };
   };
 

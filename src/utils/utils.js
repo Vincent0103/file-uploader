@@ -73,4 +73,42 @@ const getNodesFromPath = async (srcPath, userId) => {
   return nodes;
 };
 
-export { validationErrorMessages, validateEntity, getNodesFromPath };
+const toTitleCase = (str) => str.charAt(0).toUpperCase() + str.slice(1);
+
+const getPopupObject = (isCreating, entityType, entityId = null) => {
+  let path;
+  let title;
+  let submitButtonName;
+
+  if (isCreating) {
+    path = `/create/${entityType}`;
+    title = `New ${toTitleCase(entityType)}`;
+    submitButtonName = entityType === "folder" ? "Create" : "Upload";
+  } else {
+    if (!entityId) {
+      throw new Error(
+        `Entity ID: ${entityId} does not exist upon to change the link's url for edition`,
+      );
+    }
+    path = `/edit/${entityType}/${entityId}`;
+    title = `Edit ${toTitleCase(entityType)}`;
+    submitButtonName = "Edit";
+  }
+
+  const popup = {
+    path,
+    name: entityType,
+    title,
+    submitButtonName,
+    hasFileInput: entityType === "file",
+  };
+
+  return popup;
+};
+
+export {
+  validationErrorMessages,
+  validateEntity,
+  getNodesFromPath,
+  getPopupObject,
+};

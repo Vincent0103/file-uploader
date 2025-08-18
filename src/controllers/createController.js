@@ -12,10 +12,12 @@ const loginController = (() => {
       const errors = validationResult(req);
       let params;
       if (!errors.isEmpty()) {
-        params = await folderController.getIndexViewParams(req, true);
-        return res
-          .status(401)
-          .render("index", { ...params, errors: errors.array() });
+        params = await folderController.getIndexViewParams(req);
+        return res.status(401).render("index", {
+          ...params,
+          hasPopupFolderErrors: true,
+          errors: errors.array(),
+        });
       }
 
       const { id: userId } = req.user;
@@ -42,10 +44,12 @@ const loginController = (() => {
       let params;
 
       if (!errors.isEmpty()) {
-        params = await folderController.getIndexViewParams(req, false, true);
-        return res
-          .status(401)
-          .render("index", { ...params, errors: errors.array() });
+        params = await folderController.getIndexViewParams(req);
+        return res.status(401).render("index", {
+          ...params,
+          hasPopupFileErrors: true,
+          errors: errors.array(),
+        });
       }
 
       const { id: userId } = req.user;

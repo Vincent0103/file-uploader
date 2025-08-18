@@ -10,19 +10,27 @@ const loginController = (() => {
     validateEntity("Folder", "folderName", "Foldername"),
     async (req, res) => {
       const errors = validationResult(req);
+      const folderId = parseInt(req.params.folderId, 10);
+
       let params;
       if (!errors.isEmpty()) {
-        params = await folderController.getIndexViewParams(req, true);
-        return res
-          .status(401)
-          .render("index", { ...params, errors: errors.array() });
+        params = await folderController.getIndexViewParams(
+          req,
+          false,
+          folderId,
+        );
+
+        return res.status(401).render("index", {
+          ...params,
+          hasPopupFolderErrors: true,
+          errors: errors.array(),
+        });
       }
 
       const { id: userId } = req.user;
       const { folderName } = req.body;
       const parentFolderId = parseInt(req.body.parentFolderId, 10);
 
-      const { folderId } = req.params;
       const folder = await db.editFolder(userId, folderId, folderName);
       console.log(`Edited: ${folder}`);
 
@@ -38,27 +46,30 @@ const loginController = (() => {
     validateEntity("File", "fileName", "Filename"),
     async (req, res) => {
       const errors = validationResult(req);
-      let params;
+      const fileId = parseInt(req.params.fileId, 10);
 
+      let params;
       if (!errors.isEmpty()) {
-        params = await folderController.getIndexViewParams(req, false, true);
-        return res
-          .status(401)
-          .render("index", { ...params, errors: errors.array() });
+        params = await folderController.getIndexViewParams(req, false, fileId);
+        return res.status(401).render("index", {
+          ...params,
+          hasPopupFileErrors: true,
+          errors: errors.array(),
+        });
       }
 
       const { id: userId } = req.user;
       const { fileName } = req.body;
-      const folderId = parseInt(req.body.folderId, 10);
+      const parentFolderId = parseInt(req.body.parentFolderId, 10);
 
-      const { path: folderPath } = await db.getFolderById(userId, folderId);
+      const { path: folderPath } = await db.getFolderById(userId, fileId);
 
       const fileInfos = {
         size: req.file.size,
         extension: req.file.mimetype,
       };
-      await db.createFile(userId, fileName, fileInfos, folderPath, folderId);
-      return res.redirect(`/folder/${folderId}`);
+      await db.createFile(userId, fileName, fileInfos, folderPath, fileId);
+      return res.redirect(`/folder/${parentFolderId}`);
     },
   ];
 
