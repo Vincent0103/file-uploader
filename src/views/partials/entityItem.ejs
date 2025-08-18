@@ -15,7 +15,7 @@
     <%- include("moreModal.ejs") %>
   </div>
   <a
-    class="entity-link flex cursor-default flex-col items-center rounded-md border-1 border-zinc-800 p-2 group-hover:bg-zinc-900"
+    class="entity-link flex w-[130px] cursor-default flex-col items-center rounded-md border-1 border-zinc-800 p-2 group-hover:bg-zinc-900"
     href="/folder/<%= entityId %>"
   >
     <% if (!locals.mimetype) { %> <%- include("entity-icons/folder.ejs") %> <% }
@@ -26,6 +26,9 @@
     include("entity-icons/audio.ejs") %> <% } else if (mimetype ===
     'application/pdf') { %> <%- include("entity-icons/document.ejs") %> <% }
     else { %> <%- include("entity-icons/file.ejs") %> <% } %>
-    <small class="pointer-events-none -mt-1 text-sm"><%= entityName %></small>
+    <small
+      class="pointer-events-none -mt-1 block max-w-full truncate text-center text-sm"
+      ><%= entityName %></small
+    >
   </a>
 </div>

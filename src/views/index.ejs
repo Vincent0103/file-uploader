@@ -42,11 +42,15 @@
         <%- include("partials/leftSidebar.ejs", { user, sidebarFolders }) %>
         <section class="flex size-full flex-col bg-zinc-800 p-2">
           <nav class="font-light text-zinc-400">
-            <small>
+            <small class="m-1 flex gap-1">
               <% nodes.forEach((node, index) => { %>
               <span class="hover:text-zinc-300">
-                <a href="/folder/<%= node.folderId %>"><%= node.name %></a>
-                <% if (index < nodes.length - 1) { %> &gt; <% } %>
+                <a
+                  class="block max-w-[130px] truncate text-center text-sm"
+                  href="/folder/<%= node.folderId %>"
+                  ><%= node.name %><% if (index < nodes.length - 1) { %> &gt; <%
+                  } %></a
+                >
               </span>
               <% }) %>
             </small>
