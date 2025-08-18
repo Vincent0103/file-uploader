@@ -1,0 +1,61 @@
+<section
+  <% if (isVisible) { %>
+    class="file z-20 popup-container pointer-events-auto absolute inset-0 size-full bg-black/70 opacity-100 backdrop-blur-sm transition-opacity"
+  <% } else { %>
+    class="file z-20 popup-container pointer-events-none absolute inset-0 size-full bg-black/70 opacity-0 backdrop-blur-sm transition-opacity"
+  <% } %>
+>
+  <div class="flex h-full w-full items-center justify-center">
+    <form
+      action="<%= path %>"
+      method="POST"
+      enctype="multipart/form-data"
+      <% if (isVisible) { %>
+        class="popup flex w-[400px] flex-col rounded-md border-1 border-zinc-700 bg-zinc-800 p-4 transition-transform duration-200"
+      <% } else { %>
+        class="popup flex w-[400px] translate-y-8 scale-75 flex-col rounded-md border-1 border-zinc-700 bg-zinc-800 p-4 transition-transform duration-200"
+      <% } %>
+    >
+      <div class="mb-2 flex items-center justify-between">
+        <h3 class="title text-lg font-semibold"><%= title %></h3>
+        <button class="close-button" aria-label="Close" type="button">
+          <i
+            class="size-5 cursor-pointer rounded-md hover:text-zinc-500"
+            data-lucide="x"
+          ></i>
+        </button>
+      </div>
+      <%- include("errors.ejs", { inDarkMode: true }) %>
+      <input
+        aria-label="Upload File"
+        type="file"
+        name="uploadedFile"
+        id="uploadedFile"
+        accept="*"
+        class="mt-2 w-full rounded-md border-1 border-zinc-700 bg-zinc-900 p-2 text-sm placeholder:text-zinc-500 focus:border-amber-500 focus:outline-none"
+      />
+      <div id="file-name-container" class="my-3 hidden">
+        <label class="text-zinc-200" for="fileName">File name</label>
+        <input
+          name="fileName"
+          id="fileName"
+          aria-label="File Name"
+          placeholder="File Name"
+          type="text"
+          minlength="1"
+          minlength="255"
+          class="mt-2 w-full rounded-md border-1 border-zinc-700 bg-zinc-900 p-2 text-sm text-white placeholder:text-zinc-500 focus:border-amber-500 focus:outline-none"
+        />
+      </div>
+      <input type="hidden" name="parentFolderId" id="parentFolderId" value="<%= parentFolderId %>">
+      <div class="mt-4 flex justify-end">
+        <button
+          type="submit"
+          class="cursor-pointer rounded-md bg-amber-500 px-4 py-2 text-sm font-semibold text-white hover:bg-amber-600"
+        >
+          <%= submitButtonName %>
+        </button>
+      </div>
+    </form>
+  </div>
+</section>

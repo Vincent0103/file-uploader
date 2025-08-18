@@ -53,8 +53,47 @@ const db = (() => {
     return !!user;
   };
 
-  const createFolder = async (userId, filename, path, folderParentId) => {
+  const createFolder = async (userId, foldername, path, parentFolderId) => {
     const folder = await prisma.entity.create({
+      data: {
+        name: foldername,
+        path,
+        user: {
+          connect: {
+            id: userId,
+          },
+        },
+        ...(parentFolderId && {
+          predecessor: { connect: { id: parentFolderId } },
+        }),
+      },
+    });
+
+    return folder;
+  };
+
+  const editFolder = async (userId, folderId, foldername) => {
+    const folder = await prisma.entity.update({
+      where: {
+        userId,
+        id: folderId,
+      },
+      data: {
+        name: foldername,
+      },
+    });
+
+    return folder;
+  };
+
+  const createFile = async (
+    userId,
+    filename,
+    fileInfos,
+    path,
+    folderParentId,
+  ) => {
+    const { id: entityId } = await prisma.entity.create({
       data: {
         name: filename,
         path,
@@ -69,7 +108,18 @@ const db = (() => {
       },
     });
 
-    return folder;
+    const file = await prisma.file.create({
+      data: {
+        ...fileInfos,
+        entity: {
+          connect: {
+            id: entityId,
+          },
+        },
+      },
+    });
+
+    return file;
   };
 
   const getFolderById = async (userId, folderId) => {
@@ -86,7 +136,7 @@ const db = (() => {
     return folder;
   };
 
-  const getFolders = async (userId, folderId) => {
+  const getEntities = async (userId, folderId) => {
     const foldersAndFiles = await prisma.entity.findMany({
       where: {
         predecessorId: folderId,
@@ -149,10 +199,10 @@ const db = (() => {
     return parentFolder;
   };
 
-  const doesFolderExistsInPath = async (userId, filename, folderId) => {
-    const folder = await db.getFolderById(userId, folderId);
+  const doesEntityExistsInPath = async (userId, filename, entityId) => {
+    const entity = await db.getFolderById(userId, entityId);
 
-    const successorNames = folder.successor.map(({ name }) => name);
+    const successorNames = entity.successor.map(({ name }) => name);
     if (successorNames.includes(filename)) return true;
     return false;
   };
@@ -164,12 +214,14 @@ const db = (() => {
     getUserById,
     hasUserByUsername,
     createFolder,
+    editFolder,
+    createFile,
     getFolderById,
-    getFolders,
+    getEntities,
     getSidebarFolders,
     getFolderByNameAndPath,
     getPredecessorByPath,
-    doesFolderExistsInPath,
+    doesEntityExistsInPath,
   };
 })();
 

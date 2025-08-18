@@ -1,0 +1,31 @@
+<div
+  data-entity-type="<%= entityType %>"
+  data-entity-id="<%= entityId %>"
+  class="entity-item group relative"
+>
+  <div
+    class="absolute top-1 right-1 flex gap-2 opacity-0 group-hover:opacity-100"
+  >
+    <button
+      class="more-options-button relative p-1 hover:brightness-50"
+      title="More options"
+    >
+      <i class="size-6" data-lucide="ellipsis" title="More options"></i>
+    </button>
+    <%- include("moreModal.ejs") %>
+  </div>
+  <a
+    class="entity-link flex cursor-default flex-col items-center rounded-md border-1 border-zinc-800 p-2 group-hover:bg-zinc-900"
+    href="/folder/<%= entityId %>"
+  >
+    <% if (!locals.mimetype) { %> <%- include("entity-icons/folder.ejs") %> <% }
+    else if (mimetype && mimetype.startsWith('image/')) { %> <%-
+    include("entity-icons/image.ejs") %> <% } else if (mimetype &&
+    mimetype.startsWith('video/')) { %> <%- include("entity-icons/video.ejs") %>
+    <% } else if (mimetype && mimetype.startsWith('audio/')) { %> <%-
+    include("entity-icons/audio.ejs") %> <% } else if (mimetype ===
+    'application/pdf') { %> <%- include("entity-icons/document.ejs") %> <% }
+    else { %> <%- include("entity-icons/file.ejs") %> <% } %>
+    <small class="pointer-events-none -mt-1 text-sm"><%= entityName %></small>
+  </a>
+</div>

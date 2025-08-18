@@ -53,40 +53,43 @@
           </nav>
           <div class="flex flex-col">
             <div class="flex gap-2 p-2">
-              <div
-                class="create-button flex cursor-pointer items-center gap-3 rounded-md border-1 border-zinc-700 bg-zinc-900 px-3 py-1.5 hover:bg-zinc-800"
+              <button
+                data-entity-type="folder"
+                type="button"
+                class="folder open-popup-button flex cursor-pointer items-center gap-3 rounded-md border-1 border-zinc-700 bg-zinc-900 px-3 py-1.5 hover:bg-zinc-800"
               >
                 <i class="size-4" data-lucide="folder-plus"></i>
                 <span>New Folder</span>
-              </div>
-              <div
-                class="create-button flex cursor-pointer items-center gap-3 rounded-md border-1 border-zinc-700 bg-zinc-900 px-3 py-1.5 hover:bg-zinc-800"
+              </button>
+              <button
+                data-entity-type="file"
+                type="button"
+                class="file open-popup-button flex cursor-pointer items-center gap-3 rounded-md border-1 border-zinc-700 bg-zinc-900 px-3 py-1.5 hover:bg-zinc-800"
               >
                 <i class="size-4" data-lucide="file-plus"></i>
                 <span>New File</span>
-              </div>
+              </button>
             </div>
-            <% if (locals.folders) { %>
+            <% if (locals.entities) { %>
             <div class="flex flex-wrap gap-2">
-              <% folders.forEach((folder) => { %> <%-
-              include("partials/folderItem.ejs", { folderName: folder.name,
-              folderId: folder.id }) %> <% }) %>
+              <% entities.forEach((entity) => { %> <%-
+              include("partials/entityItem.ejs", { entityName: entity.name,
+              entityId: entity.id, mimetype: entity.file?.extension, entityType:
+              entity.file ? "file" : "folder" }) %> <% }) %>
             </div>
             <% } %>
           </div>
         </section>
       </main>
     </div>
-    <%- include("partials/createPopup.ejs", { createPath: "/create/folder",
-    createName: "folder", createTitle: "Folder", buttonName: "Create",
-    isVisible: hasCreateFolderErrors, folderId}) %> <%-
-    include("partials/createPopup.ejs", { createPath: "/create/file",
-    createName: "file", createTitle: "File", hasFileInput: true, buttonName:
-    "Upload", isVisible: hasCreateFileErrors }) %>
+    <%- include("partials/folderPopup.ejs", { ...popups.folder, isVisible:
+    locals.hasPopupFolderErrors, parentFolderId}) %> <%-
+    include("partials/filePopup.ejs", { ...popups.file, isVisible:
+    locals.hasPopupFileErrors, parentFolderId }) %>
     <script src="https://unpkg.com/lucide@latest"></script>
     <script>
       lucide.createIcons();
     </script>
-    <script src="/scripts/index.js"></script>
+    <script type="module" src="/scripts/index.js"></script>
   </body>
 </html>

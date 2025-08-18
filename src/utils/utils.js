@@ -1,3 +1,4 @@
+import { body } from "express-validator";
 import db from "../db/queries";
 
 const validationErrorMessages = (() => {
@@ -20,6 +21,28 @@ const validationErrorMessages = (() => {
     matchErr,
   };
 })();
+
+const validateEntity = (name, attributeName, messageName) => [
+  body(attributeName)
+    .trim()
+    .isLength({ min: 1, max: 255 })
+    .withMessage(`${messageName} ${validationErrorMessages.lengthErr(1, 255)}`)
+    .custom(async (value, { req }) => {
+      const { id: userId } = req.user;
+      const parentFolderId = parseInt(req.body.parentFolderId, 10);
+
+      const entityExists = await db.doesEntityExistsInPath(
+        userId,
+        value,
+        parentFolderId,
+      );
+
+      if (entityExists) {
+        throw new Error(`${name} "${value}" already exists.`);
+      }
+      return true;
+    }),
+];
 
 const getNodesFromPath = async (srcPath, userId) => {
   const nodes = [];
@@ -50,4 +73,42 @@ const getNodesFromPath = async (srcPath, userId) => {
   return nodes;
 };
 
-export { validationErrorMessages, getNodesFromPath };
+const toTitleCase = (str) => str.charAt(0).toUpperCase() + str.slice(1);
+
+const getPopupObject = (isCreating, entityType, entityId = null) => {
+  let path;
+  let title;
+  let submitButtonName;
+
+  if (isCreating) {
+    path = `/create/${entityType}`;
+    title = `New ${toTitleCase(entityType)}`;
+    submitButtonName = entityType === "folder" ? "Create" : "Upload";
+  } else {
+    if (!entityId) {
+      throw new Error(
+        `Entity ID: ${entityId} does not exist upon to change the link's url for edition`,
+      );
+    }
+    path = `/edit/${entityType}/${entityId}`;
+    title = `Edit ${toTitleCase(entityType)}`;
+    submitButtonName = "Edit";
+  }
+
+  const popup = {
+    path,
+    name: entityType,
+    title,
+    submitButtonName,
+    hasFileInput: entityType === "file",
+  };
+
+  return popup;
+};
+
+export {
+  validationErrorMessages,
+  validateEntity,
+  getNodesFromPath,
+  getPopupObject,
+};

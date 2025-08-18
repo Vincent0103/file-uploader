@@ -1,27 +1,28 @@
 import db from "../db/queries";
-import { getNodesFromPath } from "../utils/utils";
+import { getNodesFromPath, getPopupObject } from "../utils/utils";
 
 const folderController = (() => {
   const getIndexViewParams = async (
     req,
-    hasCreateFolderErrors = false,
-    hasCreateFileErrors = false,
+    isCreatingEntity = true,
+    entityId = null,
   ) => {
-    let folderId;
+    let parentFolderId;
 
     // not comparing with typical comparison like !req.params.folderId
     // because folderId can be equal to 0.
-    if (typeof req.params.folderId !== "undefined") {
-      folderId = req.params.folderId;
+    if (typeof req.body?.parentFolderId !== "undefined") {
+      // folderId can come from a form's body when submitting either the folder or file popup
+      parentFolderId = req.body.parentFolderId;
     } else {
-      folderId = req.body.folderId;
+      parentFolderId = req.params.folderId;
     }
 
-    folderId = parseInt(folderId, 10);
+    parentFolderId = parseInt(parentFolderId, 10);
 
     const { id: userId, username } = req.user;
 
-    const folders = await db.getFolders(userId, folderId);
+    const entities = await db.getEntities(userId, parentFolderId);
 
     const iconNames = ["home", "file-text", "image", "film", "music"];
     const sidebarFolders = (await db.getSidebarFolders(userId, username)).map(
@@ -32,20 +33,24 @@ const folderController = (() => {
       }),
     );
 
-    const mainFolder = await db.getFolderById(userId, folderId);
+    const parentFolder = await db.getFolderById(userId, parentFolderId);
     const nodes = await getNodesFromPath(
-      mainFolder.path.concat(mainFolder.name),
+      parentFolder.path.concat(parentFolder.name),
       userId,
     );
 
+    const popups = {
+      folder: getPopupObject(isCreatingEntity, "folder", entityId),
+      file: getPopupObject(isCreatingEntity, "file", entityId),
+    };
+
     return {
       user: req.user,
-      folderId,
+      parentFolderId,
       nodes,
-      folders,
+      popups,
+      entities,
       sidebarFolders,
-      hasCreateFolderErrors,
-      hasCreateFileErrors,
     };
   };
 
