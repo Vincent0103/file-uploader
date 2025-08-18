@@ -25,18 +25,10 @@ const createAndEditRelated = (folder, file) => {
     const button = event.target.closest(".edit-button");
     if (button) {
       const entityItem = button.closest(".entity-item");
-      // if (entityItem) {
-      //   const modal = entityItem.querySelector(".more-modal");
-      //   const entityLink = entityItem.querySelector(".entity-link");
-      //   const moreOptionsContainer = entityItem.querySelector("div.absolute");
-      //   toggleModal(modal, entityLink, moreOptionsContainer);
-      // }
+      const { entityType } = entityItem.dataset;
+      const entity = entityType === "folder" ? folder : file;
 
-      utils.openPopup(
-        folder.container,
-        folder.popup,
-        document.querySelector(".folder .popup input[type=text]"),
-      );
+      utils.openPopup(entity.container, entity.popup, entity.inputs[0]);
     }
   });
 };

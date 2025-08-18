@@ -74,8 +74,8 @@
             <div class="flex flex-wrap gap-2">
               <% entities.forEach((entity) => { %> <%-
               include("partials/entityItem.ejs", { entityName: entity.name,
-              folderId: entity.id, mimetype: entity?.file?.extension }) %> <% })
-              %>
+              folderId: entity.id, mimetype: entity.file?.extension, entityType:
+              entity.file ? "file" : "folder" }) %> <% }) %>
             </div>
             <% } %>
           </div>
