@@ -57,19 +57,20 @@ const DOMMethods = (() => {
   };
 
   const updatePopupContent = (
-    entityParam,
+    popupDOMParam,
     entityType,
     CRUDType,
     entityId = null,
   ) => {
     const titledEntityType = entityType === "folder" ? "Folder" : "File";
-    const entity = entityParam;
+    const popupDOM = popupDOMParam;
+
     if (CRUDType === "create") {
-      entity.title.textContent = `New ${titledEntityType}`;
-      entity.submitButton.textContent =
+      popupDOM.title.textContent = `New ${titledEntityType}`;
+      popupDOM.submitButton.textContent =
         entityType === "folder" ? "Create" : "Upload";
 
-      entity.popup.action = `/create/${entityType}`;
+      popupDOM.popup.action = `/create/${entityType}`;
     } else {
       if (!entityId) {
         throw new Error(
@@ -78,15 +79,15 @@ const DOMMethods = (() => {
       }
 
       if (CRUDType === "edit") {
-        entity.title.textContent = `Edit ${titledEntityType}`;
-        entity.submitButton.textContent = "Edit";
+        popupDOM.title.textContent = `Edit ${titledEntityType}`;
+        popupDOM.submitButton.textContent = "Edit";
 
-        entity.popup.action = `/edit/${entityType}/${entityId}`;
+        popupDOM.popup.action = `/edit/${entityType}/${entityId}`;
       } else {
-        entity.title.textContent = `Delete ${titledEntityType}`;
-        entity.submitButton.textContent = "Delete";
+        popupDOM.title.textContent = `Delete ${titledEntityType}`;
+        popupDOM.submitButton.textContent = "Delete";
 
-        entity.popup.action = `/delete/${entityType}/${entityId}`;
+        popupDOM.popup.action = `/delete/${entityType}/${entityId}`;
       }
     }
   };

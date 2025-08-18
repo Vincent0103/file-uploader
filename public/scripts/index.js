@@ -1,48 +1,48 @@
 // eslint-disable-next-line import/extensions
 import DOMMethods, { createPopupDOMObject } from "./utils.js";
 
-const listenCreatePopup = (folder, file) => {
-  [folder, file].forEach(
-    ({ container, popup, inputs, openPopupButton, closeButton }) => {
-      openPopupButton.addEventListener("click", (event) => {
-        const button = event.target.closest(".open-popup-button");
-        if (button) {
-          const { entityType } = button.dataset;
-          const entity = entityType === "folder" ? folder : file;
+const listenVisiblePopupEvents = (popupDOMs) => {
+  popupDOMs.forEach(({ popupDOM }) => {
+    const { container, popup, inputs, closeButton } = popupDOM;
+    closeButton.addEventListener("click", () =>
+      DOMMethods.closePopup(container, popup, inputs),
+    );
 
-          DOMMethods.updatePopupContent(entity, entityType, "create");
-          DOMMethods.openPopup(container, popup, inputs[0]);
-        }
-      });
-
-      closeButton.addEventListener("click", () =>
-        DOMMethods.closePopup(container, popup, inputs),
-      );
-
-      // Close popup when clicking outside the popup
-      container.addEventListener("click", (event) => {
-        if (!popup.contains(event.target)) {
-          DOMMethods.closePopup(container, popup, inputs);
-        }
-      });
-    },
-  );
+    // Close popup when clicking outside the popup
+    container.addEventListener("click", (event) => {
+      if (!popup.contains(event.target)) {
+        DOMMethods.closePopup(container, popup, inputs);
+      }
+    });
+  });
 };
 
-const listenEditPopup = (event, folder, file) => {
-  const button = event.target.closest(".edit-button");
+const listenCreatePopup = (popupDOM, entityType) => {
+  DOMMethods.updatePopupContent(popupDOM, entityType, "create");
+  DOMMethods.openPopup(popupDOM.container, popupDOM.popup, popupDOM.inputs[0]);
+};
+
+const listenEditPopup = (event, popupDOMs) => {
+  const button = event.target.closest(".edit.open-popup-button");
   if (button) {
     const entityItem = button.closest(".entity-item");
     const { entityType, entityId } = entityItem.dataset;
 
-    const entity = entityType === "folder" ? folder : file;
-    DOMMethods.updatePopupContent(entity, entityType, "edit", entityId);
-    DOMMethods.openPopup(entity.container, entity.popup, entity.inputs[0]);
+    const { popupDOM } = popupDOMs.find(
+      (item) => item.entityType === entityType,
+    );
+
+    DOMMethods.updatePopupContent(popupDOM, entityType, "edit", entityId);
+    DOMMethods.openPopup(
+      popupDOM.container,
+      popupDOM.popup,
+      popupDOM.inputs[0],
+    );
   }
 };
 
 const listenDeletePopup = (event, deletePopup) => {
-  const button = event.target.closest(".delete-button");
+  const button = event.target.closest(".delete.open-popup-button");
   if (button) {
     const entityItem = button.closest(".entity-item");
     const { entityType, entityId } = entityItem.dataset;
@@ -53,14 +53,31 @@ const listenDeletePopup = (event, deletePopup) => {
 };
 
 window.addEventListener("DOMContentLoaded", () => {
-  const folder = createPopupDOMObject("folder");
-  const file = createPopupDOMObject("file");
+  const folderDOM = createPopupDOMObject("folder");
+  const fileDOM = createPopupDOMObject("file");
   const deletePopup = createPopupDOMObject(null, true);
 
-  listenCreatePopup(folder, file);
+  const popupDOMs = [
+    {
+      popupDOM: folderDOM,
+      entityType: "folder",
+    },
+    {
+      popupDOM: fileDOM,
+      entityType: "file",
+    },
+  ];
+
+  listenVisiblePopupEvents([...popupDOMs, { popupDOM: deletePopup }]);
+
+  popupDOMs.forEach(({ popupDOM, entityType }) => {
+    popupDOM.openPopupButton.addEventListener("click", () => {
+      listenCreatePopup(popupDOM, entityType);
+    });
+  });
 
   document.addEventListener("click", (event) => {
-    listenEditPopup(event, folder, file);
+    listenEditPopup(event, popupDOMs);
     listenDeletePopup(event, deletePopup);
   });
 
