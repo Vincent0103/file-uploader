@@ -1,9 +1,8 @@
-import path from "path";
 import { validationResult } from "express-validator";
 import multer from "multer";
-import { validateEntity } from "../utils/utils";
-import db from "../db/queries";
+import { getStorage, validateEntity } from "../utils/utils";
 import folderController from "./folderController";
+import db from "../db/queries";
 
 const loginController = (() => {
   const createFolderPost = [
@@ -33,9 +32,7 @@ const loginController = (() => {
     },
   ];
 
-  const destinationPath = path.join(__dirname, "../../public/uploads");
-  const upload = multer({ dest: destinationPath });
-
+  const upload = multer({ storage: getStorage() });
   const createFilePost = [
     upload.single("uploadedFile"),
     validateEntity("File", "fileName", "Filename"),
@@ -54,16 +51,26 @@ const loginController = (() => {
 
       const { id: userId } = req.user;
       const { fileName } = req.body;
-      const folderId = parseInt(req.body.folderId, 10);
+      const parentFolderId = parseInt(req.body.parentFolderId, 10);
 
-      const { path: folderPath } = await db.getFolderById(userId, folderId);
+      const { path: folderPath } = await db.getFolderById(
+        userId,
+        parentFolderId,
+      );
 
       const fileInfos = {
         size: req.file.size,
+        storagePath: req.file.path,
         extension: req.file.mimetype,
       };
-      await db.createFile(userId, fileName, fileInfos, folderPath, folderId);
-      return res.redirect(`/folder/${folderId}`);
+      await db.createFile(
+        userId,
+        fileName,
+        fileInfos,
+        folderPath,
+        parentFolderId,
+      );
+      return res.redirect(`/folder/${parentFolderId}`);
     },
   ];
 

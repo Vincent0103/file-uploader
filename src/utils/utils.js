@@ -1,4 +1,6 @@
 import { body } from "express-validator";
+import multer from "multer";
+import path from "path";
 import db from "../db/queries";
 
 const validationErrorMessages = (() => {
@@ -106,9 +108,25 @@ const getPopupObject = (isCreating, entityType, entityId = null) => {
   return popup;
 };
 
+const getStorage = () => {
+  const destinationPath = path.join(__dirname, "../../public/uploads");
+  const storage = multer.diskStorage({
+    destination: destinationPath,
+    filename: (req, file, cb) => {
+      const uniqueSuffix = `${Date.now()}-${Math.round(Math.random() * 1e9)}`;
+      const ext = path.extname(file.originalname);
+      const filename = `${file.fieldname.toLowerCase()}-${uniqueSuffix}${ext}`;
+      cb(null, filename);
+    },
+  });
+
+  return storage;
+};
+
 export {
   validationErrorMessages,
   validateEntity,
   getNodesFromPath,
   getPopupObject,
+  getStorage,
 };

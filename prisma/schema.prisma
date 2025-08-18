@@ -42,9 +42,10 @@ model Entity {
 }
 
 model File {
-  id        Int    @id @default(autoincrement())
-  size      Int
-  extension String
-  entity    Entity @relation(fields: [entityId], references: [id])
-  entityId  Int    @unique
+  id          Int    @id @default(autoincrement())
+  size        Int
+  storagePath String
+  extension   String
+  entity      Entity @relation(fields: [entityId], references: [id])
+  entityId    Int    @unique
 }

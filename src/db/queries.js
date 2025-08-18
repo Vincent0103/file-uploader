@@ -122,6 +122,25 @@ const db = (() => {
     return file;
   };
 
+  const editFile = async (userId, fileId, filename, fileInfos) => {
+    const file = await prisma.entity.update({
+      where: {
+        userId,
+        id: fileId,
+      },
+      data: {
+        name: filename,
+        file: {
+          update: {
+            ...fileInfos,
+          },
+        },
+      },
+    });
+
+    return file;
+  };
+
   const getFolderById = async (userId, folderId) => {
     const folder = await prisma.entity.findFirst({
       where: {
@@ -216,6 +235,7 @@ const db = (() => {
     createFolder,
     editFolder,
     createFile,
+    editFile,
     getFolderById,
     getEntities,
     getSidebarFolders,
