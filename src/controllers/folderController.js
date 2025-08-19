@@ -1,5 +1,5 @@
 import db from "../db/queries";
-import { getNodesFromPath, getPopupObject } from "../utils/utils";
+import { getNodesFromPath, getPopupObject, getFileIcon } from "../utils/utils";
 
 const folderController = (() => {
   const getIndexViewParams = async (
@@ -22,7 +22,11 @@ const folderController = (() => {
 
     const { id: userId, username } = req.user;
 
-    const entities = await db.getEntities(userId, parentFolderId);
+    let entities = await db.getEntities(userId, parentFolderId);
+    entities = entities.map((entity) => ({
+      ...entity,
+      fileIcon: getFileIcon(entity),
+    }));
 
     const iconNames = ["home", "file-text", "image", "film", "music"];
     const sidebarFolders = (await db.getSidebarFolders(userId, username)).map(

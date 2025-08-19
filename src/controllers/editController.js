@@ -30,9 +30,7 @@ const loginController = (() => {
       const { folderName } = req.body;
       const parentFolderId = parseInt(req.body.parentFolderId, 10);
 
-      const folder = await db.editFolder(folderId, folderName);
-      console.log(`Edited: ${folder}`);
-
+      await db.editFolder(folderId, folderName);
       return res.redirect(`/folder/${parentFolderId}`);
     },
   ];

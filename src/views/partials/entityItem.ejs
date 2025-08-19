@@ -19,14 +19,7 @@
     class="entity-link flex w-[130px] cursor-default flex-col items-center rounded-md border-1 border-zinc-800 p-2 group-hover:bg-zinc-900"
     href="/folder/<%= entityId %>"
   >
-    <% if (!locals.mimetype) { %> <%- include("entity-icons/folder.ejs") %> <% }
-    else if (mimetype && mimetype.startsWith('image/')) { %> <%-
-    include("entity-icons/image.ejs") %> <% } else if (mimetype &&
-    mimetype.startsWith('video/')) { %> <%- include("entity-icons/video.ejs") %>
-    <% } else if (mimetype && mimetype.startsWith('audio/')) { %> <%-
-    include("entity-icons/audio.ejs") %> <% } else if (mimetype ===
-    'application/pdf') { %> <%- include("entity-icons/document.ejs") %> <% }
-    else { %> <%- include("entity-icons/file.ejs") %> <% } %>
+    <%- include(`entity-icons/${fileIcon}.ejs`) %>
     <small
       id="entity-name"
       class="pointer-events-none -mt-1 block max-w-full truncate text-center text-sm"

@@ -38,7 +38,7 @@
           <a href="/logout">Log Out</a>
         </div>
       </nav>
-      <main class="flex h-full">
+      <main class="relative flex h-full">
         <%- include("partials/leftSidebar.ejs", { user, sidebarFolders }) %>
         <section class="flex size-full flex-col bg-zinc-800 p-2">
           <nav class="font-light text-zinc-400">
@@ -78,12 +78,14 @@
             <div class="flex flex-wrap gap-2">
               <% entities.forEach((entity) => { %> <%-
               include("partials/entityItem.ejs", { entityName: entity.name,
-              entityId: entity.id, mimetype: entity.file?.extension, entityType:
+              entityId: entity.id, fileIcon: entity.fileIcon, entityType:
               entity.file ? "file" : "folder", parentFolderId}) %> <% }) %>
             </div>
             <% } %>
           </div>
         </section>
+        <%- include("partials/rightSidebar.ejs", { file: locals.file,
+        parentFolderId }) %>
       </main>
     </div>
     <%- include("partials/deletePopup.ejs") %> <%-

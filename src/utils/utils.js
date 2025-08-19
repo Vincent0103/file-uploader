@@ -130,10 +130,24 @@ const getStorage = () => {
   return storage;
 };
 
+const getFileIcon = (entity) => {
+  if (!entity.file) {
+    return "folder";
+  }
+  const { extension } = entity.file;
+
+  if (extension.startsWith("image/")) return "image";
+  if (extension.startsWith("video/")) return "video";
+  if (extension.startsWith("audio/")) return "audio";
+  if (extension === "application/pdf") return "document";
+  return "file";
+};
+
 export {
   validationErrorMessages,
   validateEntity,
   getNodesFromPath,
   getPopupObject,
   getStorage,
+  getFileIcon,
 };
