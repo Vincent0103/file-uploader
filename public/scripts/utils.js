@@ -1,12 +1,12 @@
 const DOMMethods = (() => {
-  const toggleModal = (modal, entityLink, moreOptionsContainer) => {
+  const toggleModal = (modal, entityContainer, moreOptionsContainer) => {
     modal.classList.toggle("opacity-100");
     modal.classList.toggle("pointer-events-auto");
     modal.classList.toggle("opacity-0");
     modal.classList.toggle("pointer-events-none");
-    entityLink.classList.toggle("hover:bg-zinc-900");
-    entityLink.classList.toggle("bg-zinc-800");
-    entityLink.classList.toggle("bg-zinc-900");
+    entityContainer.classList.toggle("hover:bg-zinc-900");
+    entityContainer.classList.toggle("bg-zinc-800");
+    entityContainer.classList.toggle("bg-zinc-900");
     moreOptionsContainer.classList.toggle("opacity-0");
     moreOptionsContainer.classList.toggle("group-hover:opacity-100");
   };

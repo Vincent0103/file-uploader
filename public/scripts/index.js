@@ -96,9 +96,9 @@ window.addEventListener("DOMContentLoaded", () => {
       const entityItem = button.closest(".entity-item");
       if (entityItem) {
         const modal = entityItem.querySelector(".more-modal");
-        const entityLink = entityItem.querySelector(".entity-link");
+        const entityContainer = entityItem.querySelector(".entity-container");
         const moreOptionsContainer = entityItem.querySelector("div.absolute");
-        DOMMethods.toggleModal(modal, entityLink, moreOptionsContainer);
+        DOMMethods.toggleModal(modal, entityContainer, moreOptionsContainer);
       }
       return;
     }
@@ -107,9 +107,9 @@ window.addEventListener("DOMContentLoaded", () => {
     document.querySelectorAll(".more-modal.opacity-100").forEach((modal) => {
       const entityItem = modal.closest(".entity-item");
       if (entityItem && !entityItem.contains(event.target)) {
-        const entityLink = entityItem.querySelector(".entity-link");
+        const entityContainer = entityItem.querySelector(".entity-container");
         const moreOptionsContainer = entityItem.querySelector("div.absolute");
-        DOMMethods.toggleModal(modal, entityLink, moreOptionsContainer);
+        DOMMethods.toggleModal(modal, entityContainer, moreOptionsContainer);
       }
     });
   });
