@@ -1,8 +1,10 @@
+import { filesize } from "filesize";
 import db from "../db/queries";
 import {
   getNodesFromPath,
   getPopupObject,
   getEntityIcon,
+  mapEntityForUI,
 } from "../utils/utils";
 
 const folderController = (() => {
@@ -27,11 +29,7 @@ const folderController = (() => {
     const { id: userId, username } = req.user;
 
     let entities = await db.getEntities(userId, parentFolderId);
-    entities = entities.map((entity) => ({
-      ...entity,
-      icon: getEntityIcon(entity),
-      type: entity.file ? "file" : "folder",
-    }));
+    entities = entities.map((entity) => mapEntityForUI(entity));
 
     const iconNames = ["home", "file-text", "image", "film", "music"];
     const sidebarFolders = (await db.getSidebarFolders(userId, username)).map(

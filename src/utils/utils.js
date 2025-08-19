@@ -2,6 +2,7 @@ import { body } from "express-validator";
 import multer from "multer";
 import path from "path";
 import db from "../db/queries";
+import { filesize } from "filesize";
 
 const validationErrorMessages = (() => {
   const lengthErr = (min, max) => `must be between ${min} and ${max}.`;
@@ -143,6 +144,18 @@ const getEntityIcon = (entity) => {
   return "file";
 };
 
+const mapEntityForUI = (entity) => ({
+  ...entity,
+  ...(entity.file && {
+    file: {
+      ...entity.file,
+      size: filesize(entity.file.size),
+    },
+  }),
+  icon: getEntityIcon(entity),
+  type: entity.file ? "file" : "folder",
+});
+
 export {
   validationErrorMessages,
   validateEntity,
@@ -150,4 +163,5 @@ export {
   getPopupObject,
   getStorage,
   getEntityIcon,
+  mapEntityForUI,
 };
