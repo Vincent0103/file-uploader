@@ -1,5 +1,6 @@
 - Update file path logic to use predecessorId instead of the actual path (join by name with "/")
-- Do deletion feature
+- Handle errors for file uploads when creating, it should say that max file size = 10MB
+- for editing files, you cannot edit the file input
 - clear errors messages when user closes popups and reopen another one
 - include images in the readme for all of your projects and attract eyeballs.
 

@@ -1,6 +1,6 @@
 import { validationResult } from "express-validator";
 import multer from "multer";
-import { getStorage, validateEntity } from "../utils/utils";
+import { getMulterOptions, validateEntity } from "../utils/utils";
 import db from "../db/queries";
 import folderController from "./folderController";
 
@@ -34,7 +34,7 @@ const loginController = (() => {
     },
   ];
 
-  const upload = multer({ storage: getStorage() });
+  const upload = multer(getMulterOptions());
   const editFilePost = [
     upload.single("uploadedFile"),
     validateEntity("File", "fileName", "Filename"),

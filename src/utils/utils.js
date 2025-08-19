@@ -116,7 +116,7 @@ const getPopupObject = (CRUDType, entityType, entityId = null) => {
   return popup;
 };
 
-const getStorage = () => {
+const getMulterOptions = () => {
   const destinationPath = path.join(__dirname, "../../public/uploads");
   const storage = multer.diskStorage({
     destination: destinationPath,
@@ -128,7 +128,14 @@ const getStorage = () => {
     },
   });
 
-  return storage;
+  // Add file filter to only accept images
+
+  const limits = {
+    fileSize: 1024 * 1024 * 10, // 10MB
+    files: 1,
+  };
+
+  return { storage, limits };
 };
 
 const getEntityIcon = (entity) => {
@@ -161,7 +168,7 @@ export {
   validateEntity,
   getNodesFromPath,
   getPopupObject,
-  getStorage,
+  getMulterOptions,
   getEntityIcon,
   mapEntityForUI,
 };
