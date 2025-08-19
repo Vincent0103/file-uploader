@@ -98,33 +98,21 @@ const DOMMethods = (() => {
     }
   };
 
-  const updateFileDetailsContent = (
-    iconPath,
-    name,
-    size,
-    extension,
-    uploaded,
-  ) => {
-    const rightSidebar = document.getElementById("right-sidebar");
+  const updateFileDetailsContent = (rightSidebar, entityInfos) => {
     const fileDetails = {
       icon: rightSidebar.querySelector("#file-details-icon"),
       name: rightSidebar.querySelector("#file-details-name"),
       size: rightSidebar.querySelector("#file-details-size"),
       extension: rightSidebar.querySelector("#file-details-extension"),
       uploaded: rightSidebar.querySelector("#file-details-uploaded"),
-      closeButton: rightSidebar.querySelector(".close-button"),
     };
 
+    const { iconPath, name, size, extension, uploaded } = entityInfos;
     fileDetails.icon.src = iconPath;
     fileDetails.name.textContent = name;
     fileDetails.size.textContent = size;
     fileDetails.extension.textContent = extension;
     fileDetails.uploaded.textContent = uploaded;
-
-    fileDetails.closeButton.addEventListener("click", () => {
-      rightSidebar.classList.add("hidden");
-      rightSidebar.classList.remove("absolute");
-    });
   };
 
   const listenMoreOptionsButton = (event) => {
@@ -151,41 +139,42 @@ const DOMMethods = (() => {
     });
   };
 
-  const openFileDetails = (fileId) => {
-    const fileItem = document.querySelector(
-      `.file-item[data-file-id="${fileId}"]`,
-    );
-    if (fileItem) {
-      const fileName = fileItem.querySelector(".file-name").textContent;
-      const fileSize = fileItem.querySelector(".file-size").textContent;
-      const fileExtension =
-        fileItem.querySelector(".file-extension").textContent;
-      const fileUploaded = fileItem.querySelector(".file-uploaded").textContent;
+  const getIconPath = (iconName) => `/images/${iconName}.svg`;
 
-      DOMMethods.updateFileDetailsContent(
-        fileItem.dataset.iconPath,
-        fileName,
-        fileSize,
-        fileExtension,
-        fileUploaded,
-      );
-    }
+  const openFileDetails = (entityItem) => {
+    const { entityType } = entityItem.dataset;
+    if (entityType !== "file") return;
+
+    const rightSidebar = document.getElementById("right-sidebar");
+    rightSidebar.classList.remove("hidden");
+    rightSidebar.classList.add("absolute");
+
+    const entityName = entityItem.querySelector("#entity-name").textContent;
+    const { entityExtension, entitySize, entityIcon } = entityItem.dataset;
+
+    const entityInfos = {
+      iconPath: getIconPath(entityIcon),
+      name: entityName,
+      size: entitySize,
+      extension: entityExtension,
+    };
+
+    DOMMethods.updateFileDetailsContent(rightSidebar, entityInfos);
   };
 
   const listenFileClick = (event) => {
     const entityItem = event.target.closest(".entity-item");
-    if (entityItem) {
-      const { entityType } = entityItem.dataset;
-      if (entityType === "file") {
-        const { entityExtension, entitySize } = entityItem.dataset;
-      }
-      (iconPath,
-        name,
-        size,
-        extension,
-        uploaded,
-        DOMMethods.openFileDetails(fileId));
-    }
+    if (entityItem) openFileDetails(entityItem);
+  };
+
+  const listenOpenedRightSidebar = () => {
+    const rightSidebar = document.getElementById("right-sidebar");
+    const closeButton = rightSidebar.querySelector(".close-button");
+    closeButton.addEventListener("click", () => {
+      if (rightSidebar.classList.contains("hidden")) return;
+      rightSidebar.classList.add("hidden");
+      rightSidebar.classList.remove("absolute");
+    });
   };
 
   return {
@@ -197,6 +186,8 @@ const DOMMethods = (() => {
     updateFileDetailsContent,
     listenMoreOptionsButton,
     listenOpenedModals,
+    listenFileClick,
+    listenOpenedRightSidebar,
   };
 })();
 

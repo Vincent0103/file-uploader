@@ -77,6 +77,7 @@ window.addEventListener("DOMContentLoaded", () => {
   ];
 
   listenVisiblePopupEvents([...popupDOMs, { popupDOM: deletePopup }]);
+  DOMMethods.listenOpenedRightSidebar();
 
   popupDOMs.forEach(({ popupDOM, entityType }) => {
     popupDOM.openPopupButton.addEventListener("click", () => {
@@ -88,6 +89,7 @@ window.addEventListener("DOMContentLoaded", () => {
     listenEditPopup(event, popupDOMs);
     listenDeletePopup(event, deletePopup);
 
+    DOMMethods.listenFileClick(event);
     DOMMethods.listenMoreOptionsButton(event);
 
     // Close open modals if clicking outside
