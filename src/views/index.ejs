@@ -77,9 +77,8 @@
             <% if (locals.entities) { %>
             <div class="flex flex-wrap gap-2">
               <% entities.forEach((entity) => { %> <%-
-              include("partials/entityItem.ejs", { entityName: entity.name,
-              entityId: entity.id, fileIcon: entity.fileIcon, entityType:
-              entity.file ? "file" : "folder", parentFolderId}) %> <% }) %>
+              include("partials/entityItem.ejs", { entity, parentFolderId}) %>
+              <% }) %>
             </div>
             <% } %>
           </div>

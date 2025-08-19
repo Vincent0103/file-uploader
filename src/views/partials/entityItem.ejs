@@ -1,6 +1,11 @@
 <div
-  data-entity-id="<%= entityId %>"
-  data-entity-type="<%= entityType %>"
+  data-entity-id="<%= entity.id %>"
+  data-entity-type="<%= entity.type %>"
+  <% if (entity.type === "file") { %>
+    data-entity-extension="<%= entity.file.extension %>"
+    data-entity-size="<%= entity.file.size %>"
+    data-entity-file-icon="<%= entity.fileIcon %>"
+  <% } %>
   data-parent-folder-id="<%= parentFolderId %>"
   class="entity-item group relative"
 >
@@ -16,27 +21,27 @@
     <%- include("moreModal.ejs") %>
   </div>
 
-  <% if (entityType === "folder") { %>
+  <% if (entity.type === "folder") { %>
   <a
     class="entity-container flex w-[130px] cursor-default flex-col items-center rounded-md border-1 border-zinc-800 p-2 group-hover:bg-zinc-900 active:bg-zinc-700"
-    href="/folder/<%= entityId %>"
+    href="/folder/<%= entity.id %>"
   >
-    <%- include(`entity-icons/${fileIcon}.ejs`) %>
+    <%- include(`entity-icons/${entity.icon}.ejs`) %>
     <small
       id="entity-name"
       class="pointer-events-none -mt-1 block max-w-full truncate text-center text-sm"
-      ><%= entityName %></small
+      ><%= entity.name %></small
     >
   </a>
   <% } else { %>
   <div
     class="entity-container flex w-[130px] cursor-default flex-col items-center rounded-md border-1 border-zinc-800 p-2 group-hover:bg-zinc-900 active:bg-zinc-700"
   >
-    <%- include(`entity-icons/${fileIcon}.ejs`) %>
+    <%- include(`entity-icons/${entity.icon}.ejs`) %>
     <small
       id="entity-name"
       class="pointer-events-none -mt-1 block max-w-full truncate text-center text-sm"
-      ><%= entityName %></small
+      ><%= entity.name %></small
     >
   </div>
   <% } %>

@@ -88,8 +88,8 @@ const db = (() => {
   const createFile = async (
     userId,
     filename,
-    fileInfos,
     path,
+    fileInfos,
     folderParentId,
   ) => {
     const { id: entityId } = await prisma.entity.create({

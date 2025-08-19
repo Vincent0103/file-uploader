@@ -63,11 +63,12 @@ const loginController = (() => {
         storagePath: req.file.path,
         extension: req.file.mimetype,
       };
+
       await db.createFile(
         userId,
         fileName,
-        fileInfos,
         folderPath,
+        fileInfos,
         parentFolderId,
       );
       return res.redirect(`/folder/${parentFolderId}`);

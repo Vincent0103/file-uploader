@@ -130,7 +130,7 @@ const getStorage = () => {
   return storage;
 };
 
-const getFileIcon = (entity) => {
+const getEntityIcon = (entity) => {
   if (!entity.file) {
     return "folder";
   }
@@ -149,5 +149,5 @@ export {
   getNodesFromPath,
   getPopupObject,
   getStorage,
-  getFileIcon,
+  getEntityIcon,
 };

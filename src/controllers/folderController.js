@@ -1,5 +1,9 @@
 import db from "../db/queries";
-import { getNodesFromPath, getPopupObject, getFileIcon } from "../utils/utils";
+import {
+  getNodesFromPath,
+  getPopupObject,
+  getEntityIcon,
+} from "../utils/utils";
 
 const folderController = (() => {
   const getIndexViewParams = async (
@@ -25,7 +29,8 @@ const folderController = (() => {
     let entities = await db.getEntities(userId, parentFolderId);
     entities = entities.map((entity) => ({
       ...entity,
-      fileIcon: getFileIcon(entity),
+      icon: getEntityIcon(entity),
+      type: entity.file ? "file" : "folder",
     }));
 
     const iconNames = ["home", "file-text", "image", "film", "music"];

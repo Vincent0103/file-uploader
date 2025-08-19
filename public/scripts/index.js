@@ -87,30 +87,10 @@ window.addEventListener("DOMContentLoaded", () => {
   document.addEventListener("click", (event) => {
     listenEditPopup(event, popupDOMs);
     listenDeletePopup(event, deletePopup);
-  });
 
-  document.addEventListener("click", (event) => {
-    // Handle more-options-button click
-    const button = event.target.closest(".more-options-button");
-    if (button) {
-      const entityItem = button.closest(".entity-item");
-      if (entityItem) {
-        const modal = entityItem.querySelector(".more-modal");
-        const entityContainer = entityItem.querySelector(".entity-container");
-        const moreOptionsContainer = entityItem.querySelector("div.absolute");
-        DOMMethods.toggleModal(modal, entityContainer, moreOptionsContainer);
-      }
-      return;
-    }
+    DOMMethods.listenMoreOptionsButton(event);
 
     // Close open modals if clicking outside
-    document.querySelectorAll(".more-modal.opacity-100").forEach((modal) => {
-      const entityItem = modal.closest(".entity-item");
-      if (entityItem && !entityItem.contains(event.target)) {
-        const entityContainer = entityItem.querySelector(".entity-container");
-        const moreOptionsContainer = entityItem.querySelector("div.absolute");
-        DOMMethods.toggleModal(modal, entityContainer, moreOptionsContainer);
-      }
-    });
+    DOMMethods.listenOpenedModals(event);
   });
 });

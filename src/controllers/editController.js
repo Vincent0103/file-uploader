@@ -1,4 +1,3 @@
-import path from "path";
 import { validationResult } from "express-validator";
 import multer from "multer";
 import { getStorage, validateEntity } from "../utils/utils";
@@ -61,6 +60,7 @@ const loginController = (() => {
         storagePath: req.file.path,
         extension: req.file.mimetype,
       };
+
       await db.editFile(fileId, fileName, fileInfos);
       return res.redirect(`/folder/${parentFolderId}`);
     },

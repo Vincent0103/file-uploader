@@ -12,20 +12,20 @@
   },
   "devDependencies": {
     "@types/bun": "latest",
-    "eslint": "^9.32.0",
+    "eslint": "^9.33.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-import": "^2.32.0",
     "eslint-plugin-prettier": "^5.5.4",
     "prettier": "^3.6.2",
     "prettier-plugin-tailwindcss": "^0.6.14",
-    "prisma": "^6.13.0",
+    "prisma": "^6.14.0",
     "typescript": "^5.9.2"
   },
   "dependencies": {
-    "@prisma/client": "^6.13.0",
+    "@prisma/client": "^6.14.0",
     "@quixo3/prisma-session-store": "^3.1.13",
-    "@tailwindcss/cli": "^4.1.11",
+    "@tailwindcss/cli": "^4.1.12",
     "bcryptjs": "^3.0.2",
     "dotenv": "^17.2.1",
     "ejs": "^3.1.10",
@@ -35,6 +35,6 @@
     "multer": "^2.0.2",
     "passport": "^0.7.0",
     "passport-local": "^1.0.0",
-    "tailwindcss": "^4.1.11"
+    "tailwindcss": "^4.1.12"
   }
 }

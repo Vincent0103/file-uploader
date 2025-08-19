@@ -89,7 +89,6 @@ const DOMMethods = (() => {
         popupDOM.title.textContent = `Delete ${titledEntityType}`;
         popupDOM.deleteContentEntityType.textContent = entityType;
         popupDOM.deleteContentEntityName.textContent = entityName;
-        popupDOM.inputs.entityId.value = entityId;
         popupDOM.inputs.entityType.value = entityType;
         popupDOM.inputs.parentFolderId.value = parentFolderId;
         popupDOM.submitButton.textContent = "Delete";
@@ -99,12 +98,105 @@ const DOMMethods = (() => {
     }
   };
 
+  const updateFileDetailsContent = (
+    iconPath,
+    name,
+    size,
+    extension,
+    uploaded,
+  ) => {
+    const rightSidebar = document.getElementById("right-sidebar");
+    const fileDetails = {
+      icon: rightSidebar.querySelector("#file-details-icon"),
+      name: rightSidebar.querySelector("#file-details-name"),
+      size: rightSidebar.querySelector("#file-details-size"),
+      extension: rightSidebar.querySelector("#file-details-extension"),
+      uploaded: rightSidebar.querySelector("#file-details-uploaded"),
+      closeButton: rightSidebar.querySelector(".close-button"),
+    };
+
+    fileDetails.icon.src = iconPath;
+    fileDetails.name.textContent = name;
+    fileDetails.size.textContent = size;
+    fileDetails.extension.textContent = extension;
+    fileDetails.uploaded.textContent = uploaded;
+
+    fileDetails.closeButton.addEventListener("click", () => {
+      rightSidebar.classList.add("hidden");
+      rightSidebar.classList.remove("absolute");
+    });
+  };
+
+  const listenMoreOptionsButton = (event) => {
+    const button = event.target.closest(".more-options-button");
+    if (button) {
+      const entityItem = button.closest(".entity-item");
+      if (entityItem) {
+        const modal = entityItem.querySelector(".more-modal");
+        const entityContainer = entityItem.querySelector(".entity-container");
+        const moreOptionsContainer = entityItem.querySelector("div.absolute");
+        DOMMethods.toggleModal(modal, entityContainer, moreOptionsContainer);
+      }
+    }
+  };
+
+  const listenOpenedModals = (event) => {
+    document.querySelectorAll(".more-modal.opacity-100").forEach((modal) => {
+      const entityItem = modal.closest(".entity-item");
+      if (entityItem && !entityItem.contains(event.target)) {
+        const entityContainer = entityItem.querySelector(".entity-container");
+        const moreOptionsContainer = entityItem.querySelector("div.absolute");
+        DOMMethods.toggleModal(modal, entityContainer, moreOptionsContainer);
+      }
+    });
+  };
+
+  const openFileDetails = (fileId) => {
+    const fileItem = document.querySelector(
+      `.file-item[data-file-id="${fileId}"]`,
+    );
+    if (fileItem) {
+      const fileName = fileItem.querySelector(".file-name").textContent;
+      const fileSize = fileItem.querySelector(".file-size").textContent;
+      const fileExtension =
+        fileItem.querySelector(".file-extension").textContent;
+      const fileUploaded = fileItem.querySelector(".file-uploaded").textContent;
+
+      DOMMethods.updateFileDetailsContent(
+        fileItem.dataset.iconPath,
+        fileName,
+        fileSize,
+        fileExtension,
+        fileUploaded,
+      );
+    }
+  };
+
+  const listenFileClick = (event) => {
+    const entityItem = event.target.closest(".entity-item");
+    if (entityItem) {
+      const { entityType } = entityItem.dataset;
+      if (entityType === "file") {
+        const { entityExtension, entitySize } = entityItem.dataset;
+      }
+      (iconPath,
+        name,
+        size,
+        extension,
+        uploaded,
+        DOMMethods.openFileDetails(fileId));
+    }
+  };
+
   return {
     toggleModal,
     closePopup,
     openPopup,
     onFileSubmission,
     updatePopupContent,
+    updateFileDetailsContent,
+    listenMoreOptionsButton,
+    listenOpenedModals,
   };
 })();
 
