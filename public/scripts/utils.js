@@ -164,10 +164,15 @@ const DOMMethods = (() => {
 
   const listenFileClick = (event) => {
     const entityItem = event.target.closest(".entity-item");
-    const isNotClickingOnMoreOptions = !event.target.closest(
-      ".more-options-button",
-    );
-    if (entityItem && isNotClickingOnMoreOptions) openFileDetails(entityItem);
+    const element = event.target;
+    if (
+      !entityItem ||
+      element.closest(".more-options-button") ||
+      element.closest(".more-modal")
+    ) {
+      return;
+    }
+    openFileDetails(entityItem);
   };
 
   const listenOpenedRightSidebar = () => {
