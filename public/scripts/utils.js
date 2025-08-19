@@ -98,7 +98,8 @@ const DOMMethods = (() => {
     }
   };
 
-  const updateFileDetailsContent = (rightSidebar, entityInfos) => {
+  const updateFileDetailsContent = (entityInfos) => {
+    const rightSidebar = document.getElementById("right-sidebar");
     const fileDetails = {
       icon: rightSidebar.querySelector("#file-details-icon"),
       name: rightSidebar.querySelector("#file-details-name"),
@@ -113,6 +114,9 @@ const DOMMethods = (() => {
     fileDetails.size.textContent = size;
     fileDetails.extension.textContent = extension;
     fileDetails.uploaded.textContent = uploaded;
+
+    rightSidebar.classList.remove("hidden");
+    rightSidebar.classList.add("absolute");
   };
 
   const listenMoreOptionsButton = (event) => {
@@ -145,10 +149,6 @@ const DOMMethods = (() => {
     const { entityType } = entityItem.dataset;
     if (entityType !== "file") return;
 
-    const rightSidebar = document.getElementById("right-sidebar");
-    rightSidebar.classList.remove("hidden");
-    rightSidebar.classList.add("absolute");
-
     const entityName = entityItem.querySelector("#entity-name").textContent;
     const { entityExtension, entitySize, entityIcon } = entityItem.dataset;
 
@@ -159,7 +159,7 @@ const DOMMethods = (() => {
       extension: entityExtension,
     };
 
-    DOMMethods.updateFileDetailsContent(rightSidebar, entityInfos);
+    DOMMethods.updateFileDetailsContent(entityInfos);
   };
 
   const listenFileClick = (event) => {
