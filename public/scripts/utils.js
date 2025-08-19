@@ -108,8 +108,9 @@ const DOMMethods = (() => {
       uploaded: rightSidebar.querySelector("#file-details-uploaded"),
     };
 
-    const { iconPath, name, size, extension, uploaded } = entityInfos;
-    fileDetails.icon.src = iconPath;
+    const { iconPath, name, size, extension, uploaded, storagePath } =
+      entityInfos;
+    fileDetails.icon.src = storagePath;
     fileDetails.name.textContent = name;
     fileDetails.size.textContent = size;
     fileDetails.extension.textContent = extension;
@@ -150,13 +151,15 @@ const DOMMethods = (() => {
     if (entityType !== "file") return;
 
     const entityName = entityItem.querySelector("#entity-name").textContent;
-    const { entityExtension, entitySize, entityIcon } = entityItem.dataset;
+    const { entityExtension, entitySize, entityIcon, entityStoragePath } =
+      entityItem.dataset;
 
     const entityInfos = {
       iconPath: getIconPath(entityIcon),
       name: entityName,
       size: entitySize,
       extension: entityExtension,
+      storagePath: entityStoragePath,
     };
 
     DOMMethods.updateFileDetailsContent(entityInfos);

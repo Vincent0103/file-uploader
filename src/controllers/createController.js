@@ -58,9 +58,12 @@ const loginController = (() => {
         parentFolderId,
       );
 
+      const startingIndex = req.file.path.indexOf("/uploads/");
+      const storagePath = req.file.path.substring(startingIndex);
+
       const fileInfos = {
         size: req.file.size,
-        storagePath: req.file.path,
+        storagePath,
         extension: req.file.mimetype,
       };
 
