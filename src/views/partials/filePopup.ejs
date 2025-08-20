@@ -5,6 +5,22 @@
     class="file z-30 popup-container pointer-events-none absolute inset-0 size-full bg-black/70 opacity-0 backdrop-blur-sm transition-opacity"
   <% } %>
 >
+  <style>
+    progress {
+      box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
+    }
+    progress::-webkit-progress-bar {
+      background-color: #f97316;
+    }
+    progress::-webkit-progress-value {
+      background-color: #f97316;
+      box-shadow: 1px 1px 5px 3px #f97316;
+    }
+    progress::-moz-progress-bar {
+      background-color: #f97316;
+      box-shadow: 1px 1px 5px 3px #f97316;
+    }
+  </style>
   <div class="flex h-full w-full items-center justify-center">
     <form
       action="<%= path %>"
@@ -37,7 +53,7 @@
         <% } %>
         class="mt-2 disabled:opacity-50 disabled:text-zinc-500 disabled:hover:cursor-not-allowed w-full rounded-md border-1 border-zinc-700 bg-zinc-900 p-2 text-sm placeholder:text-zinc-500 focus:border-amber-500 focus:outline-none"
       />
-      <progress id="upload-progress" value="0" max="100" class="hidden"></progress>
+      <progress id="upload-progress" value="0" max="100" class="hidden h-3 rounded-lg my-2 accent-amber-500"></progress>
       <% if (locals.hasPopupFileErrors && CRUDType === "edit") { %>
       <div id="file-name-container" class="my-3">
       <% } else { %>

@@ -345,6 +345,15 @@
     width: 100%;
     height: 100%;
   }
+  .h-3 {
+    height: calc(var(--spacing) * 3);
+  }
+  .h-4 {
+    height: calc(var(--spacing) * 4);
+  }
+  .h-8 {
+    height: calc(var(--spacing) * 8);
+  }
   .h-full {
     height: 100%;
   }
@@ -576,6 +585,9 @@
       background-color: color-mix(in oklab, var(--color-black) 70%, transparent);
     }
   }
+  .bg-red-500 {
+    background-color: var(--color-red-500);
+  }
   .bg-rose-600 {
     background-color: var(--color-rose-600);
   }
@@ -729,6 +741,12 @@
   }
   .underline {
     text-decoration-line: underline;
+  }
+  .accent-amber-500 {
+    accent-color: var(--color-amber-500);
+  }
+  .accent-red-500 {
+    accent-color: var(--color-red-500);
   }
   .opacity-0 {
     opacity: 0%;

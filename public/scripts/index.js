@@ -133,8 +133,8 @@ window.addEventListener("DOMContentLoaded", () => {
   fileDOM.popup.addEventListener("submit", (event) => {
     const submitButton = event.submitter;
     const { crudType } = submitButton.dataset;
-    console.log(submitButton);
-    if (crudType !== "edit") onFormSubmit(event);
+
+    if (crudType !== "edit") onFormSubmit(event, fileDOM);
   });
 
   document.addEventListener("click", (event) => {

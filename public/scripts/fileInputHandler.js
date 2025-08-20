@@ -1,7 +1,7 @@
-const onFormSubmit = (e) => {
+const onFormSubmit = (e, popupDOM) => {
   e.preventDefault();
   const form = e.target;
-  //   const fileInput = document.getElementById("uploadedFile");
+
   const progressBar = document.getElementById("upload-progress");
   const formData = new FormData(form);
 
@@ -9,6 +9,15 @@ const onFormSubmit = (e) => {
   xhr.open("POST", form.action);
 
   xhr.upload.onprogress = (event) => {
+    // Disable inputs and submit button during submission
+    Object.values(popupDOM.inputs).forEach((input) => {
+      input.setAttribute("readonly", true);
+      input.setAttribute("tabindex", "-1");
+      input.disabled = true;
+    });
+    popupDOM.submitButton.disabled = true;
+    popupDOM.submitButton.setAttribute("aria-disabled", "true");
+
     if (event.lengthComputable) {
       const percent = (event.loaded / event.total) * 100;
       progressBar.value = percent;
