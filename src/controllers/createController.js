@@ -1,8 +1,8 @@
 import { validationResult } from "express-validator";
 import multer from "multer";
-import { getMulterOptions, validateEntity } from "../utils/utils";
-import folderController from "./folderController";
-import db from "../db/queries";
+import { getMulterOptions, validateEntity } from "../utils/utils.js";
+import folderController from "./folderController.js";
+import db from "../db/queries.js";
 
 const loginController = (() => {
   const createFolderPost = [

@@ -1,4 +1,4 @@
-import db from "../db/queries";
+import db from "../db/queries.js";
 
 const deleteController = (() => {
   const deleteFolderPost = [

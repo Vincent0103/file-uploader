@@ -1,4 +1,3 @@
-// eslint-disable-next-line import/extensions
 import DOMMethods, { createPopupDOMObject } from "./utils.js";
 
 const listenVisiblePopupEvents = (popupDOMs) => {
@@ -20,11 +19,9 @@ const listenVisiblePopupEvents = (popupDOMs) => {
 
 const listenCreatePopup = (popupDOM) => {
   DOMMethods.updatePopupContent(popupDOM, "create");
+  const { container, popup, inputs, hiddableContainer } = popupDOM;
 
-  const [firstInput] = Object.values(popupDOM.inputs);
-  const { container, popup, hiddableContainer } = popupDOM;
-
-  DOMMethods.openPopup(container, popup, firstInput, hiddableContainer, true);
+  DOMMethods.openPopup(container, popup, inputs, hiddableContainer, true);
 };
 
 const listenEditPopup = (event, popupDOMs) => {
@@ -37,10 +34,9 @@ const listenEditPopup = (event, popupDOMs) => {
     const popupDOM = popupDOMs.find((item) => item.entityType === entityType);
     DOMMethods.updatePopupContent(popupDOM, "edit", entityId, entityName);
 
-    const [firstInput] = Object.values(popupDOM.inputs);
-    const { container, popup, hiddableContainer } = popupDOM;
+    const { container, inputs, popup, hiddableContainer } = popupDOM;
 
-    DOMMethods.openPopup(container, popup, firstInput, hiddableContainer);
+    DOMMethods.openPopup(container, popup, inputs, hiddableContainer);
   }
 };
 

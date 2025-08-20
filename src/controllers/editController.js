@@ -10,6 +10,7 @@ const loginController = (() => {
     async (req, res) => {
       const errors = validationResult(req);
       const folderId = parseInt(req.params.folderId, 10);
+      const { folderName } = req.body;
 
       let params;
       if (!errors.isEmpty()) {
@@ -22,11 +23,11 @@ const loginController = (() => {
         return res.status(401).render("index", {
           ...params,
           hasPopupFolderErrors: true,
+          folderName,
           errors: errors.array(),
         });
       }
 
-      const { folderName } = req.body;
       const parentFolderId = parseInt(req.body.parentFolderId, 10);
 
       await db.editFolder(folderId, folderName);
@@ -34,13 +35,14 @@ const loginController = (() => {
     },
   ];
 
-  const upload = multer(getMulterOptions());
+  const uploads = multer(getMulterOptions());
   const editFilePost = [
-    upload.single("uploadedFile"),
+    uploads.none(), // Ensure no file upload is expected
     validateEntity("File", "fileName", "Filename"),
     async (req, res) => {
       const errors = validationResult(req);
       const fileId = parseInt(req.params.fileId, 10);
+      const { fileName } = req.body;
 
       let params;
       if (!errors.isEmpty()) {
@@ -48,20 +50,15 @@ const loginController = (() => {
         return res.status(401).render("index", {
           ...params,
           hasPopupFileErrors: true,
+          CRUDType: "edit",
+          fileName,
           errors: errors.array(),
         });
       }
 
-      const { fileName } = req.body;
       const parentFolderId = parseInt(req.body.parentFolderId, 10);
 
-      const fileInfos = {
-        size: req.file.size,
-        storagePath: req.file.path,
-        extension: req.file.mimetype,
-      };
-
-      await db.editFile(fileId, fileName, fileInfos);
+      await db.editFile(fileId, fileName);
       return res.redirect(`/folder/${parentFolderId}`);
     },
   ];

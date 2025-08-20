@@ -1,11 +1,11 @@
-import { filesize } from "filesize";
-import db from "../db/queries";
+import db from "../db/queries.js";
+
 import {
   getNodesFromPath,
   getPopupObject,
   getEntityIcon,
   mapEntityForUI,
-} from "../utils/utils";
+} from "../utils/utils.js";
 
 const folderController = (() => {
   const getIndexViewParams = async (

@@ -32,6 +32,14 @@ export default defineConfig([
     },
 
     rules: {
+      "import/extensions": [
+        "error",
+        "ignorePackages",
+        {
+          js: "always",
+          mjs: "always",
+        },
+      ],
       "prettier/prettier": "error",
       "no-console": "off",
     },

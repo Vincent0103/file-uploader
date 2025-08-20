@@ -1,5 +1,5 @@
 import { Router } from "express";
-import editController from "../controllers/editController";
+import editController from "../controllers/editController.js";
 
 const editRouter = Router();
 editRouter.post("/folder/:folderId", editController.editFolderPost);

@@ -1,5 +1,5 @@
 <section
-  <% if (isVisible) { %>
+  <% if (locals.hasPopupFileErrors) { %>
     class="file z-30 popup-container pointer-events-auto absolute inset-0 size-full bg-black/70 opacity-100 backdrop-blur-sm transition-opacity"
   <% } else { %>
     class="file z-30 popup-container pointer-events-none absolute inset-0 size-full bg-black/70 opacity-0 backdrop-blur-sm transition-opacity"
@@ -10,7 +10,7 @@
       action="<%= path %>"
       method="POST"
       enctype="multipart/form-data"
-      <% if (isVisible) { %>
+      <% if (locals.hasPopupFileErrors) { %>
         class="popup flex w-[400px] flex-col rounded-md border-1 border-zinc-700 bg-zinc-800 p-4 transition-transform duration-200"
       <% } else { %>
         class="popup flex w-[400px] translate-y-8 scale-75 flex-col rounded-md border-1 border-zinc-700 bg-zinc-800 p-4 transition-transform duration-200"
@@ -32,9 +32,16 @@
         name="uploadedFile"
         id="uploadedFile"
         accept="*"
+        <% if (locals.hasPopupFileErrors && locals.CRUDType === "edit") { %>
+          disabled=true
+        <% } %>
         class="mt-2 disabled:opacity-50 disabled:text-zinc-500 disabled:hover:cursor-not-allowed w-full rounded-md border-1 border-zinc-700 bg-zinc-900 p-2 text-sm placeholder:text-zinc-500 focus:border-amber-500 focus:outline-none"
       />
+      <% if (locals.hasPopupFileErrors && locals.CRUDType === "edit") { %>
+      <div id="file-name-container" class="my-3">
+      <% } else { %>
       <div id="file-name-container" class="my-3 hidden">
+      <% } %>
         <label class="text-zinc-200" for="fileName">File name</label>
         <input
           name="fileName"

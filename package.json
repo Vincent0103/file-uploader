@@ -5,10 +5,11 @@
   "private": true,
   "scripts": {
     "dev": "bun --watch src/app.js",
+    "inspect": "bun --inspect src/app.js",
     "dev:css": "bunx @tailwindcss/cli -i ./src/styles.css -o ./public/css/styles.css --watch",
     "start": "bun src/app.js",
     "migrate:dev": "bunx prisma migrate dev",
-    "migrate:deploy": "bunx prims migrate deploy"
+    "migrate:deploy": "bunx prisma migrate deploy"
   },
   "devDependencies": {
     "@types/bun": "latest",

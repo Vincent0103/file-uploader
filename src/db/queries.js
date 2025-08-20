@@ -121,18 +121,13 @@ const db = (() => {
     return file;
   };
 
-  const editFile = async (fileId, filename, fileInfos) => {
+  const editFile = async (fileId, filename) => {
     const file = await prisma.entity.update({
       where: {
         id: fileId,
       },
       data: {
         name: filename,
-        file: {
-          update: {
-            ...fileInfos,
-          },
-        },
       },
     });
 

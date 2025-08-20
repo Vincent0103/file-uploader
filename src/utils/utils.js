@@ -1,8 +1,10 @@
+import { fileURLToPath } from "url";
+import { dirname } from "path";
 import { body } from "express-validator";
 import multer from "multer";
 import path from "path";
-import db from "../db/queries";
 import { filesize } from "filesize";
+import db from "../db/queries.js";
 
 const validationErrorMessages = (() => {
   const lengthErr = (min, max) => `must be between ${min} and ${max}.`;
@@ -117,6 +119,9 @@ const getPopupObject = (CRUDType, entityType, entityId = null) => {
 };
 
 const getMulterOptions = () => {
+  const __filename = fileURLToPath(import.meta.url);
+  const __dirname = dirname(__filename);
+
   const destinationPath = path.join(__dirname, "../../public/uploads");
   const storage = multer.diskStorage({
     destination: destinationPath,

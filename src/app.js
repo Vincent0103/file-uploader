@@ -1,21 +1,26 @@
 import { PrismaClient } from "@prisma/client";
 import { PrismaSessionStore } from "@quixo3/prisma-session-store";
+import { fileURLToPath } from "url";
+import { dirname } from "path";
 import express from "express";
 import expressSession from "express-session";
 import passport from "passport";
 import { Strategy as LocalStrategy } from "passport-local";
 import bcrypt from "bcryptjs";
 import path from "path";
-import signupRouter from "./routes/signupRouter";
-import loginRouter from "./routes/loginRouter";
-import logoutRouter from "./routes/logoutRouter";
-import db from "./db/queries";
-import createRouter from "./routes/createRouter";
-import folderRouter from "./routes/folderRouter";
-import editRouter from "./routes/editRouter";
-import deleteRouter from "./routes/deleteRouter";
+import signupRouter from "./routes/signupRouter.js";
+import loginRouter from "./routes/loginRouter.js";
+import logoutRouter from "./routes/logoutRouter.js";
+import db from "./db/queries.js";
+import createRouter from "./routes/createRouter.js";
+import folderRouter from "./routes/folderRouter.js";
+import editRouter from "./routes/editRouter.js";
+import deleteRouter from "./routes/deleteRouter.js";
 
 const app = express();
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");

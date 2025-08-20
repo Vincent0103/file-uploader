@@ -31,16 +31,16 @@ const DOMMethods = (() => {
   const openPopup = (
     container,
     popup,
-    firstInput,
+    inputsParam,
     hiddableContainer,
     isHidingContainer = false,
   ) => {
+    const inputs = Object.values(inputsParam);
     const onFirstInputChange = (filename) => {
       hiddableContainer.classList.remove("hidden");
 
-      const fileNameInput = document.getElementById("fileName");
-      fileNameInput.value = filename || "";
-      fileNameInput.focus();
+      inputs[1].value = filename || "";
+      inputs[1].focus();
     };
 
     container.classList.remove("opacity-0");
@@ -49,8 +49,8 @@ const DOMMethods = (() => {
     container.classList.add("pointer-events-auto");
     popup.classList.remove("scale-75", "translate-y-8");
 
-    if (!firstInput) return;
-    firstInput.focus();
+    if (!inputs[0]) return;
+    inputs[0].focus();
 
     // Make the file name input container appear on file submission
     // when the user is not editing a file
@@ -58,12 +58,13 @@ const DOMMethods = (() => {
       if (isHidingContainer) {
         hiddableContainer.classList.add("hidden");
 
-        firstInput.addEventListener("change", (e) =>
+        inputs[0].addEventListener("change", (e) =>
           onFirstInputChange(e.target.files[0].name),
         );
       } else {
-        firstInput.disabled = true;
+        inputs[0].disabled = true;
         hiddableContainer.classList.remove("hidden");
+        inputs[1].focus();
       }
     }
   };
