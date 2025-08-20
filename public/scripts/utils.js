@@ -177,17 +177,39 @@ const DOMMethods = (() => {
     DOMMethods.updateFileDetailsContent(entityInfos);
   };
 
+  const handleEntityItemClickStylings = (event) => {
+    const selectedEntity = event.target.closest(".entity-item");
+    document.querySelectorAll(".entity-item").forEach((entityItem) => {
+      const isSelected = entityItem === selectedEntity;
+      Array.from(entityItem.children).forEach((child) => {
+        if (
+          child.classList.contains("opacity-0") ||
+          child.classList.contains("opacity-100")
+        ) {
+          child.classList.toggle("opacity-100", isSelected);
+          child.classList.toggle("opacity-0", !isSelected);
+        } else {
+          child.classList.toggle("bg-zinc-900", isSelected);
+          child.classList.toggle("border-1", isSelected);
+          child.classList.toggle("border-amber-600", isSelected);
+        }
+      });
+    });
+  };
+
   const listenFileClick = (event) => {
-    const entityItem = event.target.closest(".entity-item");
+    handleEntityItemClickStylings(event);
+
+    const targetEntityItem = event.target.closest(".entity-item");
     const element = event.target;
     if (
-      !entityItem ||
+      !targetEntityItem ||
       element.closest(".more-options-button") ||
       element.closest(".more-modal")
     ) {
       return;
     }
-    openFileDetails(entityItem);
+    openFileDetails(targetEntityItem);
   };
 
   const listenOpenedRightSidebar = () => {
