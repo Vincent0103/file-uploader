@@ -2,29 +2,29 @@
 import DOMMethods, { createPopupDOMObject } from "./utils.js";
 
 const listenVisiblePopupEvents = (popupDOMs) => {
-  popupDOMs.forEach(({ popupDOM }) => {
-    const { container, popup, inputs, closeButton } = popupDOM;
+  popupDOMs.forEach((popupDOM) => {
+    const { container, popup, inputs, hiddableContainer, closeButton } =
+      popupDOM;
     closeButton.addEventListener("click", () =>
-      DOMMethods.closePopup(container, popup, inputs),
+      DOMMethods.closePopup(container, popup, inputs, hiddableContainer),
     );
 
     // Close popup when clicking outside the popup
     container.addEventListener("click", (event) => {
       if (!popup.contains(event.target)) {
-        DOMMethods.closePopup(container, popup, inputs);
+        DOMMethods.closePopup(container, popup, inputs, hiddableContainer);
       }
     });
   });
 };
 
-const listenCreatePopup = (popupDOM, entityType) => {
-  DOMMethods.updatePopupContent(popupDOM, entityType, "create");
-  DOMMethods.openPopup(
-    popupDOM.container,
-    popupDOM.popup,
-    popupDOM.inputs[0],
-    "create",
-  );
+const listenCreatePopup = (popupDOM) => {
+  DOMMethods.updatePopupContent(popupDOM, "create");
+
+  const [firstInput] = Object.values(popupDOM.inputs);
+  const { container, popup, hiddableContainer } = popupDOM;
+
+  DOMMethods.openPopup(container, popup, firstInput, hiddableContainer, true);
 };
 
 const listenEditPopup = (event, popupDOMs) => {
@@ -33,17 +33,13 @@ const listenEditPopup = (event, popupDOMs) => {
     const entityItem = button.closest(".entity-item");
     const { entityType, entityId } = entityItem.dataset;
 
-    const { popupDOM } = popupDOMs.find(
-      (item) => item.entityType === entityType,
-    );
+    const popupDOM = popupDOMs.find((item) => item.entityType === entityType);
+    DOMMethods.updatePopupContent(popupDOM, "edit", entityId);
 
-    DOMMethods.updatePopupContent(popupDOM, entityType, "edit", entityId);
-    DOMMethods.openPopup(
-      popupDOM.container,
-      popupDOM.popup,
-      popupDOM.inputs[0],
-      "edit",
-    );
+    const [firstInput] = Object.values(popupDOM.inputs);
+    const { container, popup, hiddableContainer } = popupDOM;
+
+    DOMMethods.openPopup(container, popup, firstInput, hiddableContainer);
   }
 };
 
@@ -52,11 +48,16 @@ const listenDeletePopup = (event, deletePopup) => {
   if (button) {
     const entityItem = button.closest(".entity-item");
     const { entityType, entityId, parentFolderId } = entityItem.dataset;
+
+    // the entityType is dependant of the entity being deleted
+    // which is the reason why we need to set it here based
+    // on the currently deleting entity
+    deletePopup.entityType = entityType;
+
     const entityName = entityItem.querySelector("#entity-name").textContent;
 
     DOMMethods.updatePopupContent(
       deletePopup,
-      entityType,
       "delete",
       entityId,
       entityName,
@@ -71,28 +72,20 @@ window.addEventListener("DOMContentLoaded", () => {
   const fileDOM = createPopupDOMObject("file");
   const deletePopup = createPopupDOMObject(null, true);
 
-  const popupDOMs = [
-    {
-      popupDOM: folderDOM,
-      entityType: "folder",
-    },
-    {
-      popupDOM: fileDOM,
-      entityType: "file",
-    },
-  ];
+  const popupDOMs = [folderDOM, fileDOM, deletePopup];
+  const entityRelatedPopupDOMs = popupDOMs.slice(0, 2);
 
-  listenVisiblePopupEvents([...popupDOMs, { popupDOM: deletePopup }]);
+  listenVisiblePopupEvents(popupDOMs);
   DOMMethods.listenOpenedRightSidebar();
 
-  popupDOMs.forEach(({ popupDOM, entityType }) => {
+  entityRelatedPopupDOMs.forEach((popupDOM) => {
     popupDOM.openPopupButton.addEventListener("click", () => {
-      listenCreatePopup(popupDOM, entityType);
+      listenCreatePopup(popupDOM);
     });
   });
 
   document.addEventListener("click", (event) => {
-    listenEditPopup(event, popupDOMs);
+    listenEditPopup(event, entityRelatedPopupDOMs);
     listenDeletePopup(event, deletePopup);
 
     DOMMethods.listenFileClick(event);

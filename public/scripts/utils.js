@@ -11,25 +11,32 @@ const DOMMethods = (() => {
     moreOptionsContainer.classList.toggle("group-hover:opacity-100");
   };
 
-  const closePopup = (container, popup, inputsParams) => {
+  const closePopup = (container, popup, inputsParams, hiddableContainer) => {
     container.classList.add("opacity-0");
     container.classList.add("pointer-events-none");
     container.classList.remove("opacity-100");
     container.classList.remove("pointer-events-auto");
     popup.classList.add("scale-75", "translate-y-8");
+    if (hiddableContainer && !hiddableContainer.classList.contains("hidden")) {
+      hiddableContainer.classList.add("hidden");
+    }
 
     // Reset all input fields
     Object.values(inputsParams).forEach((input) => {
       input.value = "";
+      if (input.disabled) input.disabled = false;
     });
   };
 
-  const openPopup = (container, popup, firstInput, CRUDType) => {
-    let filename;
-    let fileNameContainer;
-
-    const onFileEditSubmission = () => {
-      if (fileNameContainer) fileNameContainer.classList.remove("hidden");
+  const openPopup = (
+    container,
+    popup,
+    firstInput,
+    hiddableContainer,
+    isHidingContainer = false,
+  ) => {
+    const onFirstInputChange = (filename) => {
+      hiddableContainer.classList.remove("hidden");
 
       const fileNameInput = document.getElementById("fileName");
       fileNameInput.value = filename || "";
@@ -45,27 +52,33 @@ const DOMMethods = (() => {
     if (!firstInput) return;
     firstInput.focus();
 
-    // Make the file name input appear on file submission
-    if (firstInput.type === "file" && CRUDType !== "edit") {
-      fileNameContainer = document.getElementById("file-name-container");
-      fileNameContainer.classList.add("hidden");
+    // Make the file name input container appear on file submission
+    // when the user is not editing a file
+    if (hiddableContainer) {
+      if (isHidingContainer) {
+        hiddableContainer.classList.add("hidden");
 
-      firstInput.addEventListener("change", (e) =>
-        onFileEditSubmission(e.target.files[0].name, fileNameContainer),
-      );
+        firstInput.addEventListener("change", (e) =>
+          onFirstInputChange(e.target.files[0].name),
+        );
+      } else {
+        firstInput.disabled = true;
+        hiddableContainer.classList.remove("hidden");
+      }
     }
   };
 
   const updatePopupContent = (
     popupDOMParam,
-    entityType,
     CRUDType,
     entityId = null,
     entityName = null,
     parentFolderId = null,
   ) => {
-    const titledEntityType = entityType === "folder" ? "Folder" : "File";
     const popupDOM = popupDOMParam;
+    const { entityType } = popupDOM;
+
+    const titledEntityType = entityType === "folder" ? "Folder" : "File";
 
     if (CRUDType === "create") {
       popupDOM.title.textContent = `New ${titledEntityType}`;
@@ -216,17 +229,21 @@ const createPopupDOMObject = (entityType, forDeletion = false) => {
   let openPopupButton;
   let deleteContentEntityName;
   let deleteContentEntityType;
+  let hiddableContainer;
   const popup = container.querySelector(".popup");
   const title = container.querySelector(".title");
   const submitButton = container.querySelector("button[type=submit]");
   const closeButton = container.querySelector(".close-button");
 
   if (!forDeletion) {
-    inputs = container.querySelectorAll("input[type=file], input[type=text]");
-
     openPopupButton = document.querySelector(
       `${containerSelector}.open-popup-button`,
     );
+
+    const fileNameContainer = popup.querySelector("#file-name-container");
+    if (fileNameContainer) hiddableContainer = fileNameContainer;
+
+    inputs = container.querySelectorAll("input[type=file], input[type=text]");
     inputs = getInputsKeyValuePairs(inputs);
   } else {
     deleteContentEntityName = container.querySelector(
@@ -243,7 +260,9 @@ const createPopupDOMObject = (entityType, forDeletion = false) => {
   }
 
   const popupDOM = {
+    entityType,
     container,
+    hiddableContainer,
     inputs,
     openPopupButton,
     deleteContentEntityName,
