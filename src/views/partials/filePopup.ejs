@@ -1,8 +1,8 @@
 <section
   <% if (isVisible) { %>
-    class="file z-20 popup-container pointer-events-auto absolute inset-0 size-full bg-black/70 opacity-100 backdrop-blur-sm transition-opacity"
+    class="file z-30 popup-container pointer-events-auto absolute inset-0 size-full bg-black/70 opacity-100 backdrop-blur-sm transition-opacity"
   <% } else { %>
-    class="file z-20 popup-container pointer-events-none absolute inset-0 size-full bg-black/70 opacity-0 backdrop-blur-sm transition-opacity"
+    class="file z-30 popup-container pointer-events-none absolute inset-0 size-full bg-black/70 opacity-0 backdrop-blur-sm transition-opacity"
   <% } %>
 >
   <div class="flex h-full w-full items-center justify-center">
@@ -32,9 +32,9 @@
         name="uploadedFile"
         id="uploadedFile"
         accept="*"
-        class="mt-2 w-full rounded-md border-1 border-zinc-700 bg-zinc-900 p-2 text-sm placeholder:text-zinc-500 focus:border-amber-500 focus:outline-none"
+        class="mt-2 disabled:opacity-50 disabled:text-zinc-500 disabled:hover:cursor-not-allowed w-full rounded-md border-1 border-zinc-700 bg-zinc-900 p-2 text-sm placeholder:text-zinc-500 focus:border-amber-500 focus:outline-none"
       />
-      <div id="file-name-container" class="my-3 hidden">
+      <div id="file-name-container" class="my-3">
         <label class="text-zinc-200" for="fileName">File name</label>
         <input
           name="fileName"

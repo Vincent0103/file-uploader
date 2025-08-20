@@ -19,7 +19,12 @@ const listenVisiblePopupEvents = (popupDOMs) => {
 
 const listenCreatePopup = (popupDOM, entityType) => {
   DOMMethods.updatePopupContent(popupDOM, entityType, "create");
-  DOMMethods.openPopup(popupDOM.container, popupDOM.popup, popupDOM.inputs[0]);
+  DOMMethods.openPopup(
+    popupDOM.container,
+    popupDOM.popup,
+    popupDOM.inputs[0],
+    "create",
+  );
 };
 
 const listenEditPopup = (event, popupDOMs) => {
@@ -37,6 +42,7 @@ const listenEditPopup = (event, popupDOMs) => {
       popupDOM.container,
       popupDOM.popup,
       popupDOM.inputs[0],
+      "edit",
     );
   }
 };

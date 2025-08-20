@@ -18,26 +18,24 @@ const DOMMethods = (() => {
     container.classList.remove("pointer-events-auto");
     popup.classList.add("scale-75", "translate-y-8");
 
-    if (!inputsParams || !Array.isArray(inputsParams)) return;
-
-    // Make the file name input appear on file submission
-    inputsParams.forEach((input) => {
-      const fileNameContainer = document.getElementById("file-name-container");
-      fileNameContainer.classList.add("hidden");
+    // Reset all input fields
+    Object.values(inputsParams).forEach((input) => {
       input.value = "";
     });
   };
 
-  const onFileSubmission = (filename) => {
-    const fileNameContainer = document.getElementById("file-name-container");
-    fileNameContainer.classList.remove("hidden");
+  const openPopup = (container, popup, firstInput, CRUDType) => {
+    let filename;
+    let fileNameContainer;
 
-    const fileNameInput = document.getElementById("fileName");
-    fileNameInput.value = filename || "";
-    fileNameInput.focus();
-  };
+    const onFileEditSubmission = () => {
+      if (fileNameContainer) fileNameContainer.classList.remove("hidden");
 
-  const openPopup = (container, popup, firstInput) => {
+      const fileNameInput = document.getElementById("fileName");
+      fileNameInput.value = filename || "";
+      fileNameInput.focus();
+    };
+
     container.classList.remove("opacity-0");
     container.classList.remove("pointer-events-none");
     container.classList.add("opacity-100");
@@ -45,13 +43,15 @@ const DOMMethods = (() => {
     popup.classList.remove("scale-75", "translate-y-8");
 
     if (!firstInput) return;
-
     firstInput.focus();
 
     // Make the file name input appear on file submission
-    if (firstInput.type === "file") {
+    if (firstInput.type === "file" && CRUDType !== "edit") {
+      fileNameContainer = document.getElementById("file-name-container");
+      fileNameContainer.classList.add("hidden");
+
       firstInput.addEventListener("change", (e) =>
-        onFileSubmission(e.target.files[0].name),
+        onFileEditSubmission(e.target.files[0].name, fileNameContainer),
       );
     }
   };
@@ -85,7 +85,7 @@ const DOMMethods = (() => {
         popupDOM.submitButton.textContent = "Edit";
 
         popupDOM.popup.action = `/edit/${entityType}/${entityId}`;
-      } else {
+      } else if (CRUDType === "delete") {
         popupDOM.title.textContent = `Delete ${titledEntityType}`;
         popupDOM.deleteContentEntityType.textContent = entityType;
         popupDOM.deleteContentEntityName.textContent = entityName;
@@ -143,8 +143,6 @@ const DOMMethods = (() => {
     });
   };
 
-  const getIconPath = (iconName) => `/images/${iconName}.svg`;
-
   const openFileDetails = (entityItem) => {
     const { entityType } = entityItem.dataset;
     if (entityType !== "file") return;
@@ -152,6 +150,8 @@ const DOMMethods = (() => {
     const entityName = entityItem.querySelector("#entity-name").textContent;
     const { entityExtension, entitySize, entityIcon, entityStoragePath } =
       entityItem.dataset;
+
+    const getIconPath = (iconName) => `/images/${iconName}.svg`;
 
     const entityInfos = {
       iconPath: getIconPath(entityIcon),
@@ -191,7 +191,6 @@ const DOMMethods = (() => {
     toggleModal,
     closePopup,
     openPopup,
-    onFileSubmission,
     updatePopupContent,
     updateFileDetailsContent,
     listenMoreOptionsButton,
@@ -201,49 +200,59 @@ const DOMMethods = (() => {
   };
 })();
 
-const getInputsKeyValuePairs = (inputs) =>
-  Array.from(inputs).reduce((acc, input) => {
-    acc[input.id] = input;
-    return acc;
-  }, {});
-
 const createPopupDOMObject = (entityType, forDeletion = false) => {
-  const popupDOM = {};
-  const containerSelector = forDeletion ? ".deletion" : `.${entityType}`;
+  const getInputsKeyValuePairs = (inputs) =>
+    Array.from(inputs).reduce((acc, input) => {
+      acc[input.id] = input;
+      return acc;
+    }, {});
 
+  const containerSelector = forDeletion ? ".deletion" : `.${entityType}`;
   const container = document.querySelector(
     `${containerSelector}.popup-container`,
   );
 
-  popupDOM.container = container;
+  let inputs;
+  let openPopupButton;
+  let deleteContentEntityName;
+  let deleteContentEntityType;
+  const popup = container.querySelector(".popup");
+  const title = container.querySelector(".title");
+  const submitButton = container.querySelector("button[type=submit]");
+  const closeButton = container.querySelector(".close-button");
 
   if (!forDeletion) {
-    const inputs = container.querySelectorAll(
-      "input[type=file], input[type=text]",
-    );
-    const openPopupButton = document.querySelector(
+    inputs = container.querySelectorAll("input[type=file], input[type=text]");
+
+    openPopupButton = document.querySelector(
       `${containerSelector}.open-popup-button`,
     );
-    popupDOM.inputs = getInputsKeyValuePairs(inputs);
-    popupDOM.openPopupButton = openPopupButton;
+    inputs = getInputsKeyValuePairs(inputs);
   } else {
-    popupDOM.deleteContentEntityName = container.querySelector(
+    deleteContentEntityName = container.querySelector(
       "#delete-content-entity-name",
     );
-    popupDOM.deleteContentEntityType = container.querySelector(
+    deleteContentEntityType = container.querySelector(
       "#delete-content-entity-type",
     );
-    popupDOM.inputs = {
+    inputs = {
       entityId: container.querySelector("#entityId"),
       entityType: container.querySelector("#entityType"),
       parentFolderId: container.querySelector("#parentFolderId"),
     };
   }
 
-  popupDOM.popup = container.querySelector(".popup");
-  popupDOM.title = container.querySelector(".title");
-  popupDOM.submitButton = container.querySelector("button[type=submit]");
-  popupDOM.closeButton = container.querySelector(".close-button");
+  const popupDOM = {
+    container,
+    inputs,
+    openPopupButton,
+    deleteContentEntityName,
+    deleteContentEntityType,
+    popup,
+    title,
+    submitButton,
+    closeButton,
+  };
 
   return popupDOM;
 };
