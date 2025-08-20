@@ -126,7 +126,9 @@ const DOMMethods = (() => {
       uploaded: rightSidebar.querySelector("#file-details-uploaded"),
     };
 
-    const { name, size, extension, uploaded, storagePath } = entityInfos;
+    const { iconPath, name, size, extension, uploaded, storagePath } =
+      entityInfos;
+    if (fileDetails.icon.src !== storagePath) fileDetails.icon.src = iconPath;
     fileDetails.icon.src = storagePath;
     fileDetails.name.textContent = name;
     fileDetails.size.textContent = size;
