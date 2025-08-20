@@ -1,3 +1,4 @@
+import onFormSubmit from "./fileInputHandler.js";
 import DOMMethods, { createPopupDOMObject } from "./utils.js";
 
 const listenFileClick = (event) => {
@@ -84,7 +85,6 @@ const listenEditPopup = (event, popupDOMs) => {
     DOMMethods.updatePopupContent(popupDOM, "edit", entityId, entityName);
 
     const { container, inputs, popup, hiddableContainer } = popupDOM;
-
     DOMMethods.openPopup(container, popup, inputs, hiddableContainer);
   }
 };
@@ -128,6 +128,13 @@ window.addEventListener("DOMContentLoaded", () => {
     popupDOM.openPopupButton.addEventListener("click", () => {
       listenCreatePopup(popupDOM);
     });
+  });
+
+  fileDOM.popup.addEventListener("submit", (event) => {
+    const submitButton = event.submitter;
+    const { crudType } = submitButton.dataset;
+    console.log(submitButton);
+    if (crudType !== "edit") onFormSubmit(event);
   });
 
   document.addEventListener("click", (event) => {

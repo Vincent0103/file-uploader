@@ -88,8 +88,9 @@
       </main>
     </div>
     <%- include("partials/deletePopup.ejs") %> <%-
-    include("partials/folderPopup.ejs", { ...popups.folder, parentFolderId }) %>
-    <%- include("partials/filePopup.ejs", { ...popups.file, parentFolderId }) %>
+    include("partials/folderPopup.ejs", { ...popups.folder, CRUDType,
+    parentFolderId }) %> <%- include("partials/filePopup.ejs", { ...popups.file,
+    CRUDType, parentFolderId }) %>
     <script src="https://unpkg.com/lucide@latest"></script>
     <script>
       lucide.createIcons();

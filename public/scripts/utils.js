@@ -35,7 +35,11 @@ const DOMMethods = (() => {
     hiddableContainer,
     isHidingContainer = false,
   ) => {
-    const inputs = Object.values(inputsParam);
+    let inputs;
+    if (inputsParam) {
+      inputs = Object.values(inputsParam);
+    }
+
     const onFirstInputChange = (filename) => {
       hiddableContainer.classList.remove("hidden");
 
@@ -49,7 +53,7 @@ const DOMMethods = (() => {
     container.classList.add("pointer-events-auto");
     popup.classList.remove("scale-75", "translate-y-8");
 
-    if (!inputs[0]) return;
+    if (!inputs) return;
     inputs[0].focus();
 
     // Make the file name input container appear on file submission
@@ -85,6 +89,7 @@ const DOMMethods = (() => {
       popupDOM.title.textContent = `New ${titledEntityType}`;
       popupDOM.submitButton.textContent =
         entityType === "folder" ? "Create" : "Upload";
+      popupDOM.submitButton.dataset.crudType = "create";
 
       popupDOM.popup.action = `/create/${entityType}`;
     } else {
@@ -97,6 +102,7 @@ const DOMMethods = (() => {
       if (CRUDType === "edit") {
         popupDOM.title.textContent = `Edit ${titledEntityType}`;
         popupDOM.submitButton.textContent = "Edit";
+        popupDOM.submitButton.dataset.crudType = "edit";
 
         Object.values(popupDOM.inputs).forEach((input) => {
           if (input.type === "text") input.value = entityName;

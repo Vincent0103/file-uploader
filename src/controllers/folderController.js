@@ -57,6 +57,7 @@ const folderController = (() => {
       parentFolderId,
       nodes,
       popups,
+      CRUDType,
       entities,
       sidebarFolders,
     };

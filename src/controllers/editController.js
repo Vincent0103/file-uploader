@@ -1,8 +1,8 @@
 import { validationResult } from "express-validator";
 import multer from "multer";
-import { getMulterOptions, validateEntity } from "../utils/utils";
-import db from "../db/queries";
-import folderController from "./folderController";
+import { getMulterOptions, validateEntity } from "../utils/utils.js";
+import db from "../db/queries.js";
+import folderController from "./folderController.js";
 
 const loginController = (() => {
   const editFolderPost = [
@@ -50,7 +50,6 @@ const loginController = (() => {
         return res.status(401).render("index", {
           ...params,
           hasPopupFileErrors: true,
-          CRUDType: "edit",
           fileName,
           errors: errors.array(),
         });
