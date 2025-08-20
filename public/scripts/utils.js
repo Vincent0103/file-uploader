@@ -108,8 +108,7 @@ const DOMMethods = (() => {
       uploaded: rightSidebar.querySelector("#file-details-uploaded"),
     };
 
-    const { iconPath, name, size, extension, uploaded, storagePath } =
-      entityInfos;
+    const { name, size, extension, uploaded, storagePath } = entityInfos;
     fileDetails.icon.src = storagePath;
     fileDetails.name.textContent = name;
     fileDetails.size.textContent = size;
@@ -202,6 +201,12 @@ const DOMMethods = (() => {
   };
 })();
 
+const getInputsKeyValuePairs = (inputs) =>
+  Array.from(inputs).reduce((acc, input) => {
+    acc[input.id] = input;
+    return acc;
+  }, {});
+
 const createPopupDOMObject = (entityType, forDeletion = false) => {
   const popupDOM = {};
   const containerSelector = forDeletion ? ".deletion" : `.${entityType}`;
@@ -219,7 +224,7 @@ const createPopupDOMObject = (entityType, forDeletion = false) => {
     const openPopupButton = document.querySelector(
       `${containerSelector}.open-popup-button`,
     );
-    popupDOM.inputs = inputs;
+    popupDOM.inputs = getInputsKeyValuePairs(inputs);
     popupDOM.openPopupButton = openPopupButton;
   } else {
     popupDOM.deleteContentEntityName = container.querySelector(
