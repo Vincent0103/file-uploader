@@ -32,9 +32,10 @@ const listenEditPopup = (event, popupDOMs) => {
   if (button) {
     const entityItem = button.closest(".entity-item");
     const { entityType, entityId } = entityItem.dataset;
+    const entityName = entityItem.querySelector("#entity-name").textContent;
 
     const popupDOM = popupDOMs.find((item) => item.entityType === entityType);
-    DOMMethods.updatePopupContent(popupDOM, "edit", entityId);
+    DOMMethods.updatePopupContent(popupDOM, "edit", entityId, entityName);
 
     const [firstInput] = Object.values(popupDOM.inputs);
     const { container, popup, hiddableContainer } = popupDOM;

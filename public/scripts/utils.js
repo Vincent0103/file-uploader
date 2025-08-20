@@ -97,6 +97,10 @@ const DOMMethods = (() => {
         popupDOM.title.textContent = `Edit ${titledEntityType}`;
         popupDOM.submitButton.textContent = "Edit";
 
+        Object.values(popupDOM.inputs).forEach((input) => {
+          if (input.type === "text") input.value = entityName;
+        });
+
         popupDOM.popup.action = `/edit/${entityType}/${entityId}`;
       } else if (CRUDType === "delete") {
         popupDOM.title.textContent = `Delete ${titledEntityType}`;
@@ -182,10 +186,7 @@ const DOMMethods = (() => {
     document.querySelectorAll(".entity-item").forEach((entityItem) => {
       const isSelected = entityItem === selectedEntity;
       Array.from(entityItem.children).forEach((child) => {
-        if (
-          child.classList.contains("opacity-0") ||
-          child.classList.contains("opacity-100")
-        ) {
+        if (child.classList.contains("more-options-container")) {
           child.classList.toggle("opacity-100", isSelected);
           child.classList.toggle("opacity-0", !isSelected);
         } else {
