@@ -1,5 +1,54 @@
 import DOMMethods, { createPopupDOMObject } from "./utils.js";
 
+const listenFileClick = (event) => {
+  DOMMethods.handleEntityItemClickStylings(event);
+
+  const targetEntityItem = event.target.closest(".entity-item");
+  const element = event.target;
+  if (
+    !targetEntityItem ||
+    element.closest(".more-options-button") ||
+    element.closest(".more-modal")
+  ) {
+    return;
+  }
+  DOMMethods.openFileDetails(targetEntityItem);
+};
+
+const listenOpenedRightSidebar = () => {
+  const rightSidebar = document.getElementById("right-sidebar");
+  const closeButton = rightSidebar.querySelector(".close-button");
+  closeButton.addEventListener("click", () => {
+    if (rightSidebar.classList.contains("hidden")) return;
+    rightSidebar.classList.add("hidden");
+    rightSidebar.classList.remove("absolute");
+  });
+};
+
+const listenMoreOptionsButton = (event) => {
+  const button = event.target.closest(".more-options-button");
+  if (button) {
+    const entityItem = button.closest(".entity-item");
+    if (entityItem) {
+      const modal = entityItem.querySelector(".more-modal");
+      const entityContainer = entityItem.querySelector(".entity-container");
+      const moreOptionsContainer = entityItem.querySelector("div.absolute");
+      DOMMethods.toggleModal(modal, entityContainer, moreOptionsContainer);
+    }
+  }
+};
+
+const listenOpenedModals = (event) => {
+  document.querySelectorAll(".more-modal.opacity-100").forEach((modal) => {
+    const entityItem = modal.closest(".entity-item");
+    if (entityItem && !entityItem.contains(event.target)) {
+      const entityContainer = entityItem.querySelector(".entity-container");
+      const moreOptionsContainer = entityItem.querySelector("div.absolute");
+      DOMMethods.toggleModal(modal, entityContainer, moreOptionsContainer);
+    }
+  });
+};
+
 const listenVisiblePopupEvents = (popupDOMs) => {
   popupDOMs.forEach((popupDOM) => {
     const { container, popup, inputs, hiddableContainer, closeButton } =
@@ -73,7 +122,7 @@ window.addEventListener("DOMContentLoaded", () => {
   const entityRelatedPopupDOMs = popupDOMs.slice(0, 2);
 
   listenVisiblePopupEvents(popupDOMs);
-  DOMMethods.listenOpenedRightSidebar();
+  listenOpenedRightSidebar();
 
   entityRelatedPopupDOMs.forEach((popupDOM) => {
     popupDOM.openPopupButton.addEventListener("click", () => {
@@ -85,10 +134,10 @@ window.addEventListener("DOMContentLoaded", () => {
     listenEditPopup(event, entityRelatedPopupDOMs);
     listenDeletePopup(event, deletePopup);
 
-    DOMMethods.listenFileClick(event);
-    DOMMethods.listenMoreOptionsButton(event);
+    listenFileClick(event);
+    listenMoreOptionsButton(event);
 
     // Close open modals if clicking outside
-    DOMMethods.listenOpenedModals(event);
+    listenOpenedModals(event);
   });
 });

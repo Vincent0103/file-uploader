@@ -139,30 +139,6 @@ const DOMMethods = (() => {
     rightSidebar.classList.add("absolute");
   };
 
-  const listenMoreOptionsButton = (event) => {
-    const button = event.target.closest(".more-options-button");
-    if (button) {
-      const entityItem = button.closest(".entity-item");
-      if (entityItem) {
-        const modal = entityItem.querySelector(".more-modal");
-        const entityContainer = entityItem.querySelector(".entity-container");
-        const moreOptionsContainer = entityItem.querySelector("div.absolute");
-        DOMMethods.toggleModal(modal, entityContainer, moreOptionsContainer);
-      }
-    }
-  };
-
-  const listenOpenedModals = (event) => {
-    document.querySelectorAll(".more-modal.opacity-100").forEach((modal) => {
-      const entityItem = modal.closest(".entity-item");
-      if (entityItem && !entityItem.contains(event.target)) {
-        const entityContainer = entityItem.querySelector(".entity-container");
-        const moreOptionsContainer = entityItem.querySelector("div.absolute");
-        DOMMethods.toggleModal(modal, entityContainer, moreOptionsContainer);
-      }
-    });
-  };
-
   const openFileDetails = (entityItem) => {
     const { entityType } = entityItem.dataset;
     if (entityType !== "file") return;
@@ -201,41 +177,14 @@ const DOMMethods = (() => {
     });
   };
 
-  const listenFileClick = (event) => {
-    handleEntityItemClickStylings(event);
-
-    const targetEntityItem = event.target.closest(".entity-item");
-    const element = event.target;
-    if (
-      !targetEntityItem ||
-      element.closest(".more-options-button") ||
-      element.closest(".more-modal")
-    ) {
-      return;
-    }
-    openFileDetails(targetEntityItem);
-  };
-
-  const listenOpenedRightSidebar = () => {
-    const rightSidebar = document.getElementById("right-sidebar");
-    const closeButton = rightSidebar.querySelector(".close-button");
-    closeButton.addEventListener("click", () => {
-      if (rightSidebar.classList.contains("hidden")) return;
-      rightSidebar.classList.add("hidden");
-      rightSidebar.classList.remove("absolute");
-    });
-  };
-
   return {
     toggleModal,
     closePopup,
     openPopup,
     updatePopupContent,
     updateFileDetailsContent,
-    listenMoreOptionsButton,
-    listenOpenedModals,
-    listenFileClick,
-    listenOpenedRightSidebar,
+    handleEntityItemClickStylings,
+    openFileDetails,
   };
 })();
 
