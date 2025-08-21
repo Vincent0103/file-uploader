@@ -40,6 +40,7 @@ const loginController = (() => {
       next();
     },
     upload.single("uploadedFile"),
+    validateEntity("File", "fileName", "Filename"),
     async (req, _res, next) => {
       const uploadEndTime = Date.now();
       const uploadTime = Math.abs(req.uploadStartTime - uploadEndTime);
@@ -48,7 +49,6 @@ const loginController = (() => {
       req.body.uploadTime = uploadTime;
       next();
     },
-    validateEntity("File", "fileName", "Filename"),
     async (req, res) => {
       const errors = validationResult(req);
       let params;

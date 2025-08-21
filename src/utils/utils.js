@@ -29,6 +29,14 @@ const validationErrorMessages = (() => {
   };
 })();
 
+const validateFileSize = (maxSize) => (value, req) => {
+  if (req.file && req.file.size > maxSize) {
+    throw new Error(
+      `file ${value} too big (${filesize(req.file.size)}). Expected <${filesize(maxSize)}`,
+    );
+  }
+};
+
 const validateEntity = (name, attributeName, messageName) => [
   body(attributeName)
     .trim()
@@ -47,6 +55,9 @@ const validateEntity = (name, attributeName, messageName) => [
       if (entityExists) {
         throw new Error(`${name} "${value}" already exists.`);
       }
+
+      if (name === "File") validateFileSize(value, req);
+
       return true;
     }),
 ];

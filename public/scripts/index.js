@@ -116,13 +116,13 @@ const listenDeletePopup = (event, deletePopup) => {
   const button = event.target.closest(".delete.open-popup-button");
   if (button) {
     const entityItem = button.closest(".entity-item");
-    const { entityFile } = entityItem.dataset;
+    const { entityFile, entityType, parentFolderId } = entityItem.dataset;
     const parsedEntityObject = JSON.parse(entityFile);
 
     // the entityType is dependant of the entity being deleted
     // which is the reason why we need to set it here based
     // on the currently deleting entity
-    deletePopup.entityType = parsedEntityObject.entityType;
+    deletePopup.entityType = entityType;
 
     const entityName = entityItem.querySelector("#entity-name").textContent;
 
@@ -131,7 +131,7 @@ const listenDeletePopup = (event, deletePopup) => {
       "delete",
       parsedEntityObject.entityId,
       entityName,
-      parsedEntityObject.parentFolderId,
+      parentFolderId,
     );
     DOMMethods.openPopup(deletePopup.container, deletePopup.popup);
   }
