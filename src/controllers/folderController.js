@@ -31,12 +31,35 @@ const folderController = (() => {
     let entities = await db.getEntities(userId, parentFolderId);
     entities = entities.map((entity) => mapEntityForUI(entity));
 
-    const iconNames = ["home", "file-text", "image", "film", "music"];
+    const iconNames = [
+      {
+        folderName: req.user.username,
+        iconName: "home",
+      },
+      {
+        folderName: "documents",
+        iconName: "file-text",
+      },
+      {
+        folderName: "images",
+        iconName: "image",
+      },
+      {
+        folderName: "videos",
+        iconName: "film",
+      },
+      {
+        folderName: "music",
+        iconName: "music",
+      },
+    ];
+
     const sidebarFolders = (await db.getSidebarFolders(userId, username)).map(
-      ({ id, name }, index) => ({
+      ({ id, name }) => ({
         folderId: id,
         name,
-        iconName: iconNames[index],
+        iconName: iconNames.find(({ folderName }) => folderName === name)
+          .iconName,
       }),
     );
 

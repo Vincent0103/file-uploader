@@ -178,6 +178,9 @@ const db = (() => {
       include: {
         file: true,
       },
+      orderBy: {
+        name: "desc",
+      },
     });
 
     return foldersAndFiles;
