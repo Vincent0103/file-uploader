@@ -145,6 +145,7 @@ const DOMMethods = (() => {
 
     if (fileDetails.icon.src !== storagePath) fileDetails.icon.src = iconPath;
     fileDetails.icon.src = storagePath;
+    fileDetails.icon.alt = `Preview of file ${name}`;
     fileDetails.name.textContent = name;
     fileDetails.size.textContent = size;
     fileDetails.extension.textContent = extension;

@@ -52,16 +52,18 @@
     <a
       href="<%= file.downloadPath %>"
       download
-      class="inline-block w-full rounded-md bg-amber-500 px-4 py-2 text-center text-sm font-semibold text-white transition-colors hover:bg-amber-600"
+      class="flex w-full items-center justify-center gap-2 rounded-md bg-amber-500 px-4 py-2 text-center text-sm font-semibold text-white transition-colors hover:bg-amber-600"
     >
-      Download
+      <i class="size-5" data-lucide="download"></i>
+      <span>Download</span>
     </a>
     <% } else { %>
     <button
-      class="w-full cursor-not-allowed rounded-md bg-zinc-700 px-4 py-2 text-sm font-semibold text-zinc-400"
+      class="flex w-full cursor-not-allowed items-center justify-center gap-2 rounded-md bg-zinc-700 px-4 py-2 text-sm font-semibold text-zinc-400"
       disabled
     >
-      Download
+      <i class="size-5" data-lucide="download"></i>
+      <span>Download</span>
     </button>
     <% } %>
   </div>
