@@ -1,8 +1,5 @@
 - Update file path logic to use predecessorId instead of the actual path (join by name with "/")
 - add all error page
-- Fix duplicate files input
-- Handle errors for file uploads when creating, it should say that max file size = 10MB
-- clear errors messages when user closes popups and reopen another one
 - include images in the readme for all of your projects and attract eyeballs.
 
 # file-uploader
