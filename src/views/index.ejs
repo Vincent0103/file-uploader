@@ -38,9 +38,9 @@
           <a href="/logout">Log Out</a>
         </div>
       </nav>
-      <main class="relative flex size-full">
+      <main class="relative flex size-full overflow-hidden">
         <%- include("partials/leftSidebar.ejs", { user, sidebarFolders }) %>
-        <section class="flex size-full flex-col bg-zinc-800 p-2">
+        <section class="flex w-full flex-col bg-zinc-800 p-2">
           <nav class="font-light text-zinc-400">
             <small class="m-1 flex gap-1">
               <% nodes.forEach((node, index) => { %>
