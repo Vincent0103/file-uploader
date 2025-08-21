@@ -155,11 +155,10 @@ const db = (() => {
     return deletedEntities.concat(deletedEntity);
   };
 
-  const getFolderById = async (userId, folderId) => {
+  const getFolderById = async (folderId) => {
     const folder = await prisma.entity.findFirst({
       where: {
         id: folderId,
-        userId,
       },
       include: {
         successor: true,

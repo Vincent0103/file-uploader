@@ -52,30 +52,19 @@ const validateEntity = (name, attributeName, messageName) => [
     }),
 ];
 
-const getNodesFromPath = async (srcPath, userId) => {
+const getNodesFromEntityId = async (entityId) => {
   const nodes = [];
 
-  // The next loop doesn't follow eslint good practices but is necessary
-  // so that it runs *sequentially* and doesn't cause race conditions.
-
-  const lastIndexOfSlash = srcPath.lastIndexOf("/");
-  const narrowedPath = srcPath.slice(0, lastIndexOfSlash + 1);
-  const name = srcPath.slice(lastIndexOfSlash + 1, srcPath.length);
-
-  let folder = await db.getFolderByNameAndPath(userId, name, narrowedPath);
-
-  nodes.push({
-    name,
-    folderId: folder.id,
-  });
-  while (folder.predecessorId) {
-    folder = await db.getFolderById(userId, folder.predecessorId);
+  let currentEntityId = entityId;
+  do {
+    const folder = await db.getFolderById(currentEntityId);
 
     nodes.push({
       name: folder.name,
       folderId: folder.id,
     });
-  }
+    currentEntityId = folder.predecessorId;
+  } while (currentEntityId);
 
   nodes.reverse();
   return nodes;
@@ -176,7 +165,7 @@ const mapEntityForUI = (entity) => ({
 export {
   validationErrorMessages,
   validateEntity,
-  getNodesFromPath,
+  getNodesFromEntityId,
   getPopupObject,
   getMulterOptions,
   getEntityIcon,

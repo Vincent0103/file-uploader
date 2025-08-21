@@ -157,7 +157,12 @@ window.addEventListener("DOMContentLoaded", () => {
     listenEditPopup(event, entityRelatedPopupDOMs);
     listenDeletePopup(event, deletePopup);
 
-    listenFileClick(event);
+    const entityItem = event.target.closest(".entity-item");
+    if (entityItem) {
+      const { entityType } = entityItem.dataset;
+      if (entityType === "file") listenFileClick(event);
+    }
+
     listenMoreOptionsButton(event);
 
     // Close open modals if clicking outside

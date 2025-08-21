@@ -1,9 +1,8 @@
 import db from "../db/queries.js";
 
 import {
-  getNodesFromPath,
+  getNodesFromEntityId,
   getPopupObject,
-  getEntityIcon,
   mapEntityForUI,
 } from "../utils/utils.js";
 
@@ -63,11 +62,7 @@ const folderController = (() => {
       }),
     );
 
-    const parentFolder = await db.getFolderById(userId, parentFolderId);
-    const nodes = await getNodesFromPath(
-      parentFolder.path.concat(parentFolder.name),
-      userId,
-    );
+    const nodes = await getNodesFromEntityId(parentFolderId);
 
     const CRUDType = isCreatingEntity ? "create" : "edit";
     const popups = {
