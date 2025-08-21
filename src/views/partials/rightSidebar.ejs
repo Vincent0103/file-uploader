@@ -20,9 +20,9 @@
         alt=""
       />
     </div>
-    <div class="box-content flex gap-1">
+    <div class="flex gap-1">
       <span class="font-medium">Name:</span>
-      <p class="w-54 break-words" id="file-details-name">
+      <p class="w-full break-all" id="file-details-name">
         <%= file?.name || "-" %>
       </p>
     </div>
@@ -48,23 +48,15 @@
     </div>
   </div>
   <div class="mt-6">
-    <% if (file && file.downloadPath) { %>
     <a
-      href="<%= file.downloadPath %>"
+      id="file-details-download-link"
+      href="<%= file?.storagePath %>"
+      class="flex w-full items-center justify-center gap-2 rounded-md bg-amber-500 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-amber-600 disabled:cursor-not-allowed disabled:bg-zinc-700 disabled:text-zinc-400"
       download
-      class="flex w-full items-center justify-center gap-2 rounded-md bg-amber-500 px-4 py-2 text-center text-sm font-semibold text-white transition-colors hover:bg-amber-600"
-    >
-      <i class="size-5" data-lucide="download"></i>
-      <span>Download</span>
-    </a>
-    <% } else { %>
-    <button
-      class="flex w-full cursor-not-allowed items-center justify-center gap-2 rounded-md bg-zinc-700 px-4 py-2 text-sm font-semibold text-zinc-400"
       disabled
     >
       <i class="size-5" data-lucide="download"></i>
       <span>Download</span>
-    </button>
-    <% } %>
+    </a>
   </div>
 </aside>

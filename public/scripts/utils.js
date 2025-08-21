@@ -131,6 +131,7 @@ const DOMMethods = (() => {
       extension: rightSidebar.querySelector("#file-details-extension"),
       uploadTime: rightSidebar.querySelector("#file-details-upload-time"),
       createdAt: rightSidebar.querySelector("#file-details-created-at"),
+      downloadLink: rightSidebar.querySelector("#file-details-download-link"),
     };
 
     const {
@@ -151,6 +152,8 @@ const DOMMethods = (() => {
     fileDetails.extension.textContent = extension;
     fileDetails.uploadTime.textContent = uploadTime;
     fileDetails.createdAt.textContent = createdAt;
+    fileDetails.downloadLink.href = storagePath;
+    fileDetails.downloadLink.download = name;
 
     rightSidebar.classList.remove("hidden");
     rightSidebar.classList.add("absolute");
