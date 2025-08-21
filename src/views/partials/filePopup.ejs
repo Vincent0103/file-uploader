@@ -53,6 +53,7 @@
         <% } %>
         class="mt-2 disabled:opacity-50 disabled:text-zinc-500 disabled:hover:cursor-not-allowed w-full rounded-md border-1 border-zinc-700 bg-zinc-900 p-2 text-sm placeholder:text-zinc-500 focus:border-amber-500 focus:outline-none"
       />
+      <small class="mt-1 text-zinc-400"><i>Max file size: 10MB</i></small>
       <progress id="upload-progress" value="0" max="100" class="hidden h-3 rounded-lg my-2 accent-amber-500"></progress>
       <% if (locals.hasPopupFileErrors && CRUDType === "edit") { %>
       <div id="file-name-container" class="my-3">

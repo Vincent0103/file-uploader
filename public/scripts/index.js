@@ -69,9 +69,17 @@ const listenVisiblePopupEvents = (popupDOMs) => {
 
 const listenCreatePopup = (popupDOM) => {
   DOMMethods.updatePopupContent(popupDOM, "create");
-  const { container, popup, inputs, hiddableContainer } = popupDOM;
+  const { container, popup, inputs, fileInputInfos, hiddableContainer } =
+    popupDOM;
 
-  DOMMethods.openPopup(container, popup, inputs, hiddableContainer, true);
+  DOMMethods.openPopup(
+    container,
+    popup,
+    inputs,
+    fileInputInfos,
+    hiddableContainer,
+    true,
+  );
 };
 
 const listenEditPopup = (event, popupDOMs) => {
@@ -79,14 +87,12 @@ const listenEditPopup = (event, popupDOMs) => {
   if (button) {
     const entityItem = button.closest(".entity-item");
 
-    const { entityFile } = entityItem.dataset;
+    const { entityFile, entityType } = entityItem.dataset;
     const parsedEntityObject = JSON.parse(entityFile);
 
     const entityName = entityItem.querySelector("#entity-name").textContent;
 
-    const popupDOM = popupDOMs.find(
-      (item) => item.entityType === parsedEntityObject.entityType,
-    );
+    const popupDOM = popupDOMs.find((item) => item.entityType === entityType);
     DOMMethods.updatePopupContent(
       popupDOM,
       "edit",
@@ -94,8 +100,15 @@ const listenEditPopup = (event, popupDOMs) => {
       entityName,
     );
 
-    const { container, inputs, popup, hiddableContainer } = popupDOM;
-    DOMMethods.openPopup(container, popup, inputs, hiddableContainer);
+    const { container, inputs, popup, fileInputInfos, hiddableContainer } =
+      popupDOM;
+    DOMMethods.openPopup(
+      container,
+      popup,
+      inputs,
+      fileInputInfos,
+      hiddableContainer,
+    );
   }
 };
 

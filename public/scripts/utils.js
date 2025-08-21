@@ -32,6 +32,7 @@ const DOMMethods = (() => {
     container,
     popup,
     inputsParam,
+    fileInputInfos,
     hiddableContainer,
     isHidingContainer = false,
   ) => {
@@ -61,6 +62,7 @@ const DOMMethods = (() => {
     if (hiddableContainer) {
       if (isHidingContainer) {
         hiddableContainer.classList.add("hidden");
+        fileInputInfos.classList.remove("hidden");
 
         inputs[0].addEventListener("change", (e) =>
           onFirstInputChange(e.target.files[0].name),
@@ -68,6 +70,7 @@ const DOMMethods = (() => {
       } else {
         inputs[0].disabled = true;
         hiddableContainer.classList.remove("hidden");
+        fileInputInfos.classList.add("hidden");
         inputs[1].focus();
       }
     }
@@ -223,6 +226,7 @@ const createPopupDOMObject = (entityType, forDeletion = false) => {
   let deleteContentEntityName;
   let deleteContentEntityType;
   let hiddableContainer;
+  let fileInputInfos;
   const popup = container.querySelector(".popup");
   const title = container.querySelector(".title");
   const submitButton = container.querySelector("button[type=submit]");
@@ -236,6 +240,7 @@ const createPopupDOMObject = (entityType, forDeletion = false) => {
     const fileNameContainer = popup.querySelector("#file-name-container");
     if (fileNameContainer) hiddableContainer = fileNameContainer;
 
+    fileInputInfos = popup.querySelector("small");
     inputs = container.querySelectorAll("input[type=file], input[type=text]");
     inputs = getInputsKeyValuePairs(inputs);
   } else {
@@ -257,6 +262,7 @@ const createPopupDOMObject = (entityType, forDeletion = false) => {
     container,
     hiddableContainer,
     inputs,
+    fileInputInfos,
     openPopupButton,
     deleteContentEntityName,
     deleteContentEntityType,
