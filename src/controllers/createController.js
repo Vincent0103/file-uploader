@@ -34,7 +34,20 @@ const loginController = (() => {
 
   const upload = multer(getMulterOptions());
   const createFilePost = [
+    async (req, _res, next) => {
+      const uploadStartTime = Date.now();
+      req.uploadStartTime = uploadStartTime;
+      next();
+    },
     upload.single("uploadedFile"),
+    async (req, _res, next) => {
+      const uploadEndTime = Date.now();
+      const uploadTime = Math.abs(req.uploadStartTime - uploadEndTime);
+      delete req.uploadStartTime;
+
+      req.body.uploadTime = uploadTime;
+      next();
+    },
     validateEntity("File", "fileName", "Filename"),
     async (req, res) => {
       const errors = validationResult(req);
@@ -52,6 +65,7 @@ const loginController = (() => {
       const { id: userId } = req.user;
       const { fileName } = req.body;
       const parentFolderId = parseInt(req.body.parentFolderId, 10);
+      const uploadTime = parseInt(req.body.uploadTime, 10);
 
       const { path: folderPath } = await db.getFolderById(
         userId,
@@ -64,6 +78,7 @@ const loginController = (() => {
       const fileInfos = {
         size: req.file.size,
         storagePath,
+        uploadTime,
         extension: req.file.mimetype,
       };
 

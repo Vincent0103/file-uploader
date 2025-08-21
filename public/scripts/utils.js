@@ -129,17 +129,19 @@ const DOMMethods = (() => {
       name: rightSidebar.querySelector("#file-details-name"),
       size: rightSidebar.querySelector("#file-details-size"),
       extension: rightSidebar.querySelector("#file-details-extension"),
-      uploaded: rightSidebar.querySelector("#file-details-uploaded"),
+      uploadTime: rightSidebar.querySelector("#file-details-upload-time"),
+      createdAt: rightSidebar.querySelector("#file-details-created-at"),
     };
 
-    const { iconPath, name, size, extension, uploaded, storagePath } =
+    const { iconPath, name, size, extension, uploadTime, storagePath } =
       entityInfos;
     if (fileDetails.icon.src !== storagePath) fileDetails.icon.src = iconPath;
     fileDetails.icon.src = storagePath;
     fileDetails.name.textContent = name;
     fileDetails.size.textContent = size;
     fileDetails.extension.textContent = extension;
-    fileDetails.uploaded.textContent = uploaded;
+    fileDetails.uploadTime.textContent = uploadTime;
+    // fileDetails.createdAt.textContent = createdAt;
 
     rightSidebar.classList.remove("hidden");
     rightSidebar.classList.add("absolute");
@@ -150,8 +152,13 @@ const DOMMethods = (() => {
     if (entityType !== "file") return;
 
     const entityName = entityItem.querySelector("#entity-name").textContent;
-    const { entityExtension, entitySize, entityIcon, entityStoragePath } =
-      entityItem.dataset;
+    const {
+      entityExtension,
+      entitySize,
+      entityUploadTime,
+      entityIcon,
+      entityStoragePath,
+    } = entityItem.dataset;
 
     const getIconPath = (iconName) => `/images/${iconName}.svg`;
 
@@ -160,6 +167,7 @@ const DOMMethods = (() => {
       name: entityName,
       size: entitySize,
       extension: entityExtension,
+      uploadTime: entityUploadTime,
       storagePath: entityStoragePath,
     };
 

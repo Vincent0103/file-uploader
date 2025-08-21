@@ -3,6 +3,7 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 const main = async () => {
+  // await prisma.user.deleteMany();
   // await db.createFolder(3, "home", "/");
   // await db.createFolder(3, "documents", "/home/", 27);
   // await db.createFolder(3, "images", "/home/", 27);

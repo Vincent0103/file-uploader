@@ -37,10 +37,14 @@
       <span id="file-details-extension"><%= file?.extension || "-" %></span>
     </div>
     <div>
-      <span class="font-medium">Uploaded:</span>
-      <span id="file-details-uploaded"
+      <span class="font-medium">created at:</span>
+      <span id="file-details-created-at"
         ><%= file?.createdAt ? file.createdAt.toLocaleString() : "-" %></span
       >
+    </div>
+    <div>
+      <span class="font-medium">Upload time:</span>
+      <span id="file-details-upload-time"><%= file?.uploadTime || "-" %></span>
     </div>
   </div>
   <div class="mt-6">

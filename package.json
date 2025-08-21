@@ -37,6 +37,7 @@
     "multer": "^2.0.2",
     "passport": "^0.7.0",
     "passport-local": "^1.0.0",
+    "pretty-ms": "^9.2.0",
     "tailwindcss": "^4.1.12"
   }
 }

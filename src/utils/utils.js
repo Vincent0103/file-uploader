@@ -5,6 +5,7 @@ import multer from "multer";
 import path from "path";
 import { filesize } from "filesize";
 import db from "../db/queries.js";
+import prettyMilliseconds from "pretty-ms";
 
 const validationErrorMessages = (() => {
   const lengthErr = (min, max) => `must be between ${min} and ${max}.`;
@@ -162,6 +163,7 @@ const mapEntityForUI = (entity) => ({
     file: {
       ...entity.file,
       size: filesize(entity.file.size),
+      uploadTime: prettyMilliseconds(entity.file.uploadTime),
     },
   }),
   icon: getEntityIcon(entity),
