@@ -53,11 +53,10 @@ const db = (() => {
     return !!user;
   };
 
-  const createFolder = async (userId, foldername, path, parentFolderId) => {
+  const createFolder = async (userId, foldername, parentFolderId) => {
     const folder = await prisma.entity.create({
       data: {
         name: foldername,
-        path,
         user: {
           connect: {
             id: userId,
@@ -85,17 +84,10 @@ const db = (() => {
     return folder;
   };
 
-  const createFile = async (
-    userId,
-    filename,
-    path,
-    fileInfos,
-    folderParentId,
-  ) => {
+  const createFile = async (userId, filename, fileInfos, folderParentId) => {
     const { id: entityId } = await prisma.entity.create({
       data: {
         name: filename,
-        path,
         user: {
           connect: {
             id: userId,
@@ -202,40 +194,19 @@ const db = (() => {
     return folders;
   };
 
-  const getFolderByNameAndPath = async (userId, name, path) => {
+  const getRootFolder = async (userId) => {
     const folder = await prisma.entity.findFirst({
       where: {
-        name,
-        path,
         userId,
+        predecessorId: null,
       },
     });
 
     return folder;
   };
 
-  const getPredecessorByPath = async (userId, path) => {
-    const childFolder = await prisma.entity.findFirst({
-      where: {
-        path,
-        userId,
-      },
-    });
-
-    if (!childFolder) return null;
-    const { predecessorId } = childFolder;
-
-    const parentFolder = await prisma.entity.findFirst({
-      where: {
-        id: predecessorId,
-      },
-    });
-
-    return parentFolder;
-  };
-
-  const doesEntityExistsInPath = async (userId, filename, entityId) => {
-    const entity = await db.getFolderById(userId, entityId);
+  const doesEntityExistsInFolder = async (filename, folderId) => {
+    const entity = await db.getFolderById(folderId);
 
     const successorNames = entity.successor.map(({ name }) => name);
     if (successorNames.includes(filename)) return true;
@@ -256,9 +227,8 @@ const db = (() => {
     getFolderById,
     getEntities,
     getSidebarFolders,
-    getFolderByNameAndPath,
-    getPredecessorByPath,
-    doesEntityExistsInPath,
+    getRootFolder,
+    doesEntityExistsInFolder,
   };
 })();
 

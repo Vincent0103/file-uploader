@@ -35,11 +35,9 @@ const validateEntity = (name, attributeName, messageName) => [
     .isLength({ min: 1, max: 255 })
     .withMessage(`${messageName} ${validationErrorMessages.lengthErr(1, 255)}`)
     .custom(async (value, { req }) => {
-      const { id: userId } = req.user;
       const parentFolderId = parseInt(req.body.parentFolderId, 10);
 
-      const entityExists = await db.doesEntityExistsInPath(
-        userId,
+      const entityExists = await db.doesEntityExistsInFolder(
         value,
         parentFolderId,
       );
@@ -58,6 +56,7 @@ const getNodesFromEntityId = async (entityId) => {
   let currentEntityId = entityId;
   do {
     const folder = await db.getFolderById(currentEntityId);
+    if (!folder) break;
 
     nodes.push({
       name: folder.name,

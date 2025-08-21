@@ -1,4 +1,3 @@
-- Update file path logic to use predecessorId instead of the actual path (join by name with "/")
 - add all error page
 - include images in the readme for all of your projects and attract eyeballs.
 

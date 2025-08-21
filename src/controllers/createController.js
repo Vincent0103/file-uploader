@@ -24,8 +24,7 @@ const loginController = (() => {
       const { folderName } = req.body;
       const parentFolderId = parseInt(req.body.parentFolderId, 10);
 
-      const { path: folderPath } = await db.getFolderById(parentFolderId);
-      await db.createFolder(userId, folderName, folderPath, parentFolderId);
+      await db.createFolder(userId, folderName, parentFolderId);
       return res.redirect(`/folder/${parentFolderId}`);
     },
   ];
@@ -82,8 +81,6 @@ const loginController = (() => {
       const parentFolderId = parseInt(req.body.parentFolderId, 10);
       const uploadTime = parseInt(req.body.uploadTime, 10);
 
-      const { path: folderPath } = await db.getFolderById(parentFolderId);
-
       const startingIndex = req.file.path.indexOf("/uploads/");
       const storagePath = req.file.path.substring(startingIndex);
 
@@ -94,13 +91,7 @@ const loginController = (() => {
         extension: req.file.mimetype,
       };
 
-      await db.createFile(
-        userId,
-        fileName,
-        folderPath,
-        fileInfos,
-        parentFolderId,
-      );
+      await db.createFile(userId, fileName, fileInfos, parentFolderId);
       return res.redirect(`/folder/${parentFolderId}`);
     },
   ];
