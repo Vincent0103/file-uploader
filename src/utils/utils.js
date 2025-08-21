@@ -6,6 +6,7 @@ import path from "path";
 import { filesize } from "filesize";
 import db from "../db/queries.js";
 import prettyMilliseconds from "pretty-ms";
+import { format } from "date-fns";
 
 const validationErrorMessages = (() => {
   const lengthErr = (min, max) => `must be between ${min} and ${max}.`;
@@ -162,6 +163,7 @@ const mapEntityForUI = (entity) => ({
   ...(entity.file && {
     file: {
       ...entity.file,
+      createdAt: format(entity.file.createdAt, "yyyy-MM-dd HH:mm"),
       size: filesize(entity.file.size),
       uploadTime: prettyMilliseconds(entity.file.uploadTime),
     },

@@ -42,12 +42,13 @@ model Entity {
 }
 
 model File {
-  id          Int    @id @default(autoincrement())
+  id          Int      @id @default(autoincrement())
+  createdAt   DateTime @default(now())
   size        Int
   storagePath String
   extension   String
   // uploadTime in milliseconds
   uploadTime  Int
-  entity      Entity @relation(fields: [entityId], references: [id], onDelete: Cascade)
-  entityId    Int    @unique
+  entity      Entity   @relation(fields: [entityId], references: [id], onDelete: Cascade)
+  entityId    Int      @unique
 }
