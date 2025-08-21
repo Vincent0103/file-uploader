@@ -156,7 +156,7 @@ const DOMMethods = (() => {
     fileDetails.downloadLink.download = name;
 
     rightSidebar.classList.remove("hidden");
-    rightSidebar.classList.add("absolute");
+    rightSidebar.classList.add("block");
   };
 
   const openFileDetails = (entityItem) => {
