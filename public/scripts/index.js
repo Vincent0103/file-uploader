@@ -1,4 +1,3 @@
-import onFormSubmit from "./fileInputHandler.js";
 import DOMMethods, { createPopupDOMObject } from "./utils.js";
 
 const listenFileClick = (event) => {
@@ -140,9 +139,16 @@ const listenDeletePopup = (event, deletePopup) => {
 window.addEventListener("DOMContentLoaded", () => {
   const folderDOM = createPopupDOMObject("folder");
   const fileDOM = createPopupDOMObject("file");
-  const deletePopup = createPopupDOMObject(null, true);
+  const deletePopup = createPopupDOMObject("deletion");
+
+  let errorPopup;
+  if (document.querySelector(".error.popup-container")) {
+    errorPopup = createPopupDOMObject("error");
+  }
 
   const popupDOMs = [folderDOM, fileDOM, deletePopup];
+  if (errorPopup) popupDOMs.push(errorPopup);
+
   const entityRelatedPopupDOMs = popupDOMs.slice(0, 2);
 
   listenVisiblePopupEvents(popupDOMs);
@@ -152,13 +158,6 @@ window.addEventListener("DOMContentLoaded", () => {
     popupDOM.openPopupButton.addEventListener("click", () => {
       listenCreatePopup(popupDOM);
     });
-  });
-
-  fileDOM.popup.addEventListener("submit", (event) => {
-    const submitButton = event.submitter;
-    const { crudType } = submitButton.dataset;
-
-    if (crudType !== "edit") onFormSubmit(event, fileDOM);
   });
 
   document.addEventListener("click", (event) => {

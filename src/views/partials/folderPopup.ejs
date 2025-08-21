@@ -1,19 +1,11 @@
 <section
-  <% if (locals.hasPopupFolderErrors) { %>
-    class="folder z-30 popup-container pointer-events-auto absolute inset-0 size-full bg-black/70 opacity-100 backdrop-blur-sm transition-opacity"
-  <% } else { %>
-    class="folder z-30 popup-container pointer-events-none absolute inset-0 size-full bg-black/70 opacity-0 backdrop-blur-sm transition-opacity"
-  <% } %>
+  class="folder popup-container pointer-events-none absolute inset-0 z-30 size-full bg-black/70 opacity-0 backdrop-blur-sm transition-opacity"
 >
   <div class="flex h-full w-full items-center justify-center">
     <form
       action="<%= path %>"
       method="POST"
-      <% if (locals.hasPopupFolderErrors) { %>
-        class="popup flex w-[400px] flex-col rounded-md border-1 border-zinc-700 bg-zinc-800 p-4 transition-transform duration-200"
-      <% } else { %>
-        class="popup flex w-[400px] translate-y-8 scale-75 flex-col rounded-md border-1 border-zinc-700 bg-zinc-800 p-4 transition-transform duration-200"
-      <% } %>
+      class="popup flex w-[400px] translate-y-8 scale-75 flex-col rounded-md border-1 border-zinc-700 bg-zinc-800 p-4 transition-transform duration-200"
     >
       <div class="mb-2 flex items-center justify-between">
         <h3 class="title text-lg font-semibold"><%= title %></h3>
@@ -24,7 +16,6 @@
           ></i>
         </button>
       </div>
-      <%- include("errors.ejs", { inDarkMode: true }) %>
       <input
         aria-label="folderName"
         placeholder="Folder Name"
@@ -35,7 +26,12 @@
         minlength="255"
         class="mt-2 w-full rounded-md border-1 border-zinc-700 bg-zinc-900 p-2 text-sm text-white placeholder:text-zinc-500 focus:border-amber-500 focus:outline-none"
       />
-      <input type="hidden" name="parentFolderId" id="parentFolderId" value="<%= parentFolderId %>">
+      <input
+        type="hidden"
+        name="parentFolderId"
+        id="parentFolderId"
+        value="<%= parentFolderId %>"
+      />
       <div class="mt-4 flex justify-end">
         <button
           type="submit"

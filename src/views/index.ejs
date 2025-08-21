@@ -87,7 +87,8 @@
         parentFolderId }) %>
       </main>
     </div>
-    <%- include("partials/deletePopup.ejs") %> <%-
+    <%- include("partials/errorPopup.ejs") %> <%-
+    include("partials/deletePopup.ejs") %> <%-
     include("partials/folderPopup.ejs", { ...popups.folder, CRUDType,
     parentFolderId }) %> <%- include("partials/filePopup.ejs", { ...popups.file,
     CRUDType, parentFolderId }) %>

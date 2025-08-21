@@ -22,7 +22,6 @@ const loginController = (() => {
 
         return res.status(401).render("index", {
           ...params,
-          hasPopupFolderErrors: true,
           folderName,
           errors: errors.array(),
         });
@@ -49,7 +48,6 @@ const loginController = (() => {
         params = await folderController.getIndexViewParams(req, false, fileId);
         return res.status(401).render("index", {
           ...params,
-          hasPopupFileErrors: true,
           fileName,
           errors: errors.array(),
         });

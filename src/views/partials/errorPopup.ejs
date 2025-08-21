@@ -1,0 +1,29 @@
+<% if (locals.errors) { %>
+<section
+  class="error popup-container pointer-events-auto absolute inset-0 z-40 size-full bg-black/70 opacity-100 backdrop-blur-sm transition-opacity"
+>
+  <div class="flex h-full w-full items-center justify-center">
+    <div
+      class="popup flex w-[400px] flex-col rounded-md border-1 border-rose-700 bg-zinc-800 p-4 transition-transform duration-200"
+    >
+      <div class="mb-2 flex items-center justify-between">
+        <h3 class="text-lg font-semibold text-rose-400">Error</h3>
+        <button class="close-button" aria-label="Close" type="button">
+          <i
+            class="size-5 cursor-pointer rounded-md hover:text-zinc-500"
+            data-lucide="x"
+          ></i>
+        </button>
+      </div>
+      <ul class="mb-2 space-y-1 text-sm text-rose-50">
+        <% errors.forEach((error) => { %> <% if (Array.isArray(error.msg)) { %>
+        <% error.msg.forEach((msg) => { %>
+        <li><%= msg %></li>
+        <% }); %> <% } else { %>
+        <li><%= error.msg %></li>
+        <% } %> <% }); %>
+      </ul>
+    </div>
+  </div>
+</section>
+<% } %>

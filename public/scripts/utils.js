@@ -22,10 +22,12 @@ const DOMMethods = (() => {
     }
 
     // Reset all input fields
-    Object.values(inputsParams).forEach((input) => {
-      input.value = "";
-      if (input.disabled) input.disabled = false;
-    });
+    if (inputsParams) {
+      Object.values(inputsParams).forEach((input) => {
+        input.value = "";
+        if (input.disabled) input.disabled = false;
+      });
+    }
   };
 
   const openPopup = (
@@ -209,16 +211,15 @@ const DOMMethods = (() => {
   };
 })();
 
-const createPopupDOMObject = (entityType, forDeletion = false) => {
+const createPopupDOMObject = (containerClass) => {
   const getInputsKeyValuePairs = (inputs) =>
     Array.from(inputs).reduce((acc, input) => {
       acc[input.id] = input;
       return acc;
     }, {});
 
-  const containerSelector = forDeletion ? ".deletion" : `.${entityType}`;
   const container = document.querySelector(
-    `${containerSelector}.popup-container`,
+    `.${containerClass}.popup-container`,
   );
 
   let inputs;
@@ -227,14 +228,16 @@ const createPopupDOMObject = (entityType, forDeletion = false) => {
   let deleteContentEntityType;
   let hiddableContainer;
   let fileInputInfos;
+  let entityType;
   const popup = container.querySelector(".popup");
   const title = container.querySelector(".title");
   const submitButton = container.querySelector("button[type=submit]");
   const closeButton = container.querySelector(".close-button");
 
-  if (!forDeletion) {
+  if (containerClass !== "deletion" && containerClass !== "error") {
+    entityType = containerClass;
     openPopupButton = document.querySelector(
-      `${containerSelector}.open-popup-button`,
+      `.${containerClass}.open-popup-button`,
     );
 
     const fileNameContainer = popup.querySelector("#file-name-container");
@@ -243,7 +246,7 @@ const createPopupDOMObject = (entityType, forDeletion = false) => {
     fileInputInfos = popup.querySelector("small");
     inputs = container.querySelectorAll("input[type=file], input[type=text]");
     inputs = getInputsKeyValuePairs(inputs);
-  } else {
+  } else if (containerClass === "deletion") {
     deleteContentEntityName = container.querySelector(
       "#delete-content-entity-name",
     );
