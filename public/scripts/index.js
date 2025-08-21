@@ -86,18 +86,12 @@ const listenEditPopup = (event, popupDOMs) => {
   if (button) {
     const entityItem = button.closest(".entity-item");
 
-    const { entityFile, entityType } = entityItem.dataset;
-    const parsedEntityObject = JSON.parse(entityFile);
+    const { entityId, entityType } = entityItem.dataset;
 
     const entityName = entityItem.querySelector("#entity-name").textContent;
 
     const popupDOM = popupDOMs.find((item) => item.entityType === entityType);
-    DOMMethods.updatePopupContent(
-      popupDOM,
-      "edit",
-      parsedEntityObject.entityId,
-      entityName,
-    );
+    DOMMethods.updatePopupContent(popupDOM, "edit", entityId, entityName);
 
     const { container, inputs, popup, fileInputInfos, hiddableContainer } =
       popupDOM;
@@ -115,8 +109,7 @@ const listenDeletePopup = (event, deletePopup) => {
   const button = event.target.closest(".delete.open-popup-button");
   if (button) {
     const entityItem = button.closest(".entity-item");
-    const { entityFile, entityType, parentFolderId } = entityItem.dataset;
-    const parsedEntityObject = JSON.parse(entityFile);
+    const { entityId, entityType, parentFolderId } = entityItem.dataset;
 
     // the entityType is dependant of the entity being deleted
     // which is the reason why we need to set it here based
@@ -128,7 +121,7 @@ const listenDeletePopup = (event, deletePopup) => {
     DOMMethods.updatePopupContent(
       deletePopup,
       "delete",
-      parsedEntityObject.entityId,
+      entityId,
       entityName,
       parentFolderId,
     );
