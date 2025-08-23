@@ -14,7 +14,7 @@
   </head>
   <body
     style="background-image: linear-gradient(135deg, #0c0704, #432622)"
-    class="font-inter m-0 flex h-screen w-screen items-center justify-center p-5 text-white"
+    class="font-inter m-0 flex h-screen w-screen items-center justify-center p-3 text-white md:p-5"
   >
     <div
       class="absolute inset-0 -z-10 size-full bg-[url(/images/body-wallpaper.jpg)] bg-cover bg-center"
@@ -48,7 +48,9 @@
               <h1 class="my-2 text-6xl font-bold text-red-500">
                 <% if (error) { %> <%= error.statusCode %> <% } %>
               </h1>
-              <h2 class="mb-2 text-3xl font-semibold">Something went wrong</h2>
+              <h2 class="mb-2 text-center text-3xl font-semibold">
+                Something went wrong
+              </h2>
               <p class="mb-6 max-w-md text-center text-zinc-300">
                 <% if (error) { %> <%= error.message %> <% } else { %> An
                 unexpected error has occurred. Please try again later. <% } %>
