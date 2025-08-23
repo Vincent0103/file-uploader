@@ -14,7 +14,7 @@
   </head>
   <body
     style="background-image: linear-gradient(135deg, #0c0704, #432622)"
-    class="font-inter m-0 flex h-screen w-screen items-center justify-center p-5 text-white"
+    class="font-inter m-0 flex h-screen w-screen items-center justify-center p-2 text-white md:p-5"
   >
     <div
       class="absolute inset-0 -z-10 size-full bg-[url(/images/body-wallpaper.jpg)] bg-cover bg-center"
@@ -76,7 +76,10 @@
               </button>
             </div>
             <% if (locals.entities) { %>
-            <div class="flex flex-wrap gap-2">
+            <div
+              class="grid grid-flow-row grid-cols-2 gap-2 sm:grid-cols-3 md:flex md:flex-wrap md:justify-start"
+              style="grid-auto-rows: 1fr"
+            >
               <% entities.forEach((entity) => { %> <%-
               include("partials/entityItem.ejs", { entity, parentFolderId}) %>
               <% }) %>

@@ -1,8 +1,6 @@
 import DOMMethods, { createPopupDOMObject } from "./utils.js";
 
 const listenFileClick = (event) => {
-  DOMMethods.handleEntityItemClickStylings(event);
-
   const targetEntityItem = event.target.closest(".entity-item");
   const element = event.target;
   if (
@@ -156,6 +154,7 @@ window.addEventListener("DOMContentLoaded", () => {
   document.addEventListener("click", (event) => {
     listenEditPopup(event, entityRelatedPopupDOMs);
     listenDeletePopup(event, deletePopup);
+    DOMMethods.handleEntityItemClickStylings(event);
 
     const entityItem = event.target.closest(".entity-item");
     if (entityItem) {

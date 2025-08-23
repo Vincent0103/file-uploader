@@ -4,11 +4,11 @@ const DOMMethods = (() => {
     modal.classList.toggle("pointer-events-auto");
     modal.classList.toggle("opacity-0");
     modal.classList.toggle("pointer-events-none");
-    entityContainer.classList.toggle("hover:bg-zinc-900");
-    entityContainer.classList.toggle("bg-zinc-800");
-    entityContainer.classList.toggle("bg-zinc-900");
-    moreOptionsContainer.classList.toggle("opacity-0");
-    moreOptionsContainer.classList.toggle("group-hover:opacity-100");
+    // entityContainer.classList.toggle("hover:bg-zinc-900");
+    // entityContainer.classList.toggle("bg-zinc-800");
+    // entityContainer.classList.toggle("bg-zinc-900");
+    moreOptionsContainer.classList.toggle("md:opacity-0");
+    moreOptionsContainer.classList.toggle("md:group-hover:opacity-100");
   };
 
   const closePopup = (container, popup, inputsParams, hiddableContainer) => {
@@ -189,8 +189,8 @@ const DOMMethods = (() => {
       const isSelected = entityItem === selectedEntity;
       Array.from(entityItem.children).forEach((child) => {
         if (child.classList.contains("more-options-container")) {
-          child.classList.toggle("opacity-100", isSelected);
-          child.classList.toggle("opacity-0", !isSelected);
+          child.classList.toggle("md:opacity-100", isSelected);
+          child.classList.toggle("md:opacity-0", !isSelected);
         } else {
           child.classList.toggle("bg-zinc-900", isSelected);
           child.classList.toggle("border-1", isSelected);

@@ -1,4 +1,6 @@
 - include images in the readme for all of your projects and attract eyeballs.
+- order by folder then files
+- class="grid grid-cols-1 sm:grid-cols-2gap-2 auto-rows-fr md:flex md:flex-wrap"
 
 # file-uploader
 
