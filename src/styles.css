@@ -2,4 +2,5 @@
 
 @theme {
     --font-inter: 'Inter', sans-serif;
+    --breakpoint-xs: 480px;
 }

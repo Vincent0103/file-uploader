@@ -77,8 +77,7 @@
             </div>
             <% if (locals.entities) { %>
             <div
-              class="grid grid-flow-row grid-cols-2 gap-2 sm:grid-cols-3 md:flex md:flex-wrap md:justify-start"
-              style="grid-auto-rows: 1fr"
+              class="xs:grid-cols-3 grid grid-flow-row grid-cols-2 gap-2 sm:flex sm:flex-wrap"
             >
               <% entities.forEach((entity) => { %> <%-
               include("partials/entityItem.ejs", { entity, parentFolderId}) %>

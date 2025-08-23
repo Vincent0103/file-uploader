@@ -158,8 +158,6 @@ const DOMMethods = (() => {
     fileDetails.downloadLink.download = name;
 
     rightSidebar.classList.remove("hidden");
-    rightSidebar.classList.add("md:block");
-    rightSidebar.classList.add("absolute");
   };
 
   const openFileDetails = (entityItem) => {

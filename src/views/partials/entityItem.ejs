@@ -22,7 +22,7 @@
 
   <% if (entity.type === "folder") { %>
   <a
-    class="entity-container flex w-full md:w-[130px] cursor-default flex-col items-center bg-zinc-800 rounded-md p-2 group-hover:bg-zinc-900 active:bg-zinc-700"
+    class="entity-container flex w-full sm:w-[130px] cursor-default flex-col items-center bg-zinc-800 rounded-md p-2 group-hover:bg-zinc-900 active:bg-zinc-700"
     href="/folder/<%= entity.id %>"
   >
     <%- include(`entity-icons/${entity.icon}.ejs`) %>
@@ -34,7 +34,7 @@
   </a>
   <% } else { %>
   <div
-    class="entity-container flex w-full md:w-[130px] cursor-default flex-col items-center bg-zinc-800 rounded-md p-2 group-hover:bg-zinc-900 active:bg-zinc-700"
+    class="entity-container flex w-full sm:w-[130px] cursor-default flex-col items-center bg-zinc-800 rounded-md p-2 group-hover:bg-zinc-900 active:bg-zinc-700"
   >
     <%- include(`entity-icons/${entity.icon}.ejs`) %>
     <small
