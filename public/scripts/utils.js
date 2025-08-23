@@ -1,14 +1,11 @@
 const DOMMethods = (() => {
-  const toggleModal = (modal, entityContainer, moreOptionsContainer) => {
+  const toggleModal = (modal, moreOptionsContainer) => {
     modal.classList.toggle("opacity-100");
     modal.classList.toggle("pointer-events-auto");
     modal.classList.toggle("opacity-0");
     modal.classList.toggle("pointer-events-none");
-    // entityContainer.classList.toggle("hover:bg-zinc-900");
-    // entityContainer.classList.toggle("bg-zinc-800");
-    // entityContainer.classList.toggle("bg-zinc-900");
-    moreOptionsContainer.classList.toggle("md:opacity-0");
-    moreOptionsContainer.classList.toggle("md:group-hover:opacity-100");
+    moreOptionsContainer.classList.toggle("opacity-0");
+    moreOptionsContainer.classList.toggle("group-hover:opacity-100");
   };
 
   const closePopup = (container, popup, inputsParams, hiddableContainer) => {
