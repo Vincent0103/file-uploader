@@ -18,7 +18,8 @@ const listenOpenedRightSidebar = () => {
   const closeButton = rightSidebar.querySelector(".close-button");
   closeButton.addEventListener("click", () => {
     if (rightSidebar.classList.contains("hidden")) return;
-    rightSidebar.classList.remove("block");
+    rightSidebar.classList.remove("md:block");
+    rightSidebar.classList.remove("absolute");
     rightSidebar.classList.add("hidden");
   });
 };

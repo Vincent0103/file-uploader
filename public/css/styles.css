@@ -1164,9 +1164,19 @@
       pointer-events: none;
     }
   }
+  .md\:block {
+    @media (width >= 48rem) {
+      display: block;
+    }
+  }
   .md\:flex {
     @media (width >= 48rem) {
       display: flex;
+    }
+  }
+  .md\:hidden {
+    @media (width >= 48rem) {
+      display: none;
     }
   }
   .md\:size-28 {
@@ -1181,6 +1191,11 @@
       height: 100%;
     }
   }
+  .md\:w-1\/3 {
+    @media (width >= 48rem) {
+      width: calc(1/3 * 100%);
+    }
+  }
   .md\:w-\[130px\] {
     @media (width >= 48rem) {
       width: 130px;
@@ -1189,6 +1204,11 @@
   .md\:w-full {
     @media (width >= 48rem) {
       width: 100%;
+    }
+  }
+  .md\:min-w-\[350px\] {
+    @media (width >= 48rem) {
+      min-width: 350px;
     }
   }
   .md\:grid-cols-3 {
@@ -1217,9 +1237,20 @@
       border-width: 1px;
     }
   }
+  .md\:border-l {
+    @media (width >= 48rem) {
+      border-left-style: var(--tw-border-style);
+      border-left-width: 1px;
+    }
+  }
   .md\:border-amber-600 {
     @media (width >= 48rem) {
       border-color: var(--color-amber-600);
+    }
+  }
+  .md\:border-zinc-800 {
+    @media (width >= 48rem) {
+      border-color: var(--color-zinc-800);
     }
   }
   .md\:bg-zinc-800 {
@@ -1245,6 +1276,12 @@
   .md\:opacity-100 {
     @media (width >= 48rem) {
       opacity: 100%;
+    }
+  }
+  .md\:shadow-lg {
+    @media (width >= 48rem) {
+      --tw-shadow: 0 10px 15px -3px var(--tw-shadow-color, rgb(0 0 0 / 0.1)), 0 4px 6px -4px var(--tw-shadow-color, rgb(0 0 0 / 0.1));
+      box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
     }
   }
   .md\:group-hover\:opacity-100 {
