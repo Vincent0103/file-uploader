@@ -1,4 +1,3 @@
-- add all error page
 - include images in the readme for all of your projects and attract eyeballs.
 
 # file-uploader

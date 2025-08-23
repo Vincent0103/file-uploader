@@ -4,7 +4,7 @@ import { body } from "express-validator";
 import multer from "multer";
 import path from "path";
 import { filesize } from "filesize";
-import db from "../db/queries.js";
+import db from "./db/queries.js";
 import prettyMilliseconds from "pretty-ms";
 import { format } from "date-fns";
 
@@ -161,6 +161,43 @@ const mapEntityForUI = (entity) => ({
   type: entity.file ? "file" : "folder",
 });
 
+const getSidebarInformations = async (req) => {
+  const iconNames = [
+    {
+      folderName: req.user.username,
+      iconName: "home",
+    },
+    {
+      folderName: "documents",
+      iconName: "file-text",
+    },
+    {
+      folderName: "images",
+      iconName: "image",
+    },
+    {
+      folderName: "videos",
+      iconName: "film",
+    },
+    {
+      folderName: "music",
+      iconName: "music",
+    },
+  ];
+
+  const { id: userId, username } = req.user;
+
+  const sidebarInformations = (
+    await db.getSidebarFolders(userId, username)
+  ).map(({ id, name }) => ({
+    folderId: id,
+    name,
+    iconName: iconNames.find(({ folderName }) => folderName === name).iconName,
+  }));
+
+  return sidebarInformations;
+};
+
 export {
   validationErrorMessages,
   validateEntity,
@@ -169,4 +206,5 @@ export {
   getMulterOptions,
   getEntityIcon,
   mapEntityForUI,
+  getSidebarInformations,
 };

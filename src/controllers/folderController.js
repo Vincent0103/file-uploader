@@ -4,11 +4,13 @@ import {
   getNodesFromEntityId,
   getPopupObject,
   mapEntityForUI,
-} from "../utils/utils.js";
+  getSidebarInformations,
+} from "../utils.js";
 
 const folderController = (() => {
   const getIndexViewParams = async (
     req,
+    next,
     isCreatingEntity = true,
     entityId = null,
   ) => {
@@ -19,48 +21,25 @@ const folderController = (() => {
     if (typeof req.body?.parentFolderId !== "undefined") {
       // folderId can come from a form's body when submitting either the folder or file popup
       parentFolderId = req.body.parentFolderId;
-    } else {
+    } else if (req.params.folderId) {
       parentFolderId = req.params.folderId;
+      if (isNaN(Number(parentFolderId))) {
+        throw new Error("Folder does not exist");
+      }
+    } else {
+      throw new Error("Folder does not exist");
     }
 
     parentFolderId = parseInt(parentFolderId, 10);
+    const folderIdExists = await db.doesFolderIdExists(parentFolderId);
 
-    const { id: userId, username } = req.user;
+    if (!folderIdExists) {
+      throw new Error(`Folder of id ${parentFolderId} does not exist`);
+    }
+    const { id: userId } = req.user;
 
     let entities = await db.getEntities(userId, parentFolderId);
     entities = entities.map((entity) => mapEntityForUI(entity));
-
-    const iconNames = [
-      {
-        folderName: req.user.username,
-        iconName: "home",
-      },
-      {
-        folderName: "documents",
-        iconName: "file-text",
-      },
-      {
-        folderName: "images",
-        iconName: "image",
-      },
-      {
-        folderName: "videos",
-        iconName: "film",
-      },
-      {
-        folderName: "music",
-        iconName: "music",
-      },
-    ];
-
-    const sidebarFolders = (await db.getSidebarFolders(userId, username)).map(
-      ({ id, name }) => ({
-        folderId: id,
-        name,
-        iconName: iconNames.find(({ folderName }) => folderName === name)
-          .iconName,
-      }),
-    );
 
     const nodes = await getNodesFromEntityId(parentFolderId);
 
@@ -70,20 +49,30 @@ const folderController = (() => {
       file: getPopupObject(CRUDType, "file", entityId),
     };
 
+    const sidebarInformations = await getSidebarInformations(req);
+
     return {
       user: req.user,
+      sidebarInformations,
       parentFolderId,
       nodes,
       popups,
       CRUDType,
       entities,
-      sidebarFolders,
     };
   };
 
-  const folderGet = async (req, res) => {
-    const params = await getIndexViewParams(req);
-    return res.render("index", { ...params });
+  const folderGet = async (req, res, next) => {
+    try {
+      const params = await getIndexViewParams(req, next);
+      return res.render("index", { ...params });
+    } catch (err) {
+      const error = {
+        statusCode: 404,
+        message: err.message,
+      };
+      next(error);
+    }
   };
 
   return { folderGet, getIndexViewParams };

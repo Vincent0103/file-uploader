@@ -16,6 +16,7 @@ import createRouter from "./routes/createRouter.js";
 import folderRouter from "./routes/folderRouter.js";
 import editRouter from "./routes/editRouter.js";
 import deleteRouter from "./routes/deleteRouter.js";
+import { getSidebarInformations } from "./utils.js";
 
 const app = express();
 
@@ -97,6 +98,25 @@ app.use("/edit", editRouter);
 app.use("/delete", deleteRouter);
 app.use("/logout", logoutRouter);
 app.use("/folder", folderRouter);
+app.use((req, res, next) => {
+  const err = {
+    statusCode: 404,
+    message: "Not Found",
+  };
+  next(err);
+});
+app.use(async (err, req, res, next) => {
+  let additionalParams = {};
+  if (req.user) {
+    const sidebarInformations = await getSidebarInformations(req);
+    additionalParams = { user: req.user, sidebarInformations };
+  }
+
+  console.error(err.message);
+  return res
+    .status(err.statusCode || 500)
+    .render("allErrorPage", { ...additionalParams, error: err });
+});
 
 const { PORT } = process.env;
 app.listen(PORT, () => {

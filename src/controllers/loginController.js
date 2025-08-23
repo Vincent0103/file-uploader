@@ -2,6 +2,7 @@ import passport from "passport";
 
 const loginController = (() => {
   const loginGet = (req, res) => {
+    if (req.isAuthenticated()) return res.redirect("/");
     return res.render("login");
   };
 

@@ -1,19 +1,19 @@
 import { validationResult } from "express-validator";
 import multer from "multer";
 import { filesize } from "filesize";
-import { getMulterOptions, validateEntity } from "../utils/utils.js";
+import { getMulterOptions, validateEntity } from "../utils.js";
 import folderController from "./folderController.js";
 import db from "../db/queries.js";
 
 const loginController = (() => {
   const createFolderPost = [
     validateEntity("Folder", "folderName", "Foldername"),
-    async (req, res) => {
+    async (req, res, next) => {
       const errors = validationResult(req);
 
       let params;
       if (!errors.isEmpty()) {
-        params = await folderController.getIndexViewParams(req);
+        params = await folderController.getIndexViewParams(req, next);
         return res.status(401).render("index", {
           ...params,
           errors: errors.array(),
@@ -53,7 +53,7 @@ const loginController = (() => {
       next();
     },
     validateEntity("File", "fileName", "Filename"),
-    async (req, res) => {
+    async (req, res, next) => {
       const errors = validationResult(req);
       let params;
 
@@ -69,7 +69,7 @@ const loginController = (() => {
       }
 
       if (!errors.isEmpty()) {
-        params = await folderController.getIndexViewParams(req);
+        params = await folderController.getIndexViewParams(req, next);
         return res.status(401).render("index", {
           ...params,
           errors: errors.array(),

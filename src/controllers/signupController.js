@@ -1,6 +1,6 @@
 import { body, validationResult } from "express-validator";
 import db from "../db/queries.js";
-import { validationErrorMessages } from "../utils/utils.js";
+import { validationErrorMessages } from "../utils.js";
 
 const signupController = (() => {
   const passwordValidationRegex =
@@ -43,6 +43,7 @@ const signupController = (() => {
   ];
 
   const signupGet = (req, res) => {
+    if (req.isAuthenticated()) return res.redirect("/");
     return res.render("signup");
   };
 

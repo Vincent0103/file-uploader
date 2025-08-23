@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Error | File Uploader</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body
+    style="background-image: linear-gradient(135deg, #0c0704, #432622)"
+    class="font-inter m-0 flex h-screen w-screen items-center justify-center p-5 text-white"
+  >
+    <div
+      class="absolute inset-0 -z-10 size-full bg-[url(/images/body-wallpaper.jpg)] bg-cover bg-center"
+    ></div>
+    <div
+      class="flex size-full flex-col overflow-hidden rounded-2xl border-1 border-zinc-700 shadow-xl"
+    >
+      <nav
+        class="flex w-full justify-between border-b-1 border-zinc-700 bg-zinc-900 p-3"
+      >
+        <div class="flex items-center space-x-2">
+          <div class="rounded-xl border-2 border-amber-800 bg-amber-950 p-1.5">
+            <i class="size-4 text-amber-100" data-lucide="dock"></i>
+          </div>
+          <h2 class="font-semibold">File Uploader</h2>
+        </div>
+        <div
+          class="flex cursor-pointer items-center space-x-2 rounded-md bg-zinc-800 px-2 py-1 text-sm text-white hover:bg-zinc-700"
+        >
+          <i class="size-4" data-lucide="log-out"></i>
+          <a href="/logout">Log Out</a>
+        </div>
+      </nav>
+      <main class="relative flex size-full overflow-hidden">
+        <% if (locals.user && locals.sidebarInformations) { %> <%-
+        include("partials/leftSidebar.ejs", { user, sidebarInformations }) %> <%
+        } %>
+        <section class="flex w-full flex-col bg-zinc-800 p-2">
+          <div class="flex size-full flex-col">
+            <div class="flex flex-col items-center justify-center py-20">
+              <h1 class="my-2 text-6xl font-bold text-red-500">
+                <% if (error) { %> <%= error.statusCode %> <% } %>
+              </h1>
+              <h2 class="mb-2 text-3xl font-semibold">Something went wrong</h2>
+              <p class="mb-6 max-w-md text-center text-zinc-300">
+                <% if (error) { %> <%= error.message %> <% } else { %> An
+                unexpected error has occurred. Please try again later. <% } %>
+              </p>
+              <a
+                href="/"
+                class="rounded bg-amber-700 px-4 py-2 font-semibold text-white transition hover:bg-amber-800"
+                >Go to Home</a
+              >
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+      lucide.createIcons();
+    </script>
+  </body>
+</html>

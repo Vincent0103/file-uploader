@@ -213,6 +213,16 @@ const db = (() => {
     return false;
   };
 
+  const doesFolderIdExists = async (folderId) => {
+    const folder = await prisma.entity.findFirst({
+      where: {
+        id: folderId,
+      },
+    });
+
+    return folder !== null;
+  };
+
   return {
     createUser,
     initFolders,
@@ -229,6 +239,7 @@ const db = (() => {
     getSidebarFolders,
     getRootFolder,
     doesEntityExistsInFolder,
+    doesFolderIdExists,
   };
 })();
 

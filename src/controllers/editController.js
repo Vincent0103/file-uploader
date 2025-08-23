@@ -1,13 +1,13 @@
 import { validationResult } from "express-validator";
 import multer from "multer";
-import { getMulterOptions, validateEntity } from "../utils/utils.js";
+import { getMulterOptions, validateEntity } from "../utils.js";
 import db from "../db/queries.js";
 import folderController from "./folderController.js";
 
 const loginController = (() => {
   const editFolderPost = [
     validateEntity("Folder", "folderName", "Foldername"),
-    async (req, res) => {
+    async (req, res, next) => {
       const errors = validationResult(req);
       const folderId = parseInt(req.params.folderId, 10);
       const { folderName } = req.body;
@@ -16,6 +16,7 @@ const loginController = (() => {
       if (!errors.isEmpty()) {
         params = await folderController.getIndexViewParams(
           req,
+          next,
           false,
           folderId,
         );
@@ -38,14 +39,19 @@ const loginController = (() => {
   const editFilePost = [
     uploads.none(), // Ensure no file upload is expected
     validateEntity("File", "fileName", "Filename"),
-    async (req, res) => {
+    async (req, res, next) => {
       const errors = validationResult(req);
       const fileId = parseInt(req.params.fileId, 10);
       const { fileName } = req.body;
 
       let params;
       if (!errors.isEmpty()) {
-        params = await folderController.getIndexViewParams(req, false, fileId);
+        params = await folderController.getIndexViewParams(
+          req,
+          next,
+          false,
+          fileId,
+        );
         return res.status(401).render("index", {
           ...params,
           fileName,
