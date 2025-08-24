@@ -1,10 +1,10 @@
 import { StorageClient } from "@supabase/storage-js";
 
-const { SUPABASE_URL, SUPABASE_KEY } = process.env;
+const { STORAGE_URL, STORAGE_KEY } = process.env;
 
-const storageClient = new StorageClient(SUPABASE_URL, {
-  apikey: SUPABASE_KEY,
-  Authorization: `Bearer ${SUPABASE_KEY}`,
+const storageClient = new StorageClient(STORAGE_URL, {
+  apikey: STORAGE_KEY,
+  Authorization: `Bearer ${STORAGE_KEY}`,
 });
 
 export default storageClient;
