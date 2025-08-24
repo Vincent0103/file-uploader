@@ -93,7 +93,23 @@ const storageHandler = (() => {
       .upload(`${filePath}/${filename}`, fileBody);
 
     if (error) {
-      console.error("Supabase client error:", error.code, error.message);
+      console.error(
+        `Error uploading file $${filePath}/${filename}:`,
+        error.message,
+      );
+    }
+  };
+
+  const deleteFile = async (filePath, filename) => {
+    const { error } = await storageClient
+      .from("user_uploads")
+      .remove([`${filePath}/${filename}`]);
+
+    if (error) {
+      console.error(
+        `Error deleting file $${filePath}/${filename}:`,
+        error.message,
+      );
     }
   };
 
@@ -112,7 +128,7 @@ const storageHandler = (() => {
     return publicUrl;
   };
 
-  return { getMulterOptions, uploadFile, getStoragePath };
+  return { getMulterOptions, uploadFile, deleteFile, getStoragePath };
 })();
 
 const toTitleCase = (str) => str.charAt(0).toUpperCase() + str.slice(1);

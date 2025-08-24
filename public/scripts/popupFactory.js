@@ -42,8 +42,7 @@ const createPopupDOMObject = (containerClass) => {
       "#delete-content-entity-type",
     );
     inputs = {
-      entityId: container.querySelector("#entityId"),
-      entityType: container.querySelector("#entityType"),
+      filename: container.querySelector("#filename"),
       parentFolderId: container.querySelector("#parentFolderId"),
     };
   }
