@@ -76,6 +76,9 @@ const getPathFromEntityId = async (entityId) => {
   return path;
 };
 
+const getFilenameWithExtension = (filename, extension) =>
+  mime.lookup(filename) ? filename : `${filename}.${extension}`;
+
 const storageHandler = (() => {
   const getMulterOptions = () => {
     const storage = multer.memoryStorage();
@@ -89,9 +92,7 @@ const storageHandler = (() => {
 
   // the filename should include the extension with it (ex: image0.png -> .png)
   const uploadFile = async (filePath, fileBody, filename, extension) => {
-    const filenameWithExtension = mime.lookup(filename)
-      ? filename
-      : `${filename}.${extension}`;
+    const filenameWithExtension = getFilenameWithExtension(filename, extension);
 
     const { error } = await storageClient
       .from("user_uploads")
@@ -99,50 +100,54 @@ const storageHandler = (() => {
 
     if (error) {
       throw new Error(
-        `Error uploading file $${filePath}/${filenameWithExtension}:`,
-        error.message,
+        `Error uploading file ${filePath}/${filenameWithExtension}: ${error.message}`,
       );
     }
   };
 
   const updateFile = async (filePath, filename, newFilename, extension) => {
-    const filenameWithExtension = mime.lookup(newFilename)
-      ? newFilename
-      : `${newFilename}.${extension}`;
+    const filenameWithExtension = getFilenameWithExtension(filename, extension);
+    const newFilenameWithExtension = getFilenameWithExtension(
+      newFilename,
+      extension,
+    );
 
     const { error } = await storageClient
       .from("user_uploads")
-      .move(`${filePath}/${filename}`, `${filePath}/${filenameWithExtension}`);
+      .move(
+        `${filePath}/${filenameWithExtension}`,
+        `${filePath}/${newFilenameWithExtension}`,
+      );
 
     if (error) {
       throw new Error(
-        `Error moving file ${filePath}/${filename} to ${filePath}/${filenameWithExtension}:`,
-        error.message,
+        `Error moving file ${filePath}/${filenameWithExtension} to ${filePath}/${filenameWithExtension}: ${error.message}`,
       );
     }
   };
 
-  const deleteFile = async (filePath, filename) => {
+  const deleteFile = async (filePath, filename, extension) => {
+    const filenameWithExtension = getFilenameWithExtension(filename, extension);
     const { error } = await storageClient
       .from("user_uploads")
-      .remove([`${filePath}/${filename}`]);
+      .remove([`${filePath}/${filenameWithExtension}`]);
 
     if (error) {
       throw new Error(
-        `Error deleting file $${filePath}/${filename}:`,
-        error.message,
+        `Error deleting file ${filePath}/${filenameWithExtension}: ${error.message}`,
       );
     }
   };
 
-  const getStoragePath = (filePath, filename) => {
+  const getStoragePath = (filePath, filename, extension) => {
+    const filenameWithExtension = getFilenameWithExtension(filename, extension);
     const { data, error } = storageClient
       .from("user_uploads")
-      .getPublicUrl(`${filePath}/${filename}`);
+      .getPublicUrl(`${filePath}/${filenameWithExtension}`);
 
     if (error) {
       throw new Error(
-        `Error retrieving public url for file ${filePath}/${filename}: ${error.message}`,
+        `Error retrieving public url for file ${filePath}/${filenameWithExtension}: ${error.message}`,
       );
     }
 
@@ -234,9 +239,17 @@ const getEntityIcon = (entity) => {
 const mapEntityForUI = async (entity) => {
   let filePath;
   let extension;
+  let storagePath;
   if (entity.file && entity.predecessorId) {
     filePath = await getPathFromEntityId(entity.predecessorId);
-    extension = mime.extension(entity.file.extension).toUpperCase();
+
+    extension = mime.extension(entity.file.extension);
+    storagePath = storageHandler.getStoragePath(
+      filePath,
+      entity.name,
+      extension,
+    );
+    extension = extension.toUpperCase();
   }
 
   return {
@@ -245,7 +258,7 @@ const mapEntityForUI = async (entity) => {
       file: {
         ...entity.file,
         extension,
-        storagePath: storageHandler.getStoragePath(filePath, entity.name),
+        storagePath,
         createdAt: format(entity.file.createdAt, "yyyy-MM-dd HH:mm"),
         size: filesize(entity.file.size),
         uploadTime: prettyMilliseconds(entity.file.uploadTime),

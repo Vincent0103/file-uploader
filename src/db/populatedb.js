@@ -1,11 +1,13 @@
+import mime from "mime-types";
 import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
 const main = async () => {
-  await prisma.file.deleteMany();
-  await prisma.entity.deleteMany();
-  await prisma.user.deleteMany();
+  console.log(mime.extension("image/jpeg"));
+  // await prisma.file.deleteMany();
+  // await prisma.entity.deleteMany();
+  // await prisma.user.deleteMany();
   // await db.createFolder(3, "home", "/");
   // await db.createFolder(3, "documents", "/home/", 27);
   // await db.createFolder(3, "images", "/home/", 27);

@@ -41,7 +41,6 @@ const folderController = (() => {
 
     for (let i = 0; i < entities.length; i += 1) {
       entities[i] = await mapEntityForUI(entities[i]);
-      console.log(entities[i].file);
     }
 
     const nodes = await getNodesFromEntityId(parentFolderId);

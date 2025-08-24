@@ -64,7 +64,6 @@ const signupController = (() => {
         await db.initFolders(userId, username);
         return res.redirect("/login");
       } catch (err) {
-        console.error(err);
         return next(err);
       }
     },
