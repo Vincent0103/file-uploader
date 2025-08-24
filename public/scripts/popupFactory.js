@@ -43,7 +43,6 @@ const createPopupDOMObject = (containerClass) => {
     );
     inputs = {
       filename: container.querySelector("#filename"),
-      parentFolderId: container.querySelector("#parentFolderId"),
     };
   }
 

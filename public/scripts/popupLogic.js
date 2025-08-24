@@ -109,7 +109,6 @@ const PopupLogic = () => {
         popupDOM.title.textContent = `Delete ${titledEntityType}`;
         popupDOM.deleteContentEntityType.textContent = entityType;
         popupDOM.deleteContentEntityName.textContent = entityName;
-        popupDOM.inputs.parentFolderId.value = parentFolderId;
         popupDOM.inputs.filename.value = entityName;
         popupDOM.submitButton.textContent = "Delete";
 

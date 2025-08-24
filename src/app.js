@@ -100,14 +100,14 @@ app.use("/delete", deleteRouter);
 app.use("/logout", logoutRouter);
 app.use("/folder", folderRouter);
 app.use("/download", downloadRouter);
-app.use((req, res, next) => {
+app.use((_req, _res, next) => {
   const err = {
     statusCode: 404,
     message: "Not Found",
   };
   next(err);
 });
-app.use(async (err, req, res, next) => {
+app.use(async (err, req, res, _next) => {
   let additionalParams = {};
   if (req.user) {
     const sidebarInformations = await getSidebarInformations(req);

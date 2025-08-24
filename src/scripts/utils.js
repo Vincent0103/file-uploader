@@ -1,7 +1,8 @@
 import { body } from "express-validator";
+import multer from "multer";
 import { filesize } from "filesize";
 import { format } from "date-fns";
-import multer from "multer";
+import mime from "mime-types";
 import prettyMilliseconds from "pretty-ms";
 import db from "../db/queries.js";
 import storageClient from "./storageClient.js";
@@ -53,7 +54,7 @@ const getNodesFromEntityId = async (entityId) => {
 
   let currentEntityId = entityId;
   do {
-    const folder = await db.getFolderById(currentEntityId);
+    const folder = await db.getEntityById(currentEntityId);
     if (!folder) break;
 
     nodes.push({
@@ -87,14 +88,35 @@ const storageHandler = (() => {
   };
 
   // the filename should include the extension with it (ex: image0.png -> .png)
-  const uploadFile = async (filePath, filename, fileBody) => {
+  const uploadFile = async (filePath, fileBody, filename, extension) => {
+    const filenameWithExtension = mime.lookup(filename)
+      ? filename
+      : `${filename}.${extension}`;
+
     const { error } = await storageClient
       .from("user_uploads")
-      .upload(`${filePath}/${filename}`, fileBody);
+      .upload(`${filePath}/${filenameWithExtension}`, fileBody);
 
     if (error) {
       throw new Error(
-        `Error uploading file $${filePath}/${filename}:`,
+        `Error uploading file $${filePath}/${filenameWithExtension}:`,
+        error.message,
+      );
+    }
+  };
+
+  const updateFile = async (filePath, filename, newFilename, extension) => {
+    const filenameWithExtension = mime.lookup(newFilename)
+      ? newFilename
+      : `${newFilename}.${extension}`;
+
+    const { error } = await storageClient
+      .from("user_uploads")
+      .move(`${filePath}/${filename}`, `${filePath}/${filenameWithExtension}`);
+
+    if (error) {
+      throw new Error(
+        `Error moving file ${filePath}/${filename} to ${filePath}/${filenameWithExtension}:`,
         error.message,
       );
     }
@@ -149,6 +171,7 @@ const storageHandler = (() => {
   return {
     getMulterOptions,
     uploadFile,
+    updateFile,
     deleteFile,
     getStoragePath,
     createDownloadUrl,
@@ -210,8 +233,10 @@ const getEntityIcon = (entity) => {
 
 const mapEntityForUI = async (entity) => {
   let filePath;
+  let extension;
   if (entity.file && entity.predecessorId) {
     filePath = await getPathFromEntityId(entity.predecessorId);
+    extension = mime.extension(entity.file.extension).toUpperCase();
   }
 
   return {
@@ -219,6 +244,7 @@ const mapEntityForUI = async (entity) => {
     ...(entity.file && {
       file: {
         ...entity.file,
+        extension,
         storagePath: storageHandler.getStoragePath(filePath, entity.name),
         createdAt: format(entity.file.createdAt, "yyyy-MM-dd HH:mm"),
         size: filesize(entity.file.size),

@@ -1,6 +1,7 @@
 import { validationResult } from "express-validator";
 import multer from "multer";
 import { filesize } from "filesize";
+import mime from "mime-types";
 import {
   getPathFromEntityId,
   storageHandler,
@@ -12,12 +13,12 @@ import db from "../db/queries.js";
 const loginController = (() => {
   const createFolderPost = [
     validateEntity("Folder", "folderName", "Foldername"),
-    async (req, res, next) => {
+    async (req, res) => {
       const errors = validationResult(req);
 
       let params;
       if (!errors.isEmpty()) {
-        params = await folderController.getIndexViewParams(req, next);
+        params = await folderController.getIndexViewParams(req);
         return res.status(401).render("index", {
           ...params,
           errors: errors.array(),
@@ -44,8 +45,8 @@ const loginController = (() => {
         next();
       });
     },
-    validateEntity("File", "fileName", "Filename"),
-    async (req, res, next) => {
+    validateEntity("File", "filename", "Filename"),
+    async (req, res) => {
       const errors = validationResult(req);
       let params;
 
@@ -54,14 +55,14 @@ const loginController = (() => {
         errors.errors.push({
           type: "field",
           value: "",
-          msg: `file ${req.body.fileName} is too big. Expected <${filesize(maxSize)}`,
+          msg: `file ${req.body.filename} is too big. Expected <${filesize(maxSize)}`,
           path: "uploadedFile",
           location: "body",
         });
       }
 
       if (!errors.isEmpty()) {
-        params = await folderController.getIndexViewParams(req, next);
+        params = await folderController.getIndexViewParams(req);
         return res.status(401).render("index", {
           ...params,
           errors: errors.array(),
@@ -69,30 +70,28 @@ const loginController = (() => {
       }
 
       const parentFolderId = parseInt(req.body.parentFolderId, 10);
+      const { filename } = req.body;
+
+      const path = await getPathFromEntityId(parentFolderId);
+      const { size, mimetype, buffer } = req.file;
+      const extension = mime.extension(mimetype);
 
       const uploadStartTime = Date.now();
 
       // HANDLE ERROR IF FILE DONT UPLOAD
-      const path = await getPathFromEntityId(parentFolderId);
-      await storageHandler.uploadFile(
-        path,
-        req.file.originalname,
-        req.file.buffer,
-      );
+      await storageHandler.uploadFile(path, buffer, filename, extension);
 
       const uploadEndTime = Date.now();
       const uploadTime = Math.abs(uploadStartTime - uploadEndTime);
 
-      const { id: userId } = req.user;
-      const { fileName } = req.body;
-
       const fileInfos = {
-        size: req.file.size,
+        size,
         uploadTime,
-        extension: req.file.mimetype,
+        extension: mimetype,
       };
 
-      await db.createFile(userId, fileName, fileInfos, parentFolderId);
+      const { id: userId } = req.user;
+      await db.createFile(userId, filename, fileInfos, parentFolderId);
       return res.redirect(`/folder/${parentFolderId}`);
     },
   ];

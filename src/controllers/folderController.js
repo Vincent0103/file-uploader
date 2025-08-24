@@ -10,7 +10,6 @@ import {
 const folderController = (() => {
   const getIndexViewParams = async (
     req,
-    next,
     isCreatingEntity = true,
     entityId = null,
   ) => {
@@ -42,6 +41,7 @@ const folderController = (() => {
 
     for (let i = 0; i < entities.length; i += 1) {
       entities[i] = await mapEntityForUI(entities[i]);
+      console.log(entities[i].file);
     }
 
     const nodes = await getNodesFromEntityId(parentFolderId);
@@ -67,7 +67,7 @@ const folderController = (() => {
 
   const folderGet = async (req, res, next) => {
     try {
-      const params = await getIndexViewParams(req, next);
+      const params = await getIndexViewParams(req);
       return res.render("index", { ...params });
     } catch (err) {
       const error = {

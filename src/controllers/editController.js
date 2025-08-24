@@ -1,13 +1,17 @@
 import { validationResult } from "express-validator";
 import multer from "multer";
-import { storageHandler, validateEntity } from "../scripts/utils.js";
+import {
+  getPathFromEntityId,
+  storageHandler,
+  validateEntity,
+} from "../scripts/utils.js";
 import db from "../db/queries.js";
 import folderController from "./folderController.js";
 
 const loginController = (() => {
   const editFolderPost = [
     validateEntity("Folder", "folderName", "Foldername"),
-    async (req, res, next) => {
+    async (req, res) => {
       const errors = validationResult(req);
       const folderId = parseInt(req.params.folderId, 10);
       const { folderName } = req.body;
@@ -16,7 +20,6 @@ const loginController = (() => {
       if (!errors.isEmpty()) {
         params = await folderController.getIndexViewParams(
           req,
-          next,
           false,
           folderId,
         );
@@ -38,30 +41,35 @@ const loginController = (() => {
   const uploads = multer(storageHandler.getMulterOptions());
   const editFilePost = [
     uploads.none(), // Ensure no file upload is expected
-    validateEntity("File", "fileName", "Filename"),
-    async (req, res, next) => {
+    validateEntity("File", "filename", "Filename"),
+    async (req, res) => {
       const errors = validationResult(req);
       const fileId = parseInt(req.params.fileId, 10);
-      const { fileName } = req.body;
+      const { filename } = req.body;
 
       let params;
       if (!errors.isEmpty()) {
-        params = await folderController.getIndexViewParams(
-          req,
-          next,
-          false,
-          fileId,
-        );
+        params = await folderController.getIndexViewParams(req, false, fileId);
         return res.status(401).render("index", {
           ...params,
-          fileName,
+          filename,
           errors: errors.array(),
         });
       }
 
       const parentFolderId = parseInt(req.body.parentFolderId, 10);
+      const path = await getPathFromEntityId(parentFolderId);
 
-      await db.editFile(fileId, fileName);
+      const entity = await db.getEntityById(fileId);
+
+      await storageHandler.updateFile(
+        path,
+        entity.name,
+        filename,
+        entity.file.extension,
+      );
+
+      await db.editFile(fileId, filename);
       return res.redirect(`/folder/${parentFolderId}`);
     },
   ];

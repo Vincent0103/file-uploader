@@ -23,7 +23,7 @@ const downloadController = (() => {
     }
 
     const fileId = parseInt(req.params.fileId, 10);
-    const entity = await db.getFolderById(fileId);
+    const entity = await db.getEntityById(fileId);
     const { name, predecessorId } = entity;
 
     const filePath = await getPathFromEntityId(predecessorId);
