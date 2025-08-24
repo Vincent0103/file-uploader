@@ -78,19 +78,14 @@ const loginController = (() => {
 
       const uploadStartTime = Date.now();
 
-      // HANDLE ERROR IF FILE DONT UPLOAD
       await storageHandler.uploadFile(path, buffer, filename, extension);
 
       const uploadEndTime = Date.now();
       const uploadTime = Math.abs(uploadStartTime - uploadEndTime);
 
-      const fileInfos = {
-        size,
-        uploadTime,
-        extension,
-      };
-
       const { id: userId } = req.user;
+      const fileInfos = { size, uploadTime, extension };
+
       await db.createFile(userId, filename, fileInfos, parentFolderId);
       return res.redirect(`/folder/${parentFolderId}`);
     },

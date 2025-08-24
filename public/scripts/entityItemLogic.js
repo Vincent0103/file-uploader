@@ -1,4 +1,4 @@
-const DOMMethods = (() => {
+const EntityItemLogic = () => {
   const toggleModal = (modal, moreOptionsContainer) => {
     modal.classList.toggle("opacity-100");
     modal.classList.toggle("pointer-events-auto");
@@ -26,10 +26,7 @@ const DOMMethods = (() => {
     });
   };
 
-  return {
-    toggleModal,
-    handleEntityItemClickStylings,
-  };
-})();
+  return { toggleModal, handleEntityItemClickStylings };
+};
 
-export default DOMMethods;
+export default EntityItemLogic;
