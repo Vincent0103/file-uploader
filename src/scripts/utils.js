@@ -155,17 +155,18 @@ const storageHandler = (() => {
     return publicUrl;
   };
 
-  const createDownloadUrl = async (filePath, filename) => {
+  const createDownloadUrl = async (filePath, filename, extension) => {
     const linkTimeout = 30;
+    const filenameWithExtension = getFilenameWithExtension(filename, extension);
     const { data, error } = await storageClient
       .from("user_uploads")
-      .createSignedUrl(`${filePath}/${filename}`, linkTimeout, {
+      .createSignedUrl(`${filePath}/${filenameWithExtension}`, linkTimeout, {
         download: true,
       });
 
     if (error) {
       throw new Error(
-        `Error creating download url for file ${filePath}/${filename}: ${error.message}`,
+        `Error creating download url for file ${filePath}/${filenameWithExtension}: ${error.message}`,
       );
     }
 
@@ -228,11 +229,12 @@ const getEntityIcon = (entity) => {
     return "folder";
   }
   const { extension } = entity.file;
+  const contentType = mime.contentType(`.${extension}`);
 
-  if (extension.startsWith("image/")) return "image";
-  if (extension.startsWith("video/")) return "video";
-  if (extension.startsWith("audio/")) return "audio";
-  if (extension === "application/pdf") return "document";
+  if (contentType.startsWith("image/")) return "image";
+  if (contentType.startsWith("video/")) return "video";
+  if (contentType.startsWith("audio/")) return "audio";
+  if (contentType === "application/pdf") return "document";
   return "file";
 };
 
@@ -243,7 +245,7 @@ const mapEntityForUI = async (entity) => {
   if (entity.file && entity.predecessorId) {
     filePath = await getPathFromEntityId(entity.predecessorId);
 
-    extension = mime.extension(entity.file.extension);
+    extension = entity.file.extension;
     storagePath = storageHandler.getStoragePath(
       filePath,
       entity.name,
@@ -315,5 +317,6 @@ export {
   getEntityIcon,
   mapEntityForUI,
   getSidebarInformations,
+  getFilenameWithExtension,
   storageHandler,
 };

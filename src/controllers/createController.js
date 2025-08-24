@@ -87,7 +87,7 @@ const loginController = (() => {
       const fileInfos = {
         size,
         uploadTime,
-        extension: mimetype,
+        extension,
       };
 
       const { id: userId } = req.user;

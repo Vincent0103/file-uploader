@@ -27,7 +27,11 @@ const downloadController = (() => {
     const { name, predecessorId } = entity;
 
     const filePath = await getPathFromEntityId(predecessorId);
-    const downloadLink = await storageHandler.createDownloadUrl(filePath, name);
+    const downloadLink = await storageHandler.createDownloadUrl(
+      filePath,
+      name,
+      entity.file.extension,
+    );
     return res.redirect(downloadLink);
   };
 
