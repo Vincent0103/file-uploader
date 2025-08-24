@@ -5,7 +5,7 @@ import {
   getPopupObject,
   mapEntityForUI,
   getSidebarInformations,
-} from "../utils.js";
+} from "../scripts/utils.js";
 
 const folderController = (() => {
   const getIndexViewParams = async (

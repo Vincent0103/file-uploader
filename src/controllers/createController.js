@@ -1,7 +1,11 @@
 import { validationResult } from "express-validator";
 import multer from "multer";
 import { filesize } from "filesize";
-import { getMulterOptions, validateEntity } from "../utils.js";
+import {
+  getPathFromEntityId,
+  storageHandler,
+  validateEntity,
+} from "../scripts/utils.js";
 import folderController from "./folderController.js";
 import db from "../db/queries.js";
 
@@ -29,28 +33,16 @@ const loginController = (() => {
     },
   ];
 
-  const upload = multer(getMulterOptions()).single("uploadedFile");
+  const upload = multer(storageHandler.getMulterOptions()).single(
+    "uploadedFile",
+  );
+
   const createFilePost = [
-    async (req, _res, next) => {
-      const uploadStartTime = Date.now();
-      req.uploadStartTime = uploadStartTime;
-      next();
-    },
     (req, res, next) => {
       upload(req, res, (err) => {
         if (err) req.multerError = err;
         next();
       });
-    },
-    async (req, _res, next) => {
-      if (!req.multerError) {
-        const uploadEndTime = Date.now();
-        const uploadTime = Math.abs(req.uploadStartTime - uploadEndTime);
-        delete req.uploadStartTime;
-
-        req.body.uploadTime = uploadTime;
-      }
-      next();
     },
     validateEntity("File", "fileName", "Filename"),
     async (req, res, next) => {
@@ -76,17 +68,26 @@ const loginController = (() => {
         });
       }
 
+      const parentFolderId = parseInt(req.body.parentFolderId, 10);
+
+      const uploadStartTime = Date.now();
+
+      // HANDLE ERROR IF FILE DONT UPLOAD
+      const path = await getPathFromEntityId(parentFolderId);
+      await storageHandler.uploadFile(
+        path,
+        req.file.originalname,
+        req.file.buffer,
+      );
+
+      const uploadEndTime = Date.now();
+      const uploadTime = Math.abs(uploadStartTime - uploadEndTime);
+
       const { id: userId } = req.user;
       const { fileName } = req.body;
-      const parentFolderId = parseInt(req.body.parentFolderId, 10);
-      const uploadTime = parseInt(req.body.uploadTime, 10);
-
-      const startingIndex = req.file.path.indexOf("/uploads/");
-      const storagePath = req.file.path.substring(startingIndex);
 
       const fileInfos = {
         size: req.file.size,
-        storagePath,
         uploadTime,
         extension: req.file.mimetype,
       };

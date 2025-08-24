@@ -1,12 +1,10 @@
-import { fileURLToPath } from "url";
-import { dirname } from "path";
 import { body } from "express-validator";
-import multer from "multer";
-import path from "path";
 import { filesize } from "filesize";
-import db from "./db/queries.js";
-import prettyMilliseconds from "pretty-ms";
 import { format } from "date-fns";
+import multer from "multer";
+import prettyMilliseconds from "pretty-ms";
+import db from "../db/queries.js";
+import storageClient from "./storageClient.js";
 
 const validationErrorMessages = (() => {
   const lengthErr = (min, max) => `must be between ${min} and ${max}.`;
@@ -69,6 +67,54 @@ const getNodesFromEntityId = async (entityId) => {
   return nodes;
 };
 
+const getPathFromEntityId = async (entityId) => {
+  const nodes = await getNodesFromEntityId(entityId);
+  const folders = nodes.map(({ name }) => name);
+  const path = folders.join("/");
+
+  return path;
+};
+
+const storageHandler = (() => {
+  const getMulterOptions = () => {
+    const storage = multer.memoryStorage();
+    const limits = {
+      fileSize: 1024 * 1024 * 10, // 10MB
+      files: 1,
+    };
+
+    return { storage, limits };
+  };
+
+  // the filename should include the extension with it (ex: image0.png -> .png)
+  const uploadFile = async (filePath, filename, fileBody) => {
+    const { error } = await storageClient
+      .from("user_uploads")
+      .upload(`${filePath}/${filename}`, fileBody);
+
+    if (error) {
+      console.error("Supabase client error:", error.code, error.message);
+    }
+  };
+
+  const getStoragePath = (filePath, originalname) => {
+    const { data, error } = storageClient
+      .from("user_uploads")
+      .getPublicUrl(`${filePath}/${originalname}`);
+
+    if (error) {
+      throw new Error(
+        `Error retrieving public url file ${filePath}/${originalname}: ${error.message}`,
+      );
+    }
+
+    const { publicUrl } = data;
+    return publicUrl;
+  };
+
+  return { getMulterOptions, uploadFile, getStoragePath };
+})();
+
 const toTitleCase = (str) => str.charAt(0).toUpperCase() + str.slice(1);
 
 const getPopupObject = (CRUDType, entityType, entityId = null) => {
@@ -107,31 +153,6 @@ const getPopupObject = (CRUDType, entityType, entityId = null) => {
   };
 
   return popup;
-};
-
-const getMulterOptions = () => {
-  const __filename = fileURLToPath(import.meta.url);
-  const __dirname = dirname(__filename);
-
-  const destinationPath = path.join(__dirname, "../../public/uploads");
-  const storage = multer.diskStorage({
-    destination: destinationPath,
-    filename: (req, file, cb) => {
-      const uniqueSuffix = `${Date.now()}-${Math.round(Math.random() * 1e9)}`;
-      const ext = path.extname(file.originalname);
-      const filename = `${file.fieldname.toLowerCase()}-${uniqueSuffix}${ext}`;
-      cb(null, filename);
-    },
-  });
-
-  // Add file filter to only accept images
-
-  const limits = {
-    fileSize: 1024 * 1024 * 10, // 10MB
-    files: 1,
-  };
-
-  return { storage, limits };
 };
 
 const getEntityIcon = (entity) => {
@@ -202,9 +223,10 @@ export {
   validationErrorMessages,
   validateEntity,
   getNodesFromEntityId,
+  getPathFromEntityId,
   getPopupObject,
-  getMulterOptions,
   getEntityIcon,
   mapEntityForUI,
   getSidebarInformations,
+  storageHandler,
 };

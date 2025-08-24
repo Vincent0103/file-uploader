@@ -1,6 +1,9 @@
-import DOMMethods, { createPopupDOMObject } from "./utils.js";
+import PopupLogic from "./popupLogic.js";
+import FileDetailsLogic from "./fileDetailsLogic.js";
+import createPopupDOMObject from "./popupFactory.js";
+import DOMMethods from "./utils.js";
 
-const listenFileClick = (event) => {
+const listenFileClick = (event, fileDetailsLogic) => {
   const targetEntityItem = event.target.closest(".entity-item");
   const element = event.target;
   if (
@@ -10,7 +13,7 @@ const listenFileClick = (event) => {
   ) {
     return;
   }
-  DOMMethods.openFileDetails(targetEntityItem);
+  fileDetailsLogic.openFileDetails(targetEntityItem);
 };
 
 const listenOpenedRightSidebar = () => {
@@ -44,39 +47,30 @@ const listenOpenedModals = (event) => {
   });
 };
 
-const listenVisiblePopupEvents = (popupDOMs) => {
+const listenVisiblePopupEvents = (popupLogic, popupDOMs) => {
   popupDOMs.forEach((popupDOM) => {
-    const { container, popup, inputs, hiddableContainer, closeButton } =
-      popupDOM;
+    const { container, popup, closeButton } = popupDOM;
     closeButton.addEventListener("click", () =>
-      DOMMethods.closePopup(container, popup, inputs, hiddableContainer),
+      popupLogic.closePopup(popupDOM),
     );
 
     // Close popup when clicking outside the popup
     container.addEventListener("click", (event) => {
       if (!popup.contains(event.target)) {
-        DOMMethods.closePopup(container, popup, inputs, hiddableContainer);
+        popupLogic.closePopup(popupDOM);
       }
     });
   });
 };
 
-const listenCreatePopup = (popupDOM) => {
-  DOMMethods.updatePopupContent(popupDOM, "create");
-  const { container, popup, inputs, fileInputInfos, hiddableContainer } =
-    popupDOM;
+const listenCreatePopup = (popupLogic, popupDOM) => {
+  popupLogic.updatePopupContent(popupDOM, "create");
+  const { fileInputInfos } = popupDOM;
 
-  DOMMethods.openPopup(
-    container,
-    popup,
-    inputs,
-    fileInputInfos,
-    hiddableContainer,
-    true,
-  );
+  popupLogic.openPopup(popupDOM, fileInputInfos, true);
 };
 
-const listenEditPopup = (event, popupDOMs) => {
+const listenEditPopup = (event, popupLogic, popupDOMs) => {
   const button = event.target.closest(".edit.open-popup-button");
   if (button) {
     const entityItem = button.closest(".entity-item");
@@ -86,21 +80,14 @@ const listenEditPopup = (event, popupDOMs) => {
     const entityName = entityItem.querySelector("#entity-name").textContent;
 
     const popupDOM = popupDOMs.find((item) => item.entityType === entityType);
-    DOMMethods.updatePopupContent(popupDOM, "edit", entityId, entityName);
+    popupLogic.updatePopupContent(popupDOM, "edit", entityId, entityName);
 
-    const { container, inputs, popup, fileInputInfos, hiddableContainer } =
-      popupDOM;
-    DOMMethods.openPopup(
-      container,
-      popup,
-      inputs,
-      fileInputInfos,
-      hiddableContainer,
-    );
+    const { fileInputInfos } = popupDOM;
+    popupLogic.openPopup(popupDOM, fileInputInfos, false);
   }
 };
 
-const listenDeletePopup = (event, deletePopup) => {
+const listenDeletePopup = (event, popupLogic, deletePopup) => {
   const button = event.target.closest(".delete.open-popup-button");
   if (button) {
     const entityItem = button.closest(".entity-item");
@@ -113,14 +100,14 @@ const listenDeletePopup = (event, deletePopup) => {
 
     const entityName = entityItem.querySelector("#entity-name").textContent;
 
-    DOMMethods.updatePopupContent(
+    popupLogic.updatePopupContent(
       deletePopup,
       "delete",
       entityId,
       entityName,
       parentFolderId,
     );
-    DOMMethods.openPopup(deletePopup.container, deletePopup.popup);
+    popupLogic.openPopup(deletePopup);
   }
 };
 
@@ -128,6 +115,9 @@ window.addEventListener("DOMContentLoaded", () => {
   const folderDOM = createPopupDOMObject("folder");
   const fileDOM = createPopupDOMObject("file");
   const deletePopup = createPopupDOMObject("deletion");
+
+  const fileDetailsLogic = FileDetailsLogic();
+  const popupLogic = PopupLogic();
 
   let errorPopup;
   if (document.querySelector(".error.popup-container")) {
@@ -139,24 +129,29 @@ window.addEventListener("DOMContentLoaded", () => {
 
   const entityRelatedPopupDOMs = popupDOMs.slice(0, 2);
 
-  listenVisiblePopupEvents(popupDOMs);
+  listenVisiblePopupEvents(popupLogic, popupDOMs);
   listenOpenedRightSidebar();
+
+  fileDOM.popup.addEventListener("submit", (e) => {
+    const { popup, inputs, submitButton, closeButton } = fileDOM;
+    popupLogic.onFilePopupSubmit(e, popup, inputs, submitButton, closeButton);
+  });
 
   entityRelatedPopupDOMs.forEach((popupDOM) => {
     popupDOM.openPopupButton.addEventListener("click", () => {
-      listenCreatePopup(popupDOM);
+      listenCreatePopup(popupLogic, popupDOM);
     });
   });
 
   document.addEventListener("click", (event) => {
-    listenEditPopup(event, entityRelatedPopupDOMs);
-    listenDeletePopup(event, deletePopup);
+    listenEditPopup(event, popupLogic, entityRelatedPopupDOMs);
+    listenDeletePopup(event, popupLogic, deletePopup);
     DOMMethods.handleEntityItemClickStylings(event);
 
     const entityItem = event.target.closest(".entity-item");
     if (entityItem) {
       const { entityType } = entityItem.dataset;
-      if (entityType === "file") listenFileClick(event);
+      if (entityType === "file") listenFileClick(event, fileDetailsLogic);
     }
 
     listenMoreOptionsButton(event);

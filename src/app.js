@@ -1,5 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import { PrismaSessionStore } from "@quixo3/prisma-session-store";
+import { StorageClient } from "@supabase/storage-js";
 import { fileURLToPath } from "url";
 import { dirname } from "path";
 import express from "express";
@@ -16,7 +17,7 @@ import createRouter from "./routes/createRouter.js";
 import folderRouter from "./routes/folderRouter.js";
 import editRouter from "./routes/editRouter.js";
 import deleteRouter from "./routes/deleteRouter.js";
-import { getSidebarInformations } from "./utils.js";
+import { getSidebarInformations } from "./scripts/utils.js";
 
 const app = express();
 

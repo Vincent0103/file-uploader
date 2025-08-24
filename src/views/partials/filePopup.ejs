@@ -1,6 +1,27 @@
 <section
   class="file popup-container pointer-events-none absolute inset-0 z-30 size-full bg-black/70 px-3 opacity-0 backdrop-blur-sm transition-opacity"
 >
+  <style>
+    progress {
+      box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    progress::-webkit-progress-bar {
+      background-color: #f97316;
+    }
+
+    progress::-webkit-progress-value {
+      background-color: #f97316;
+
+      box-shadow: 1px 1px 5px 3px #f97316;
+    }
+
+    progress::-moz-progress-bar {
+      background-color: #f97316;
+
+      box-shadow: 1px 1px 5px 3px #f97316;
+    }
+  </style>
   <div class="flex h-full w-full items-center justify-center">
     <form
       action="<%= path %>"
@@ -10,11 +31,12 @@
     >
       <div class="mb-2 flex items-center justify-between">
         <h3 class="title text-lg font-semibold"><%= title %></h3>
-        <button class="close-button" aria-label="Close" type="button">
-          <i
-            class="size-5 cursor-pointer rounded-md hover:text-zinc-500"
-            data-lucide="x"
-          ></i>
+        <button
+          class="close-button cursor-pointer"
+          aria-label="Close"
+          type="button"
+        >
+          <i class="size-5 rounded-md hover:text-zinc-500" data-lucide="x"></i>
         </button>
       </div>
       <input
@@ -45,6 +67,13 @@
         id="parentFolderId"
         value="<%= parentFolderId %>"
       />
+      <div
+        class="mt-4 hidden items-center justify-center gap-2 rounded-md bg-zinc-900 p-2 text-sm text-amber-500"
+        id="uploading-indicator"
+      >
+        <i class="size-5 animate-spin" data-lucide="loader-pinwheel"></i>
+        <span class="font-semibold">Uploading...</span>
+      </div>
       <div class="mt-4 flex justify-end">
         <button
           data-crud-type="<%= CRUDType %>"

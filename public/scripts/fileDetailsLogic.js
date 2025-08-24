@@ -1,0 +1,60 @@
+const FileDetailsLogic = () => {
+  const updateFileDetailsContent = (entityInfos) => {
+    const rightSidebar = document.getElementById("right-sidebar");
+    const fileDetails = {
+      icon: rightSidebar.querySelector("#file-details-icon"),
+      name: rightSidebar.querySelector("#file-details-name"),
+      size: rightSidebar.querySelector("#file-details-size"),
+      extension: rightSidebar.querySelector("#file-details-extension"),
+      uploadTime: rightSidebar.querySelector("#file-details-upload-time"),
+      createdAt: rightSidebar.querySelector("#file-details-created-at"),
+      downloadLink: rightSidebar.querySelector("#file-details-download-link"),
+    };
+
+    const {
+      createdAt,
+      iconPath,
+      name,
+      size,
+      extension,
+      uploadTime,
+      storagePath,
+    } = entityInfos;
+
+    if (fileDetails.icon.src !== storagePath) fileDetails.icon.src = iconPath;
+    fileDetails.icon.src = storagePath;
+    fileDetails.icon.alt = `Preview of file ${name}`;
+    fileDetails.name.textContent = name;
+    fileDetails.size.textContent = size;
+    fileDetails.extension.textContent = extension;
+    fileDetails.uploadTime.textContent = uploadTime;
+    fileDetails.createdAt.textContent = createdAt;
+    fileDetails.downloadLink.href = storagePath;
+    fileDetails.downloadLink.download = name;
+
+    rightSidebar.classList.remove("hidden");
+  };
+
+  const openFileDetails = (entityItem) => {
+    const { entityType, entityFile, entityIcon } = entityItem.dataset;
+    const parsedEntityObject = JSON.parse(entityFile);
+
+    if (entityType !== "file") return;
+
+    const entityName = entityItem.querySelector("#entity-name").textContent;
+
+    const getIconPath = (iconName) => `/images/${iconName}.svg`;
+
+    const entityInfos = {
+      ...parsedEntityObject,
+      iconPath: getIconPath(entityIcon),
+      name: entityName,
+    };
+
+    updateFileDetailsContent(entityInfos);
+  };
+
+  return { updateFileDetailsContent, openFileDetails };
+};
+
+export default FileDetailsLogic;

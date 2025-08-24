@@ -1,6 +1,6 @@
 import { body, validationResult } from "express-validator";
 import db from "../db/queries.js";
-import { validationErrorMessages } from "../utils.js";
+import { validationErrorMessages } from "../scripts/utils.js";
 
 const signupController = (() => {
   const passwordValidationRegex =

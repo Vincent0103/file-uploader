@@ -1,6 +1,6 @@
 import { validationResult } from "express-validator";
 import multer from "multer";
-import { getMulterOptions, validateEntity } from "../utils.js";
+import { storageHandler, validateEntity } from "../scripts/utils.js";
 import db from "../db/queries.js";
 import folderController from "./folderController.js";
 
@@ -35,7 +35,7 @@ const loginController = (() => {
     },
   ];
 
-  const uploads = multer(getMulterOptions());
+  const uploads = multer(storageHandler.getMulterOptions());
   const editFilePost = [
     uploads.none(), // Ensure no file upload is expected
     validateEntity("File", "fileName", "Filename"),
