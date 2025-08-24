@@ -22,8 +22,16 @@ const FileDetailsLogic = () => {
       storagePath,
     } = entityInfos;
 
-    if (fileDetails.icon.src !== storagePath) fileDetails.icon.src = iconPath;
-    fileDetails.icon.src = storagePath;
+    // Set placeholder image first
+    fileDetails.icon.src = iconPath;
+
+    // When the main image loads, replace the placeholder
+    const mainImage = new window.Image();
+    mainImage.src = storagePath;
+    mainImage.onload = () => {
+      fileDetails.icon.src = storagePath;
+      mainImage.src = "";
+    };
     fileDetails.icon.alt = `Preview of file ${name}`;
     fileDetails.name.textContent = name;
     fileDetails.size.textContent = size;
