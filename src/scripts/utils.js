@@ -93,7 +93,7 @@ const storageHandler = (() => {
       .upload(`${filePath}/${filename}`, fileBody);
 
     if (error) {
-      console.error(
+      throw new Error(
         `Error uploading file $${filePath}/${filename}:`,
         error.message,
       );
@@ -106,7 +106,7 @@ const storageHandler = (() => {
       .remove([`${filePath}/${filename}`]);
 
     if (error) {
-      console.error(
+      throw new Error(
         `Error deleting file $${filePath}/${filename}:`,
         error.message,
       );
@@ -120,7 +120,7 @@ const storageHandler = (() => {
 
     if (error) {
       throw new Error(
-        `Error retrieving public url file ${filePath}/${filename}: ${error.message}`,
+        `Error retrieving public url for file ${filePath}/${filename}: ${error.message}`,
       );
     }
 
@@ -128,7 +128,31 @@ const storageHandler = (() => {
     return publicUrl;
   };
 
-  return { getMulterOptions, uploadFile, deleteFile, getStoragePath };
+  const createDownloadUrl = async (filePath, filename) => {
+    const linkTimeout = 30;
+    const { data, error } = await storageClient
+      .from("user_uploads")
+      .createSignedUrl(`${filePath}/${filename}`, linkTimeout, {
+        download: true,
+      });
+
+    if (error) {
+      throw new Error(
+        `Error creating download url for file ${filePath}/${filename}: ${error.message}`,
+      );
+    }
+
+    const { signedUrl } = data;
+    return signedUrl;
+  };
+
+  return {
+    getMulterOptions,
+    uploadFile,
+    deleteFile,
+    getStoragePath,
+    createDownloadUrl,
+  };
 })();
 
 const toTitleCase = (str) => str.charAt(0).toUpperCase() + str.slice(1);

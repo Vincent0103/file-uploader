@@ -12,6 +12,7 @@ const FileDetailsLogic = () => {
     };
 
     const {
+      id,
       createdAt,
       iconPath,
       name,
@@ -29,14 +30,13 @@ const FileDetailsLogic = () => {
     fileDetails.extension.textContent = extension;
     fileDetails.uploadTime.textContent = uploadTime;
     fileDetails.createdAt.textContent = createdAt;
-    fileDetails.downloadLink.href = storagePath;
-    fileDetails.downloadLink.download = name;
+    fileDetails.downloadLink.href = `/download/${id}`;
 
     rightSidebar.classList.remove("hidden");
   };
 
   const openFileDetails = (entityItem) => {
-    const { entityType, entityFile, entityIcon } = entityItem.dataset;
+    const { entityId, entityType, entityFile, entityIcon } = entityItem.dataset;
     const parsedEntityObject = JSON.parse(entityFile);
 
     if (entityType !== "file") return;
@@ -47,6 +47,7 @@ const FileDetailsLogic = () => {
 
     const entityInfos = {
       ...parsedEntityObject,
+      id: parseInt(entityId, 10),
       iconPath: getIconPath(entityIcon),
       name: entityName,
     };

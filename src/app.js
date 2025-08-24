@@ -1,6 +1,5 @@
 import { PrismaClient } from "@prisma/client";
 import { PrismaSessionStore } from "@quixo3/prisma-session-store";
-import { StorageClient } from "@supabase/storage-js";
 import { fileURLToPath } from "url";
 import { dirname } from "path";
 import express from "express";
@@ -18,6 +17,7 @@ import folderRouter from "./routes/folderRouter.js";
 import editRouter from "./routes/editRouter.js";
 import deleteRouter from "./routes/deleteRouter.js";
 import { getSidebarInformations } from "./scripts/utils.js";
+import downloadRouter from "./routes/downloadRouter.js";
 
 const app = express();
 
@@ -99,6 +99,7 @@ app.use("/edit", editRouter);
 app.use("/delete", deleteRouter);
 app.use("/logout", logoutRouter);
 app.use("/folder", folderRouter);
+app.use("/download", downloadRouter);
 app.use((req, res, next) => {
   const err = {
     statusCode: 404,
