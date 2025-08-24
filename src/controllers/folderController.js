@@ -39,7 +39,10 @@ const folderController = (() => {
     const { id: userId } = req.user;
 
     let entities = await db.getEntities(userId, parentFolderId);
-    entities = entities.map((entity) => mapEntityForUI(entity));
+
+    for (let i = 0; i < entities.length; i += 1) {
+      entities[i] = await mapEntityForUI(entities[i]);
+    }
 
     const nodes = await getNodesFromEntityId(parentFolderId);
 

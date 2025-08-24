@@ -113,14 +113,14 @@ const storageHandler = (() => {
     }
   };
 
-  const getStoragePath = (filePath, originalname) => {
+  const getStoragePath = (filePath, filename) => {
     const { data, error } = storageClient
       .from("user_uploads")
-      .getPublicUrl(`${filePath}/${originalname}`);
+      .getPublicUrl(`${filePath}/${filename}`);
 
     if (error) {
       throw new Error(
-        `Error retrieving public url file ${filePath}/${originalname}: ${error.message}`,
+        `Error retrieving public url file ${filePath}/${filename}: ${error.message}`,
       );
     }
 
@@ -184,19 +184,27 @@ const getEntityIcon = (entity) => {
   return "file";
 };
 
-const mapEntityForUI = (entity) => ({
-  ...entity,
-  ...(entity.file && {
-    file: {
-      ...entity.file,
-      createdAt: format(entity.file.createdAt, "yyyy-MM-dd HH:mm"),
-      size: filesize(entity.file.size),
-      uploadTime: prettyMilliseconds(entity.file.uploadTime),
-    },
-  }),
-  icon: getEntityIcon(entity),
-  type: entity.file ? "file" : "folder",
-});
+const mapEntityForUI = async (entity) => {
+  let filePath;
+  if (entity.file && entity.predecessorId) {
+    filePath = await getPathFromEntityId(entity.predecessorId);
+  }
+
+  return {
+    ...entity,
+    ...(entity.file && {
+      file: {
+        ...entity.file,
+        storagePath: storageHandler.getStoragePath(filePath, entity.name),
+        createdAt: format(entity.file.createdAt, "yyyy-MM-dd HH:mm"),
+        size: filesize(entity.file.size),
+        uploadTime: prettyMilliseconds(entity.file.uploadTime),
+      },
+    }),
+    icon: getEntityIcon(entity),
+    type: entity.file ? "file" : "folder",
+  };
+};
 
 const getSidebarInformations = async (req) => {
   const iconNames = [
