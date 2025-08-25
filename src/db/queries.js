@@ -1,4 +1,5 @@
 import { PrismaClient } from "@prisma/client";
+import { getEntitiesQuery } from "@prisma/client/sql";
 import bcrypt from "bcryptjs";
 
 const db = (() => {
@@ -25,7 +26,7 @@ const db = (() => {
     await db.createFolder(userId, "documents", folderParentId);
     await db.createFolder(userId, "images", folderParentId);
     await db.createFolder(userId, "videos", folderParentId);
-    await db.createFolder(userId, "music", folderParentId);
+    await db.createFolder(userId, "audios", folderParentId);
   };
 
   const getUserByUsername = async (username) => {
@@ -162,19 +163,48 @@ const db = (() => {
   };
 
   const getEntities = async (userId, folderId) => {
-    const foldersAndFiles = await prisma.entity.findMany({
+    // const foldersAndFiles = await prisma.entity.findMany({
+    //   where: {
+    //     predecessorId: folderId,
+    //     userId,
+    //   },
+    //   orderBy: {
+    //     name: "asc",
+    //   },
+    //   include: {
+    //     file: true,
+    //   },
+    // });
+
+    const folders = await prisma.entity.findMany({
       where: {
-        predecessorId: folderId,
         userId,
+        predecessorId: folderId,
+        file: null,
+      },
+      orderBy: {
+        name: "asc",
       },
       include: {
         file: true,
       },
+    });
+
+    const files = await prisma.entity.findMany({
+      where: {
+        userId,
+        predecessorId: folderId,
+        NOT: [{ file: null }],
+      },
       orderBy: {
-        name: "desc",
+        name: "asc",
+      },
+      include: {
+        file: true,
       },
     });
 
+    const foldersAndFiles = folders.concat(files);
     return foldersAndFiles;
   };
 
@@ -187,12 +217,19 @@ const db = (() => {
           { name: "documents" },
           { name: "images" },
           { name: "videos" },
-          { name: "music" },
+          { name: "audios" },
         ],
       },
     });
 
-    return folders;
+    const order = [username, "documents", "images", "videos", "audios"];
+    const orderedFolders = [];
+    order.forEach((foldername) => {
+      const foundFolder = folders.find(({ name }) => name === foldername);
+      if (foundFolder) orderedFolders.push(foundFolder);
+    });
+
+    return orderedFolders;
   };
 
   const getRootFolder = async (userId) => {

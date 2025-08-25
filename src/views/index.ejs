@@ -31,12 +31,13 @@
           </div>
           <h2 class="font-semibold">File Uploader</h2>
         </a>
-        <div
+        <a
+          href="/logout"
           class="flex cursor-pointer items-center space-x-2 rounded-md bg-zinc-800 px-2 py-1 text-sm text-white hover:bg-zinc-700"
         >
           <i class="size-4" data-lucide="log-out"></i>
-          <a href="/logout">Log Out</a>
-        </div>
+          <span>Log Out</span>
+        </a>
       </nav>
       <main class="flex size-full overflow-hidden">
         <%- include("partials/leftSidebar.ejs", { user, sidebarInformations })

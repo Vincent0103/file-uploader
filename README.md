@@ -1,3 +1,6 @@
+- Fix order of sidebar Files when deleting then readding
+- order files and folder by folders the files.
+
 # File Uploader
 
 <p align="center">
@@ -55,33 +58,37 @@ src/
 ## Installation & Setup
 
 1. **Clone the repository:**
-	```bash
-	git clone https://github.com/Vincent0103/file-uploader.git
-	cd file-uploader
-	```
+
+   ```bash
+   git clone https://github.com/Vincent0103/file-uploader.git
+   cd file-uploader
+   ```
 
 2. **Install dependencies:**
-	```bash
-	bun install
-	```
+
+   ```bash
+   bun install
+   ```
 
 3. **Set up environment variables in `.env`:**
-	```env
-	PORT=3000
-	DATABASE_URL=your_postgres_url
-	SUPABASE_URL=your_supabase_url
-	SUPABASE_ANON_KEY=your_supabase_anon_key
-	```
+
+   ```env
+   PORT=3000
+   DATABASE_URL=your_postgres_url
+   SUPABASE_URL=your_supabase_url
+   SUPABASE_ANON_KEY=your_supabase_anon_key
+   ```
 
 4. **Run database migrations:**
-	```bash
-	bun run prisma migrate deploy
-	```
+
+   ```bash
+   bun run prisma migrate deploy
+   ```
 
 5. **Start the application:**
-	```bash
-	bun run src/app.js
-	```
+   ```bash
+   bun run src/app.js
+   ```
 
 ## Usage
 

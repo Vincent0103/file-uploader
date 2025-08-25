@@ -36,8 +36,8 @@ model File {
   id         Int      @id @default(autoincrement())
   size       Int
   extension  String
-  entityId   Int      @unique
   uploadTime Int
   createdAt  DateTime @default(now())
   entity     Entity   @relation(fields: [entityId], references: [id], onDelete: Cascade)
+  entityId   Int      @unique
 }

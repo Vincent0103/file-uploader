@@ -290,7 +290,7 @@ const getSidebarInformations = async (req) => {
       iconName: "film",
     },
     {
-      folderName: "music",
+      folderName: "audios",
       iconName: "music",
     },
   ];
