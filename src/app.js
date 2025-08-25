@@ -18,6 +18,7 @@ import editRouter from "./routes/editRouter.js";
 import deleteRouter from "./routes/deleteRouter.js";
 import { getSidebarInformations } from "./scripts/utils.js";
 import downloadRouter from "./routes/downloadRouter.js";
+import "dotenv/config";
 
 const app = express();
 
