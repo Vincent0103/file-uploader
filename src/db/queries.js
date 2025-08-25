@@ -163,19 +163,6 @@ const db = (() => {
   };
 
   const getEntities = async (userId, folderId) => {
-    // const foldersAndFiles = await prisma.entity.findMany({
-    //   where: {
-    //     predecessorId: folderId,
-    //     userId,
-    //   },
-    //   orderBy: {
-    //     name: "asc",
-    //   },
-    //   include: {
-    //     file: true,
-    //   },
-    // });
-
     const folders = await prisma.entity.findMany({
       where: {
         userId,
