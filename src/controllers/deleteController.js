@@ -10,7 +10,6 @@ const deleteController = (() => {
 
       // If deleting a file instead of a folder
       const entity = await db.getEntityById(entityId);
-      console.log(entity);
       if (entity.file) {
         const filePath = await getPathFromEntityId(parentFolderId);
         const extension = mime.extension(entity.file.extension);
