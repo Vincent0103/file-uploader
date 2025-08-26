@@ -80,7 +80,7 @@
             </div>
             <% if (locals.entities) { %>
             <div
-              class="xs:grid-cols-3 grid grid-flow-row grid-cols-2 gap-2 sm:flex sm:flex-wrap"
+              class="grid grid-flow-row grid-cols-3 gap-2 sm:flex sm:flex-wrap"
             >
               <% entities.forEach((entity) => { %> <%-
               include("partials/entityItem.ejs", { entity, parentFolderId}) %>
