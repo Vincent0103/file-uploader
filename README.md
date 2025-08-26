@@ -1,6 +1,3 @@
-- Fix order of sidebar Files when deleting then readding
-- order files and folder by folders the files.
-
 # File Uploader
 
 <p align="center">
