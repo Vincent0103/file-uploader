@@ -1,5 +1,4 @@
 import { PrismaClient } from "@prisma/client";
-import { getEntitiesQuery } from "@prisma/client/sql";
 import bcrypt from "bcryptjs";
 
 const db = (() => {
