@@ -116,7 +116,7 @@ src/
 
 - All file uploads are validated and sanitized
 - Supabase Storage policies restrict access to authenticated users
-- Passwords are securely hashed (if authentication is enabled)
+- Passwords are securely hashed
 
 ## License
 
